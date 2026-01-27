@@ -1,0 +1,987 @@
+Type Promotion and Result Type in Java:
+=======================================
+● When performing arithmetic operations between variables of different data types in Java, type promotion happens automatically to ensure the operation is safe. The maximum of the involved data types determines the result type. The general rule for determining the result type is:
+Result type = max(int, type1, type2, type3, ...)
+ 
+ 								or
+
+**Type Promotion** in Java is the process by which **smaller data types are automatically converted into larger data types** during expressions or method calls.
+
+
+### 🔹 Type Promotion
+
+Automatic conversion of one data type into another **larger compatible type**.
+
+### 🔹 Widening Conversion
+
+* Automatic
+* Safe
+* No data loss
+
+### 🔹 Narrowing Conversion (Type Casting)
+
+* Manual
+* May cause data loss
+
+
+## Rules of Type Promotion in Java**
+
+---
+
+## **Rule 1: byte, short, char → int**
+
+Even if both operands are `byte`, the result is `int`.
+
+
+byte a = 10;
+
+byte b = 20;
+
+
+
+// byte c = a + b; // ❌ Compile-time error
+
+int c = a + b;     // ✅
+
+
+✔ Java promotes operands to `int` before calculation.
+
+
+
+
+
+
+---
+
+## **Rule 2: Smaller Type → Larger Type Automatically**
+
+
+int i = 10;
+
+long l = i;    // ✔ int → long
+
+float f = l;   // ✔ long → float
+
+
+
+
+
+---
+
+## **Rule 3: Expression Result Is Highest Data Type**
+
+
+
+int i = 10;
+
+double d = 5.5;
+
+
+
+double result = i + d;  // int → double
+
+
+
+
+
+
+---
+
+## **Rule 4: char is Promoted to int**
+
+
+
+char c = 'A';
+
+int x = c;   // 65
+
+
+System.out.println('A' + 1); // 66
+
+
+
+
+
+---
+
+## **Rule 5: No Type Promotion for boolean**
+
+
+
+boolean b = true;
+
+// int x = b; // ❌ Not allowed
+
+
+
+---
+
+##Type Promotion in Arithmetic Expressions**
+
+### Example 1:
+
+byte a = 5;
+
+byte b = 10;
+
+int c = a * b;  // result is int
+
+
+
+---
+
+### Example 2:
+
+
+
+float f = 10.5f;
+
+int i = 5;
+
+float result = f + i;
+
+
+---
+
+
+
+## Type Promotion in Method Overloading**
+
+Java applies **type promotion** to find the best matching method.
+
+
+class Test {
+
+   void show(int a) {
+
+       System.out.println("int");
+
+   }
+
+
+
+   void show(double a) {
+
+       System.out.println("double");
+
+   }
+
+   public static void main(String[] args) {
+
+       Test t = new Test();
+       t.show(10);   // calls int
+
+       t.show(10.5); // calls double
+
+   }
+
+}
+
+
+---
+
+### Example with Promotion:
+
+
+
+void show(long a) {
+
+   System.out.println("long");
+
+}
+
+t.show(10); // int → long
+
+
+
+## Type Promotion vs Type Casting**
+
+| Feature    | Type Promotion   | Manual Type Casting     |
+| ---------- | ---------------- | ---------------- |
+| Conversion | Automatic        | Manual           |
+| Direction  | Smaller → Larger | Larger → Smaller |
+| Data loss  | ❌ No            | ✔ Possible      |
+| Syntax     | Not required     | Required         |
+
+---
+
+
+## **Special Case: Compile-Time Constant**
+
+byte b = 10 + 20; // ✔ allowed (constant expression)
+
+
+
+But:
+
+
+byte a = 10;
+
+byte b = 20;
+
+// byte c = a + b; // ❌ error
+
+
+📌 Because variables are involved → runtime calculation → int result.
+
+---
+
+## **Type Promotion with `char`**
+
+
+
+char a = 'a';
+
+char b = 'b';
+
+
+
+// char c = a + b; // ❌
+
+int c = a + b;    // ✔
+
+## **Why Java Uses Type Promotion**
+
+✔ Prevents overflow in calculations
+✔ Maintains precision
+✔ Ensures type safety
+✔ Avoids unexpected runtime errors
+
+Summary
+
+* Type promotion is an automatic widening conversion
+* Smaller types convert to larger types
+* Expressions result in the highest data type
+* byte, short, char promote to int
+* Boolean is excluded
+* Helps Java remain safe and predictable
+
+Class Example:-
+================
+
+public class Demo {
+
+	public static void main(String[] args) {
+		
+		byte b1 = 10;
+		byte b2 = 20;
+		int b3 = b2+b1;
+		
+		char ch1 = 'a';
+		char ch2 = 'b';
+		int ch3 = ch1+ch2;
+		System.out.println(ch3);
+		
+		short sh1 = 120;
+		short sh2 = 350;
+		int sh3 = sh1+sh2;
+		
+		int x1 = 10;
+		float f1 = 5.56f;
+		float fx1 = x1+f1;
+		
+		
+		byte b4 = 10+20;
+		
+		
+		
+		
+
+	}
+}
+
+
+
+
+# **Arithmetic Operator Precedence in Java**
+============================================
+
+---
+
+##What Is Operator Precedence?**
+
+**Operator precedence** determines **which operator is evaluated first** when multiple operators appear in the same expression **without parentheses**.
+
+👉 If precedence is the same, **associativity** decides the order.
+
+---
+
+## Why Operator Precedence Matters**
+
+Consider:
+
+int result = 10 + 5 * 2;
+
+
+
+❌ Wrong assumption:
+
+(10 + 5) * 2 = 30
+
+
+✅ Actual evaluation:
+10 + (5 * 2) = 20
+
+
+
+Because `*` has **higher precedence** than `+`.
+
+---
+
+##Arithmetic Operator Precedence Order (High → Low)**
+
+| Precedence  | Operators     | Description                       |
+| ----------- | ------------- | --------------------------------- |
+| 1 (Highest) | `()`          | Parentheses                       |
+| 2           | `++`, `--`    | Unary increment / decrement       |
+| 3           | `*`, `/`, `%` | Multiplication, Division, Modulus |
+| 4           | `+`, `-`      | Addition, Subtraction             |
+| 5 (Lowest)  | `=`           | Assignment                        |
+
+📌 **Unary operators are evaluated before arithmetic operators.**
+
+
+##Step-by-Step Evaluation Examples**
+
+---
+
+### 🔹 Example 1
+
+int x = 10 + 5 * 2;
+
+
+
+Evaluation:
+
+
+5 * 2 = 10
+
+10 + 10 = 20
+
+
+
+---
+
+### 🔹 Example 2
+
+
+int x = (10 + 5) * 2;
+
+
+
+Evaluation:
+
+
+
+(10 + 5) = 15
+
+15 * 2 = 30
+
+
+
+---
+
+### 🔹 Example 3
+
+int x = 20 / 5 * 2;
+
+
+
+Same precedence → left to right:
+
+
+
+20 / 5 = 4
+
+4 * 2 = 8
+
+
+
+### 🔹 Example 4
+
+int x = 5;
+
+int y = x++ + ++x;
+
+
+
+Step-by-step:
+
+
+x++ → use 5, then x = 6
+
+++x → x becomes 7
+
+y = 5 + 7 = 12
+
+
+
+---
+
+### 🔹 Example 5
+
+
+int x = 5;
+
+System.out.println(++x * 2);
+
+
+
+
+
+++x → 6
+
+6 * 2 = 12
+
+
+
+---
+
+## Modulus `%` Precedence**
+
+`%` has **same precedence as `*` and `/`**
+
+---
+
+### 🔹 Example 6
+
+
+System.out.println(10 + 5 % 3);
+
+
+5 % 3 = 2
+
+10 + 2 = 12
+
+
+---
+
+## Mixing Data Types & Precedence**
+
+Precedence applies **before type promotion**.
+
+---
+
+### 🔹 Example 7
+
+
+System.out.println(10 + 20 * 3.0);
+
+
+
+Evaluation:
+
+
+20 * 3.0 = 60.0
+
+10 + 60.0 = 70.0
+
+
+
+---
+
+##Common Tricky Expressions**
+
+---
+
+### 🔹 Example 8
+
+
+System.out.println(100 / 10 * 10);
+
+
+
+
+
+100 / 10 = 10
+
+10 * 10 = 100
+
+
+
+---
+
+### 🔹 Example 9
+
+
+System.out.println(100 / (10 * 10));
+
+
+
+
+
+10 * 10 = 100
+
+100 / 100 = 1
+
+
+
+---
+
+##Operator Precedence vs Parentheses**
+
+📌 **Parentheses ALWAYS win**
+
+
+
+int x = 10 + 2 * 3;     // 16
+
+int y = (10 + 2) * 3;  // 36
+
+---
+
+##Summary**
+
+* Precedence decides evaluation order
+* Parentheses override precedence
+* Same precedence → left to right
+* Unary operators are evaluated first
+* Modulus has the same precedence as * and /
+
+Class Example:-
+==============
+1. 
+public class Demo {
+
+	public static void main(String[] args) {
+		
+		int x = 5*(6+8)/2+4;
+		System.out.println(x);
+		int x1 = 10;
+		int x2 = 20;
+		int x3 = 2;
+		System.out.println(x1++ + ++x2 + x1 + x3--);
+		
+
+	}
+}
+2. 
+	public static void main(String[] args) {
+		
+		int x1 = 10;
+		int x2 = 20;
+		int x3 = 2;
+		System.out.println(x1*2%5*x3/x1);
+		
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+Question 1:=
+-----------
+float x = 5.55f;
+double y = 5.55;
+System.out.prinltln(x == y);
+
+
+
+Question 2:=
+-----------
+System.out.println(0.1 + 0.2 + 0.3); //
+
+
+Class Example:-
+=============
+1.
+class Main{
+public static void main(String[] args) {
+		int x1 = 10;
+		int x2 = 20;
+		int x3 = 30;
+		System.out.println(x3==x1+x2);
+		long l1 = 30l;
+		System.out.println(x3==l1);
+		float f = 5.56f;
+		double d = 5.56;
+		System.out.printf("%.20f\n",f);
+		System.out.printf("%.20f\n",d);
+		System.out.println(d==f); //false
+		System.out.println(0.1+0.2==0.3); //false
+		
+		
+		
+
+	}
+}
+Solution for Precision:-
+=======================
+2.
+public class Demo {
+
+	public static void main(String[] args) {
+		BigDecimal bd1 = new BigDecimal("0.1");
+		BigDecimal bd2 = new BigDecimal("0.2");
+		BigDecimal bd3 = new BigDecimal("0.3");
+		
+		System.out.println((bd1.add(bd2).equals(bd3)));
+		
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+Similarity of Java with Other Programming Languages:
+===================================================
+
+
+1. Conditional Statements (if, if-else, else-if):
+
+Decision-making statements in Java follow a syntax and logic similar to other languages.
+
+Example:
+
+
+int age = 20;
+
+if (age >= 18) {
+    System.out.println("Eligible to vote");
+} else {
+    System.out.println("Not eligible to vote");
+}
+
+
+--The working of if, if-else, and else-if is conceptually identical to C/C++.
+
+
+2. Looping Statements:
+
+--Java provides looping constructs that are almost identical to those in other languages.
+
+for Loop
+---
+
+for (int i = 1; i <= 5; i++) {
+    System.out.println(i);
+}
+
+
+while Loop:
+---
+
+int i = 1;
+
+while (i <= 5) {
+    System.out.println(i);
+    i++;
+}
+
+
+
+do-while Loop:
+---
+
+int i = 1;
+
+do {
+    System.out.println(i);
+    i++;
+} while (i <= 5);
+
+
+--The logic and flow of loops remain same across most languages.
+
+
+
+
+
+
+
+Note: in java, local variable must be initialized before we use it.
+
+ 	//local variable
+ 		int z;
+ 
+ 		z=100;
+ 
+ 	System.out.println(z);
+ 
+
+Example of conditional statements:
+---
+
+Using if-else:
+
+Demo.java:
+---
+
+
+class Demo{
+
+ 	public static void main(String[] args){
+
+ 
+ 		int marks = 500;
+
+ 		 if(marks > 600)
+ 			 System.out.println("First Div");
+ 		 else
+ 			 System.out.println("Second Div");
+
+ 	}
+
+}
+
+
+Without else part:
+
+
+class Demo{
+
+ 	public static void main(String[] args){
+
+ 
+ 		int marks = 500;
+ 		String result = "First Div";
+
+ 		 if(marks > 600)
+ 			 result = "Second Div";
+ 
+ 		System.out.println(result);
+
+ 	}
+
+}
+
+
+Without if-else:
+---
+
+
+class Demo{
+
+ 	public static void main(String[] args){
+
+ 
+ 		int marks = 500;
+
+ 		String result = (marks > 600) ? "First Div" : "Second Div";
+
+ 		System.out.println(result);
+ 
+ 	}
+
+}
+
+
+Task:
+
+int x = 2;
+
+if x value is divisible by 5 then print "Hello"  // 10
+if x value is divisible by 3 then print "Welcome" // 9
+if x value is divisible by 5 and 3 then print "Hello Welcome"  // 15,30
+if x value is not divisible by 5 and 3 then print "invalid number" //2,11
+
+
+
+
+Solution1:
+
+
+int x = 15;
+
+if (x % 5 == 0) {
+    System.out.println("Hello");
+}
+else if (x % 3 == 0) {
+    System.out.println("Welcome");
+}
+else if (x % 5 == 0 && x % 3 == 0) {
+    System.out.println("Hello Welcome");
+}
+else {
+    System.out.println("invalid number");
+}
+
+
+Why This Code Is Wrong?
+
+For x = 15
+
+x % 5 == 0 → true
+
+Program prints "Hello"
+
+The condition x % 5 == 0 && x % 3 == 0 is never reached
+
+--More specific condition is placed after less specific condition
+
+--Order of conditions is incorrect
+
+
+Correct code:
+---
+
+int x = 15;
+
+if (x % 5 == 0 && x % 3 == 0) {
+    System.out.println("Hello Welcome");
+}
+
+else if (x % 5 == 0) {
+    System.out.println("Hello");
+}
+
+else if (x % 3 == 0) {
+    System.out.println("Welcome");
+}
+
+else {
+    System.out.println("invalid number");
+}
+
+
+
+--In if-else ladder, always write the most specific condition first and the most general condition last.
+
+Questions for practice:-
+======================
+
+
+## Hollow Square (Decision Based)
+
+
+
+
+*****
+*   *
+*   *
+*   *
+*****
+
+Solution:-
+========
+public class Demo {
+
+	public static void main(String[] args) {
+		
+		for(int i=1; i<=5; i++) {
+			for(int j=1; j<=5; j++) {
+				if(i==1 || i==5 || j==1 || j==5) {
+					System.out.print("*");
+				}else {
+					System.out.print(" ");
+				}
+			}
+			System.out.println();
+		}
+
+	}
+}
+
+
+---
+
+## Left Triangle
+
+
+*
+**
+***
+****
+*****
+
+---
+
+
+
+
+## Right Triangle (Space + Star)
+
+    *
+   **
+  ***
+ ****
+*****
+
+---
+
+## Pyramid
+
+    *
+   ***
+  *****
+ *******
+*********
+---
+
+
+
+---
+
+## Same Number Pattern
+-----
+1
+22
+333
+4444
+55555
+
+---
+
+## Floyd’s Triangle:- Floyd’s Triangle is a right-angled triangle of continuous natural numbers.
+
+1
+2 3
+4 5 6
+7 8 9 10
+---
+
+## Diamond Pattern (Combination) (Home Work)
+
+    *
+   ***
+  *****
+ *******
+*********
+ *******
+  *****
+   ***
+    *
+
+
+(Upper pyramid + inverted pyramid)
+
+---
+
+## Plus Pattern (Home Work)
+
+  *
+  *
+*****
+  *
+  *
+
+
+---
+
+
+
+
+
+
+### ** Output?**
+
+int x = 10;
+if(x == 10)
+   	System.out.println("A");
+   	System.out.println("B");
+---
