@@ -858,9 +858,6 @@ Questions for practice:-
 
 ## Hollow Square (Decision Based)
 
-
-
-
 *****
 *   *
 *   *
@@ -888,7 +885,7 @@ public class Demo {
 }
 
 
----
+--------------------------------------------
 
 ## Left Triangle
 
@@ -902,7 +899,7 @@ public class Demo {
 ---
 
 
-
+---------------------------------------------
 
 ## Right Triangle (Space + Star)
 
