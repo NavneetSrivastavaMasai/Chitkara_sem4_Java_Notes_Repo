@@ -1,0 +1,314 @@
+Task:-
+------
+Code:-
+
+int i=0;
+for(System.out.println("Hi"); i<=5; System.out.println("Student")){
+
+i++;
+}
+
+
+Output:-
+Hi
+Student
+Student
+Student
+Student
+Student
+Student
+
+----------------------------------------------------------------------
+
+Break: "break" immediately stops the loop or switch and moves control outside it.
+=====
+Example:-
+public static void main(String[] args) {
+		for(int i=1; i<5; i++) {
+			System.out.println(i);
+			if(i==3) {
+				break;
+			}
+		}
+
+	}
+
+output:-
+1
+2
+3
+--------------------------------------------
+Continue:- "continue" skips the current iteration and moves to the next iteration of the loop.
+========
+Example:-
+public static void main(String[] args) {
+		for(int i=1; i<5; i++) {
+			if(i==3) {
+				continue;
+			}
+			System.out.println(i);
+			
+		}
+
+	}
+
+output:-
+=====
+1
+2
+4
+
+Note:- break exits the loop, while continue skips the current loop step.
+--------------------------
+Switch case:-
+============= "switch case" is a control statement used to choose and execute one block of code from multiple options based on a value.
+Example:-
+public static void main(String[] args) {
+		
+		int day =5;
+		switch(day) {
+		case 1:
+			System.out.println("Monday");
+			break;
+		case 2:
+			System.out.println("Tuesday");
+			break;
+		case 3:
+			System.out.println("Wednesday");
+			break;
+		case 4:
+			System.out.println("Thursday");
+			break;
+		default: System.out.println("Invalid input");
+		}
+
+	}
+
+
+
+Note:- "Default" we can use anywhere, but recommend using it at the end.
+=====
+Supports:- byte, char, short, int (Java 1-4)
+=========  Enum (Java 5)
+	   String (Java 7)
+	   Corresponding primitive data type Wrapper classes like (Byte, Short, Character, Integer) (Java 8+) 
+
+Not allowed:- long, float, double, Boolean.
+============
+
+Example with Enum:-
+=================
+package com.chitkara;
+
+
+public class Demo {
+	public static void main(String[] args) {
+		Status st = Status.DELIVERED;
+		switch(st) {
+		case NEW:
+			System.out.println("Newly Ordered");
+			break;
+		case DELIVERED:
+			System.out.println("Material is delivered");
+			break;
+		case SHIPPED:
+			System.out.println("Material is shipped");
+			break;
+		case PACKED:
+			System.out.println("Material is packed");
+			break;
+		}
+
+	}
+}
+package com.chitkara;
+
+public enum Status {
+	NEW,PACKED,SHIPPED,DELIVERED
+}
+
+Output:-
+-------
+Material is delivered
+
+
+Fall Through Behaviour:-
+======================
+public static void main(String[] args) {
+		int day =1;
+		switch(day) {
+		case 1:
+			System.out.println("Monday");
+			
+		case 2:
+			System.out.println("Tuesday");
+			
+		case 3:
+			System.out.println("Wednesday");
+			
+		case 4:
+			System.out.println("Thursday");
+		case 7:
+			System.out.println("Weekend");
+			
+		default: System.out.println("Invalid input");
+		}
+
+	}
+output:-
+Monday
+Tuesday
+Wednesday
+Thursday
+Weekend
+Invalid input
+
+Intentional Fall Through:-
+======================== 
+public static void main(String[] args) {
+		int day =5;
+		switch(day) {
+		case 1:
+			System.out.println("Monday");
+			break;
+		case 2:
+			System.out.println("Tuesday");
+			break;
+		case 3:
+			System.out.println("Wednesday");
+			break;
+		case 4:
+			System.out.println("Thursday");
+			break;
+		case 6:
+		case 7:
+			System.out.println("Weekend");
+			break;
+		default: System.out.println("Invalid input");
+		}
+
+	}
+Output:-
+------
+Weekend
+
+Switch Expression (->) :-
+=====================
+Return a value 
+Avoid "break".
+public static void main(String[] args) {
+		int day =1;
+		String dayName = switch(day) {
+		case 1 ->"Monday";
+		case 2->"Tuesday";			
+		case 3->"Wednesday";
+		case 4->"Thursday";
+		case 7->"Weekend";
+		default-> "Invalid input";
+		};
+		System.out.println(dayName);
+
+	}
+Output:-
+Monday
+
+
+Yield:-
+======
+-Return a value
+-Also execute some statement.
+Example:-
+--------
+public class Demo {
+	public static void main(String[] args) {
+		int day =1;
+		String dayName = switch(day) {
+		case 1,2,3,4,5 :
+			System.out.println("Working Day");
+			yield "Weekdays";
+		case 6,7 :
+			System.out.println("Non Working day");
+			yield "Holiday";
+		default: 
+			System.out.println("Not a valid day");
+			yield "Provide valid input";
+		};
+		System.out.println(dayName);
+
+	}
+}
+Output:-
+------
+Working Day
+Weekdays
+
+
+========================================================================================================
+
+Print==> "Hello" (With quotes):- Using Escape Operator(\) we can achieve that.
+
+System.out.println("\"Hello\"");
+
+Output:- "Hello"
+
+========================================================================================================
+
+Functions of JVM (Java Virtual Machine):
+=======================================
+
+--The JVM (Java Virtual Machine) is responsible for executing Java programs.
+
+Main Functions of JVM:
+---
+
+1. Bytecode to Machine Code Conversion:
+
+--JVM converts the required part of the bytecode (.class file) into its equivalent native machine code.
+
+--This conversion is done using:
+
+* Interpreter
+
+* JIT (Just-In-Time) Compiler
+
+2. Loading Code into Memory:
+
+--JVM loads the required bytecode into RAM using the Class Loader Subsystem.
+
+3. Execution of Code:
+
+--The converted machine code is executed with the help of the underlying Operating System (OS) and hardware.
+
+4. Memory Management:
+
+--JVM automatically manages memory using:
+
+-Heap allocation
+
+-Stack frames
+
+-Garbage Collection (GC)
+
+5. Removal of Unused Objects
+
+--JVM removes unused objects from memory using the Garbage Collector, freeing RAM.
+
+
+
+Platform Dependency of JVM:
+---
+
+--JVM is platform dependent.
+
+Reason:
+
+--A JVM running on Windows generates machine code specific to Windows OS.
+
+--A JVM running on Linux generates machine code specific to Linux OS.
+
+Important Note:
+
+--Java programs are platform independent.
+
+--JVM is platform dependent.
+

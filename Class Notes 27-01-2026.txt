@@ -883,6 +883,30 @@ public class Demo {
 
 	}
 }
+---------------------------------------------
+
+## Right Triangle (Space + Star)
+
+    *
+   **
+  ***
+ ****
+*****
+
+Code:-
+public static void main(String[] args) {
+		
+		int x = 5;
+		for(int i=0; i<x; i++) {
+			for(int j=0; j<x-i;j++) {
+				System.out.print(" ");
+			}
+			for(int j=0; j<i; j++) {
+				System.out.print("x");
+			}
+			System.out.println();
+		}
+	}
 
 
 --------------------------------------------
@@ -896,20 +920,26 @@ public class Demo {
 ****
 *****
 
----
+public static void main(String[] args) {
+		
+		String str = "";
+		for(int i=0; i<5; i++) {
+			str+="*";
+			System.out.println(str);
+		}
+	}
+
+-------------------------------------------------
+## Floyd’s Triangle:- Floyd’s Triangle is a right-angled triangle of continuous natural numbers.
+
+1
+2 3
+4 5 6
+7 8 9 10
 
 
----------------------------------------------
 
-## Right Triangle (Space + Star)
-
-    *
-   **
-  ***
- ****
-*****
-
----
+--------------------------
 
 ## Pyramid
 
@@ -918,8 +948,6 @@ public class Demo {
   *****
  *******
 *********
----
-
 
 
 ---
@@ -934,13 +962,6 @@ public class Demo {
 
 ---
 
-## Floyd’s Triangle:- Floyd’s Triangle is a right-angled triangle of continuous natural numbers.
-
-1
-2 3
-4 5 6
-7 8 9 10
----
 
 ## Diamond Pattern (Combination) (Home Work)
 
