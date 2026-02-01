@@ -1,0 +1,564 @@
+Class Activity:-
+================
+Check if 1221 is a palindrome without using  String.
+--------------------------------------------------
+public static void main(String[] args) {
+		int num = 1221;
+		int dup = num;
+		int rev = 0;
+		while(num!=0) {
+			int digit = num%10;
+			rev = rev*10 + digit;
+			num = num/10;
+		}
+		if(rev==dup) {
+			System.out.println("Palindrome");
+		}else {
+			System.out.println("Not a palindrome");
+		}
+	}
+
+
+
+
+
+
+=============================================================================================================================================
+
+float f1 = 838860.125f;
+double d1 = 838860.125;
+System.out.printf("%.20f\n",f1);
+System.out.printf("%.20f\n",d);
+int x = 0b11001100110011001100;
+System.out.println(x);
+float f = 5.56f;
+double d = 5.56;
+System.out.printf(f1==d1);  //true
+System.out.printf(f==d);    //false
+
+Note: Java uses IEEE 754 floating-point representation, which standardizes how computers encode real numbers using 32-bit (float) or 64-bit (double) binary formats, consisting of a sign bit. It enables efficient, uniform storage of very large or small numbers using normalized scientific notation
+
+
+==============================================================================================================================================
+Java Packages:
+==============
+
+--A package in Java is a namespace that groups related classes and interfaces in a single unit.
+
+--A package is used to bind the related concept logically.
+
+
+Purposes of Packages:
+
+1. Logical Grouping
+
+--Groups related classes and interfaces together.
+
+2. Namespace Management
+
+--Prevents naming collisions (same class name in different packages).
+
+Example:
+
+com.chitkara.Demo
+com.masai.Demo
+
+3. Access Control / Security
+
+--To provide some level of security with the help of access modifiers
+
+--Will discuss this concept in upcoming sessions when we talk about the access modifiers and inheritance concept.
+
+
+
+Commonly Used Java Packages:
+---
+
+
+
+java.io: Contains classes and interfaces used for Input and Output operations. Example: File, InputStream, OutputStream, BufferedReader
+
+java.util: Contains all the utility-related classes like ArrayList, LinkedList, HashMap, Scanner, Date
+
+java.sql: Contains all the classes/interfaces related to perform Database operations.
+
+**java.lang: all the basic/core classes available inside this package.
+
+Example:
+
+System
+String
+Object
+all the Wrapper classes (Integer, Float, Byte...)
+
+
+--If we try to use a class that belongs to a different package inside our class, then we must import that class from that package.
+
+--The java.lang package is a default package, and to utilize the package-related classes inside our class, we do not need to import this package; it is imported by default in every Java class.
+
+
+
+Note: In Java, the fully qualified name of a class or interface is obtained with the help of its package name
+
+java.lang.System
+java.util.ArrayList
+
+com.chitkara.Demo
+
+Example of Importing:-
+--------------------
+package com.chitkara;
+
+import com.faculty.Teacher; (Importing of class)
+public class Main {
+	public static void main(String[] args) {
+		Teacher t = new Teacher();
+
+	}
+}
+
+package com.faculty;
+
+public class Teacher {
+	String name;
+	String subject;
+}
+
+Using Teacher class from com.faculty package in Main class at com.chitkara package using "import FullyQualifiedNameOfClass".
+Fully Qualified Name:- package name+class Name.
+
+********************************************************************************************************************************
+Class:-
+======
+
+public class Car {
+	String colour;
+	double weight;
+	String model;
+	double price;
+	
+	void brake() {
+		System.out.println("Car Stops");
+	}
+	
+	void runing() {
+		System.out.println("Someone is driving the car");
+	}
+}
+
+
+Object:- 
+======
+Object Life Cycle:- Creation(Using "new" keyword) ==> Usage(Methods & State) ==>Garbage Collection(Removes Objects) 
+public class Main {
+	public static void main(String[] args) {
+		Car car = new Car();
+		car.colour = "Red";
+		car.model = "Safari";
+		car.weight = 10;
+		car.price = 20;
+		car.brake();
+		car.runing();
+	}
+}
+
+Anonymous Objects:-
+----------------         new Car().brake();
+
+Object Methods:-
+------------
+getClass()-
+----------
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Student st = new Student();
+		System.out.println(st.getClass().getName());
+	}
+}
+
+Output:-
+------
+com.chitkara.Student
+
+
+
+toString():-
+----------
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Student st = new Student();
+		System.out.println(st);
+	}
+}
+
+Output:-
+------
+com.chitkara.Student@24d46ca6
+
+
+
+hasCode()-
+---------
+-hashCode is a number created by the JVM to represent an object.
+		or
+-The JVM assigns or calculates a number for every object, and this number is called the hashCode.
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Student st = new Student();
+		System.out.println(st.hashCode());
+		int x = 0x24d46ca6;
+		System.out.println(x);
+	}
+}
+
+Output:-
+------
+617901222
+617901222
+
+Functionality of the `new` Operator
+-----------------------------------
+1. When the JVM encounters the `new` operator, it allocates memory for an object "inside the Heap area".
+
+2. In that allocated memory, the JVM creates space for "all non-static members" of the class:
+
+   - Instance variables
+   - References to instance methods
+
+3. For non-static methods:
+
+   - Only the "method reference (name + signature + address)" is associated with the object
+   - The "method body is not copied into the object"
+   - Method code is executed "only when the method is called"
+
+4. For non-static variables:
+
+   - Memory is allocated inside the object
+   - If not explicitly initialized, the JVM assigns "default values" (e.g., `0`, `null`, `false`)
+
+5. "Local variables do not get default values":
+
+   - They must be explicitly initialized
+   - Using an uninitialized local variable causes a "compile-time error"
+
+Note:-
+----
+Each object has its own separate memory:
+
+   - Multiple objects of the same class can exist
+   - Changes made to one object do "not affect other objects"
+
+	Example:-
+	--------
+public class Student {
+	String name;
+	int roll;
+	String address;
+	double marks;
+	
+	void studing() {
+		System.out.println(name+" is Studing");
+	}
+	
+	void absent() {
+		System.out.println("Roll number "+roll+" student is absent");
+	}
+	
+}
+public class Main {
+	public static void main(String[] args) {
+		Student s1 = new Student();
+		s1.name = "Ram";
+		s1.roll = 1;
+		s1.marks = 85;
+		s1.address = "Lucknow";
+		
+		Student s2 = new Student();
+		s1.name = "Site";
+		s1.roll = 2;
+		s1.marks = 90;
+		s1.address = "Raebareli";	
+		
+	}
+}
+
+In Java, multiple reference variables can refer to one object, but one reference variable can refer to only one object at any given time.
+
+	Example:-
+	-------
+	public class Main {
+	public static void main(String[] args) {
+		Student s1 = new Student();		
+		Student s2 = s1;
+		Student s3 = s1;
+		
+	}
+}
+
+
+Short Summary:-
+------------
+new → Heap memory allocation → instance variables get default values → methods are referenced, not copied
+
+for a class ref variable 3 possible values are there:
+-----------------------------------------------------
+
+1. its own class object.
+
+		Student s1 = new Student();		
+		
+
+2. its child class object:-
+--this concept is also known as super class reference and child class object.
+Example:-
+---------
+
+public class Student {
+	String name;
+	int roll;
+	String address;
+	double marks;
+	
+	void studing() {
+		System.out.println(name+" is Studing");
+	}
+	
+	void absent() {
+		System.out.println("Roll number "+roll+" student is absent");
+	}
+	
+}
+---
+package com.chitkara;
+
+public class Ram extends Student{
+
+}
+---
+public class Main {
+	public static void main(String[] args) {
+		Student s1 = null;	
+		Student s2 = new Ram();
+		
+	}
+}
+
+3. default value for any ref variable. i.e null.
+		Student s1 = null;	
+		Demo d1 = null;
+
+
+Relationship:- How one class is connected to another class.
+-------------
+	1. IS-A Relationship(Inheritance): One Class inherits another class.
+	--------------------------------- 
+
+
+
+	2. HAS-A Relationship(Association):- One Class uses another class as a member.
+	----------------------------------
+Example:-
+-------
+package com.chitkara;
+
+public class Address {
+	int hNo;
+	String city;
+	String state;
+	String pinCode;
+	
+	void printAddress() {
+		System.out.println("House Number:- "+hNo+
+							"\nCity:- "+ city+
+							"\nState:- "+ state+
+							"\nPincode:- "+ pinCode);
+	}
+	
+	
+}
+
+public class Student {
+	
+	String name;
+	String rollNo;
+	Address address;
+	
+	void printDetails() {
+		System.out.println("Name:- "+name+"\nRoll Number:- "+rollNo);
+		address.printAddress();
+	}
+
+}
+
+package com.chitkara;
+public class Main {
+	public static void main(String[] args) {
+		Student st1 = new Student();
+		st1.name = "Ishan";
+		st1.rollNo = "16";
+		
+		Address add = new Address();
+		add.hNo =1;
+		add.city = "Yamuna Nagar";
+		add.state = "Haryana";
+		add.pinCode = "135001";
+		
+		st1.address = add;
+		st1.printDetails();
+	}
+}
+
+Output:-
+-----
+Name:- Ishan
+Roll Number:- 16
+House Number:- 1
+City:- Yamuna Nagar
+State:- Haryana
+Pincode:- 135001
+
+
+a. Aggregation:- "Aggregation is a relationship where one object uses another object, but both can exist independently."
+ 
+Example:-
+--------
+public class WifiNetwork {
+	
+	String networkName;
+	
+	void connected() {
+		System.out.println("Your device connected to network "+networkName);
+	}
+
+}
+public class Device {
+	
+	WifiNetwork wifi;
+	
+	void connecting() {
+		System.out.println("Trying to connect device....");
+		wifi.connected();
+	}
+
+}
+public class Main {
+
+	public static void main(String[] args) {
+		WifiNetwork network = new WifiNetwork();
+		network.networkName = "Home";
+		
+		Device device = new Device();
+		device.wifi = network;
+		
+		device.connecting();
+	}
+
+}
+Output:-
+---------
+Trying to connect device....
+Your device connected to network Home
+
+
+Student Task:-
+=============
+The "Guest List":-
+===================
+- The Task: Create a Guest class with a String name and a House class that has a Guest currentVisitor.
+- The Implementation: 1. Create Guest g1 = new Guest(); and House h1 = new House();. 2. Assign the guest: h1.currentVisitor = g1;.
+- Set h1 = null;. Now, try to print g1.name.
+
+
+
+b. Composition:- "Composition is a relationship where one object completely owns another object, and the child object cannot exist without the parent."
+   
+Example:-
+-------
+public class Card {
+	
+	String cardName = "D-link";
+	
+	void intalling() {
+		System.out.println(cardName+" intalling inside the router...");
+	}
+}
+public class Airtel {
+	
+	Card card = new Card();
+	
+	void intalled() {
+		card.intalling();
+		System.out.println("Card successfully intalled in router.");
+	}
+
+}
+public class Main {
+	public static void main(String[] args) {
+		Airtel airtel = new Airtel();
+		airtel.intalled();
+		
+		airtel.card.cardName = "Jio";
+		airtel.intalled();
+	}
+}
+
+Output:-
+-------
+D-link intalling inside the router...
+Card successfully intalled in router.
+Jio intalling inside the router...
+Card successfully intalled in router.
+
+Student Task:-
+=============
+The "Broken Robot":-
+=====================
+- The Task: Create a Battery class with an int power variable. Create a Robot class that has a Battery myBat variable.
+- The Implementation: 1. In Main, create a Robot r1 = new Robot();. 2. Create a Battery object in Robot class when you are declaring Battery reference Battery b1 = new Battery();. 3. Manually provide value of battery power.
+- set r1 = null; "Can you still reach b1?"
+
+
+Garbage Collector:- "The Garbage Collector automatically removes unused objects from memory to free space."
+=================
+public class Main {
+	
+	@Override
+protected void finalize() throws Throwable {
+	// TODO Auto-generated method stub
+		System.out.println("GC is Running.....");
+		super.finalize();
+}
+public static void main(String[] args) {
+	int num = 1;
+	while(true) {
+		Student s = new Student();
+		s= null;
+		System.out.println(num);
+		num++;
+		System.gc();
+	}
+	
+	
+}
+}
+
+In how many ways a Object is eligible for garbage collector:-
+--------------------------------------------------------
+a. Pointing reference variable to null:-
+	Student s1 = new Student();
+	s1 = null;
+
+b. Pointing reference variable to another object:-
+	Student s1 = new Student();
+	Student s2 = new Student();
+	s1 = s2;	
+
+c. Creating anonymous object:-
+	new Student();
+
