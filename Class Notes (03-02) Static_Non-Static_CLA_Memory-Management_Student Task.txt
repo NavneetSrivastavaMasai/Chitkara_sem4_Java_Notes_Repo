@@ -1,0 +1,458 @@
+Static and Non-static:-
+======================
+
+For Instance variables:-
+-----------------------
+
+public class Student {
+	String name;
+	int roll;
+	static String collegeName = "Chitkara";
+}
+public class Main {
+	public static void main(String[] args) {
+		Student s1 = new Student();
+		s1.name = "Abhishek";
+		s1.roll = 1;
+		s1.collegeName = "IIT";
+		
+		Student s2 = new Student();
+		s2.name = "Aman";
+		s2.roll = 2;
+		s2.collegeName = "Punjab University";
+		
+		Student s3 = new Student();
+		s3.name = "Ravi";
+		s3.roll = 3;
+		System.out.println(s1.collegeName);
+		System.out.println(s2.collegeName);
+		System.out.println(s3.collegeName);	
+		
+	}
+
+}
+
+
+
+For Methods:-
+------------
+package com.chitkara;
+
+public class Student {
+	String name;
+	int roll;
+	static String collegeName = "Chitkara";
+	
+	
+	static void printDetail(Student s) {
+		System.out.println("Name:- "+s.name+
+							"\nRoll Number:- "+s.roll+collegeName);
+	}
+}
+public class Main {
+	public static void main(String[] args) {
+		
+		String name = Student.collegeName;
+		
+		Student s1 = new Student();
+		s1.name = "Abhishek";
+		s1.roll = 1;
+
+		printDetail(s1);
+		Student.printDetail(s1);
+		
+	}
+	
+	static void printDetail(Student s) {
+		System.out.println("Name:- "+s.name+
+							"\nRoll Number:- "+s.roll
+							+"\nCollege Name:- "+s.collegeName);
+	}
+
+}
+
+
+Note:-We can not access instance variables inside static method directly.
+----
+
+CLA (Command Line argument):-
+===========================
+
+Using NotePad:-
+-------------
+class Main{
+
+public static void main(String args[]){
+
+System.out.println(args[0]);
+
+System.out.println(args[1]);
+}
+
+}
+
+
+C:\Users\inno\Desktop\New folder>javac Main.java
+
+C:\Users\inno\Desktop\New folder>java Main 10 20
+10
+20
+
+
+Java Program Execution Flow & Memory Management:-
+=================================================
+
+Java Program Execution Flow
+-=-=-=-=-=-=-=-=-=-=-=--=-=-
+
+Step 1: JVM Loading
+	- When a Java program is executed, the JVM is first loaded into RAM.
+	- JVM is responsible for:
+		* Loading classes
+		* Managing memory
+		* Executing bytecode
+		* Garbage collection
+
+Step 2: Class Loading
+	- The ClassLoader subsystem loads the .class file into memory.
+	- During this phase, class-level information is stored in the Method Area.
+	- Data stored in Method Area:
+		* Class structure (blueprint of the class)
+		* Method bytecode
+		* Static variables
+		* Static methods
+		* Runtime Constant Pool
+			- Stores constants and symbolic references
+			- Used during runtime execution
+
+Step 3: Static Member Initialization
+	- Static variables are:
+		* Allocated memory
+		* Initialized with their default or assigned values
+	- Static methods:
+		* Become available for execution
+		* This happens only once per class, not per object.
+
+Step 4: Main Method Execution
+	- JVM searches for the entry point:
+		`public static void main(String[] args)`
+	- Since main() is static, it is already loaded during class loading.
+	- Program execution starts from the first line of main().
+
+Requirement of Creating an Object:-
+============================
+- Non-static members (instance variables & instance methods) are not loaded automatically.
+- To allocate memory for non-static members:
+	* We must create an object of the class
+- Object creation happens dynamically at runtime in the Heap Area.
+
+Example: Class with Static & Non-Static Members
+----------------------------------------
+package com.masai;
+
+public class Demo {
+
+    // Instance variable
+    int i = 100;
+
+    // Static variable
+    static int j = 200;
+
+    // Instance method
+    void fun1() {
+        System.out.println("inside fun1 of Demo");
+    }
+
+    // Static method
+    static void fun2() {
+        System.out.println("inside fun2 of Demo");
+    }
+
+    //Main method signature, entry point for JVM.
+    public static void main(String[] args) {
+
+        System.out.println("inside main");
+
+        // Creating object (instantiation)
+        Demo d1 = new Demo();
+
+        System.out.println(d1);      // reference value
+        System.out.println(d1.i);    // instance variable
+
+        d1.fun1();                   // instance method call
+        // fun1(); ❌ not allowed without object
+        // fun2(); ✅ allowed (same class)
+    }
+}
+
+
+ JVM Memory Areas (Simplified View)
+=-=-=-=-=-==-=-=-=-=-===-=-=-=-=-=
+The JVM divides RAM into logical memory areas:
+
+1. Method Area
+	- Stores:
+		* Class structure
+		* Method bytecode
+		* Static variables
+		* Static methods
+		* Runtime Constant Pool
+
+2. Heap Area	
+	- Stores:
+		* Objects
+		* Instance variables
+
+3. Stack Area
+	- Stores:
+		* Method call frames
+		* Local variables
+		* Reference variables
+⚠️ All these areas exist inside RAM.
+
+
+
+Memory Representation of following code:-
+-----------------------------------
+	`public class Demo {
+
+		int i;
+  	  	static int j = 200;
+
+		void fun1() {
+			System.out.println("inside fun1 of Demo");
+		}
+		public static void main(String[] args) {
+
+			Demo d1 = new Demo();  // d1 refers to object
+			d1.i = 100;
+
+			System.out.println(d1.i); // 100
+
+			Demo d2 = d1;          // d2 refers to same object
+			System.out.println(d2.i); // 100
+    		}
+	}`
+
+
+Step 1: JVM & Class Loading
+	- When program starts:
+		* JVM is loaded into RAM
+		* ClassLoader loads Demo.class
+		* Method Area (Metaspace):
+			- Class structure of Demo
+			- Method bytecode: fun1(), main()
+			- Static variable:
+				`j = 200`
+			- Runtime Constant Pool
+
+	- No object is created yet
+
+Step 2: main() Method Execution Begins
+	`public static void main(String[] args)`
+
+	- Stack:
+		* A stack frame for main() is created
+		* Local variables inside main() will live here
+
+Step 3: Object Creation
+
+	`Demo d1 = new Demo()`
+	- What happens internally:
+		* new Demo():
+			- Memory allocated in Heap
+			- Instance variable initialized:
+				`i = 0 (default value)`
+				`d1:`
+			- Reference variable created in Stack
+			- Stores address of the object in Heap
+
+Memory Snapshot:
+
+Heap
+Demo Object
+------------
+i = 0
+
+
+Stack (main frame)
+d1 ---> Heap object
+
+
+Step 4: Assigning Instance Variable
+
+	`d1.i = 100;`
+	- JVM follows reference d1
+	- Updates i inside the heap object
+
+Heap:
+Demo Object
+------------
+i = 100
+
+Step 5: Printing Instance Variable
+
+	`System.out.println(d1.i);`
+	JVM:
+		- Uses d1 reference
+		- Fetches i from heap
+
+	Output:
+	100
+
+⚠️ No new memory allocation happens here (just read operation)
+
+Step 6: Reference Assignment
+	`Demo d2 = d1;`
+	What happens:
+		- New reference variable d2 created in Stack
+		- d2 stores same heap address as d1
+		- No new object is created
+
+Memory Snapshot:
+
+Stack
+d1 ---> Heap object
+d2 ---> Heap object
+
+
+Heap
+Demo Object
+------------
+i = 100
+
+
+Step 7: Access Through Second Reference
+	`System.out.println(d2.i);`
+	JVM:
+		- Uses d2 reference
+		- Accesses same heap object
+
+Output:
+100
+
+Step 8: End of main() Method
+	What happens:
+		- main() stack frame is destroyed
+		- d1 and d2 references are removed from Stack
+		- Heap object becomes eligible for Garbage Collection
+
+💡 JVM may or may not immediately delete the object — GC is automatic.
+
+
+
+
+Important Notes:
+	- One object can be referenced by multiple variables
+	- One reference variable cannot refer to multiple objects at the same time
+
+Garbage Collection Basics
+=======================
+	- An object becomes eligible for Garbage Collection when:
+	- No reference variable points to it
+	- JVM runs a separate thread called Garbage Collector
+	- GC automatically frees memory of unreferenced objects
+
+`Demo d1 = new Demo();`
+`d1.i = 100;`
+
+`Demo d2 = d1;`
+`d1 = null;`
+
+`System.out.println(d2.i); // 100`
+
+Object is NOT eligible for GC because d2 still references it
+
+NullPointerException
+===================
+	- If a reference variable is null and we try to:
+		* Access instance variables
+		* Call instance methods
+	- JVM throws NullPointerException (Runtime Exception)
+
+
+
+
+Ask Student:-
+===========
+public class Demo {
+	
+	int x = 100;
+	
+	Demo d1 = new Demo();
+
+	public static void main(String[] args) {
+		Demo d1 = new Demo();	
+	}
+
+}
+
+
+
+
+
+Student Task:-
+-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=
+
+1. Student Result Calculator:-
+   =========================
+
+Create a Student class with:
+- int rollNo
+- String name
+- int marks1, marks2, marks3
+- static variable collage name
+
+Create a ResultCalculator class with:
+- a static method to calculate total marks
+- a non-static method to calculate percentage and grade
+
+Rules
+- Grade logic using if-else
+- Set values directly 
+
+
+
+2. Bank Account Simulation:-
+   =======================
+
+Create a BankAccount class:
+- int accountNumber
+- String accountHolderName
+- double balance
+
+Methods:
+- deposit(amount)
+- withdraw(amount)
+- displayBalance()
+
+Use a loop to perform multiple transactions.
+
+ double[] transactions = {1000, -2000, -4000, 3000};//Do not need to create array just copy this array and use  for-each loop.
+
+Rules
+- Withdrawal only if sufficient balance (if)
+
+3. Library & Book:-
+   ==============
+
+Create:
+- Book class → bookId, bookName
+- Library class → libraryName, Book book
+Assign a Book object to Library from main method.
+
+
+4. Mobile & SIM:-
+   ============
+
+Create:
+- SIM class → number, network
+- Mobile class → brand, SIM sim
+- Create SIM object inside Mobile class.
+
+Rule
+- SIM should not exist without Mobile
+
+
+
