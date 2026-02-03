@@ -1,0 +1,328 @@
+Methods:- "A method is a block of code that performs a specific task and is executed when it is called."
+=======
+Types of methods:-
+----------------
+1. Concrete Method:-
+   ---------------
+A concrete method is a method that has a body (implementation).
+
+Syntax:-
+-------
+access_modifier return_type methodName(parameters) {
+    // method body (implementation)
+}
+
+Example:-
+-------
+public void display() {
+    System.out.println("This is a concrete method");
+}
+
+
+2. Abstract Method:-
+   ---------------
+An abstract method is a method that does NOT have a body.
+
+Syntax:-
+-------
+access_modifier abstract return_type methodName(parameters);
+
+Example:-
+--------
+public abstract void show();
+
+
+
+Different ways (types) of creating Concrete Methods:-
+===================================================
+
+1. Method Without Parameters & Without Return Type
+---------------------------------------------------
+Example:-
+void print(){
+		System.out.println("Hello Students");
+	}
+
+2. Method With Parameters & Without Return Type
+------------------------------------------------
+Example:-
+void printName(String name){
+		System.out.println("Hello "+name);
+	}
+
+3. Method Without Parameters & With Return Type
+-----------------------------------------------
+Example:-
+int findRoll(){
+		return 10;
+	}
+	
+public static void main(String[] args) {
+	Main mn = new Main();
+	int roll = mn.findRoll();
+	System.out.println(roll);
+}
+
+4. Method With Parameters & With Return Type
+--------------------------------------------
+Example:-
+int add(int a, int b){
+		return a+b;
+	}
+	
+public static void main(String[] args) {
+	Main mn = new Main();
+	int sum = mn.add(10, 20);
+	System.out.println(sum);
+}
+
+Pass by value or Pass by reference:-
+==================================
+Java is strictly PASS BY VALUE.
+There is NO pass by reference in Java.
+
+
+5. Passing and Modifying Object Inside Method:-
+--------------------------------------------
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Student s = new Student();
+		s.name = "Ram";
+		s.roll= 1;
+		
+		changeName(s);
+		
+		System.out.println(s.name);
+	}
+	
+	static void changeName(Student s) {
+		 s.name = "Shyam";
+	}
+}
+
+6. Passing Object and Returning Object:-
+--------------------------------------
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Student s = new Student();
+		s.name = "Ram";
+		s.roll= 1;
+		System.out.println(s.name);
+
+		s =changeName(s);		
+		System.out.println(s.name);
+	}
+	
+	static Student changeName(Student s) {
+		 s = new Student();
+		 s.name = "Shyam";
+		 
+		 return s;
+	}
+}
+
+7. Passing Multiple Objects to a Method:-
+---------------------------------------
+public class Student {
+	
+	String name;
+}
+public class Main {
+
+	public static void main(String[] args) {
+
+		Student s1 = new Student();
+		s1.name = "Ram";
+
+		Student s2 = new Student();
+		s2.name = "Shyam";
+		System.out.println(s1.name);
+		System.out.println(s2.name);
+		
+		swapName(s1, s2);
+
+		System.out.println(s1.name);
+		System.out.println(s2.name);		
+	}
+
+	static void swapName(Student s1, Student s2) {
+		String name = s1.name;
+		s1.name = s2.name;
+		s2.name = name;
+	}
+}
+
+8. Passing Varargs (variable arguments):-
+---------------------------------------
+package com.chitkara;
+
+public class Student {
+	String name;
+}
+class Demo{
+	public static void main(String[] args) {
+		Student s1 = new Student();
+		s1.name  = "Ram";
+		Student s2 = new Student();
+		s2.name  = "Rahul";
+		Student s3 = new Student();
+		s3.name  = "Ramesh";
+		
+		new Demo().printNumber(s1,s2,s3);
+	}
+	void printNumber(Student ...nums) {
+		for(Student x:nums) {
+			System.out.println(x.name);
+		}
+	}
+	
+
+}	
+
+Polymorphism:-
+=============
+Polymorphism is a fundamental concept in Object-Oriented Programming (OOP), which means "many forms." In Java, it allows the same method or function to behave differently based on the context. This ability to define multiple behaviors for the same method name in the same or different classes is what makes polymorphism powerful and flexible.
+
+a. Static Polymorphism (Compile-Time Polymorphism)(Method Overloading):-
+----------------------------------------------------------------------
+Compile-time polymorphism is a type of polymorphism where the method call is resolved at compile time, not runtime.
+					or
+Method overloading means defining multiple methods with the same name but different parameter lists in the same class.
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Main mn = new Main();
+		mn.add(10, 10.0);
+	}
+	
+	void add(int x, int y) {
+		System.out.println(x+y); 
+		System.out.println("Inside int method");
+		
+	}
+	
+	void add(double x, double y) {
+		System.out.println(x+y);
+		System.out.println("Inside double method");
+	}
+}
+
+
+Ambiguity:- 
+----------
+* Ambiguity occurs when the compiler finds more than one equally suitable overloaded method and cannot decide which one to call.
+* Ambiguity is a compile-time error.
+* If the compiler cannot find ONE most specific method, it throws an ambiguity error.
+ 
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Main mn = new Main();
+		mn.add(10, 10);
+		
+	}
+	
+	void add(double x, int y) {
+		System.out.println(x+y); 
+		System.out.println("Inside int method");
+		
+	}
+	
+	void add(int x, double y) {
+		System.out.println(x+y);
+		System.out.println("Inside double method");
+	}
+}
+
+* Ask them to print:- System.out.println(null).
+
+Explain Ambiguity problem related to `println()` method:-
+-------------------------------------------------------
+* Ambiguity occurs in println(null) because println() is an overloaded method, and null is applicable to multiple reference-type overloads (String, char[], Object). Since the compiler cannot determine the most specific method, it results in a compile-time ambiguity error.
+
+public class Main {
+
+	public static void main(String[] args) {
+		System.out.println((Student)null); //Solution:- Provide specific type of null.
+		
+}
+
+
+
+Which method will be called:-
+----------------------------
+1. 
+class Test {
+
+    void show(String s) {
+        System.out.println("String");
+    }
+
+    void show(Object o) {
+        System.out.println("Object");
+    }
+
+    public static void main(String args[]){
+	Test t = new Test();
+ 	t.show(null);
+    }	
+
+}
+
+
+Note:-In method overloading, the compiler always chooses the MOST SPECIFIC method.
+----
+
+2.
+class Test {
+    void show(String s) {
+        System.out.println("String");
+    }
+
+    void show(Integer i) {
+        System.out.println("Integer");
+    }
+    public static void main(String args[]){
+	Test t = new Test();
+ 	t.show(null);
+    }
+
+}
+
+
+
+b. Dynamic Polymorphism (Run-Time Polymorphism)(Method Overriding):-
+====================================================================
+Dynamic polymorphism occurs when the method to be invoked is determined at runtime, based on the object type.
+
+
+
+Student Task:- 
+============
+
+Task 1. Create a class `MathUtility` with the following methods:
+
+	* `add(int a, int b)` → returns sum
+	* `subtract(int a, int b)` → returns difference
+	* `multiply(int a, int b)` → returns product
+	* `divide(int a, int b)` → returns quotient
+
+Task 2. Create a class `EmployeeSalary` with overloaded `calculateSalary()` methods:
+
+	a. `calculateSalary(int basicSalary)`
+		* Returns basic salary
+
+	b. `calculateSalary(int basicSalary, int bonus)`
+		* Returns salary + bonus
+
+	c. `calculateSalary(int basicSalary, int bonus, int taxPercentage)`
+		* Returns final salary after tax deduction on your basic salary
+
