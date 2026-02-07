@@ -1,0 +1,505 @@
+Constructor:- 
+===========
+It is a special type of non-static method that is executed automatically only when an object is created.
+					OR
+
+In Java, a constructor is a special block of code that is called when an object of a class is created. It initializes the object and sets its default values.
+
+
+
+Note:- If you don’t write a constructor, Java automatically creates a default one.
+-------
+Types of Constructor:-
+=====================
+- Default constructor:-
+-----------------------
+	A default constructor is a constructor created by the compiler if we do not define any constructor(s) for a class. 	
+
+- No-argument constructor:-
+--------------------------
+public class Student {
+	String name;
+	int rollNumber;
+	String collegeName;
+	
+	
+	public Student() {
+		System.out.println("Inside no-argument constructor......");
+	}
+}
+
+
+- Parameterized Constructor:-
+---------------------------
+public class Student {
+	String name;
+	int rollNumber;
+	String collegeName;
+
+	public Student(String name, int rollNumber, String collegeName) {
+		this.name = name;
+		this.rollNumber = rollNumber;
+		this.collegeName = collegeName;
+		System.out.println("Inside Parameterized Constructor.....");
+	}
+}
+
+Constructor overloading:-
+=======================
+package com.chitkara;
+
+public class Student {
+	String name;
+	int rollNumber;
+	String collegeName;
+	
+	public Student() {
+		System.out.println("Inside no-argument constructor....");
+	}
+	public Student(String name) {
+		this.name = name;
+		System.out.println("Inside Constructor where only passing one argument `name`.....");
+	}
+	public Student(String name, int rollNumber) {
+		this.name = name;
+		this.rollNumber = rollNumber;
+		System.out.println("Inside Constructor where passing two argument `name` and `roll`.....");
+	}
+	public Student(String name, int rollNumber, String collegeName) {
+		this.name = name;
+		this.rollNumber = rollNumber;
+		this.collegeName = collegeName;
+		System.out.println("Inside Parameterized Constructor.....");
+	}
+}
+
+
+
+
+`this` keyword:-
+================
+public class Student {
+	String name;
+	int rollNumber;
+	String collegeName;
+	
+	public Student() {
+		System.out.println("Inside no-argument constructor....");
+	}
+	void printThis() {
+		System.out.println(this);
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Student st = new Student();
+		System.out.println(st);//com.chitkara.Student@24d46ca6
+		
+		st.printThis();//com.chitkara.Student@24d46ca6
+	}
+}
+
+
+Initialization using this key word:-
+-----------------------------------
+public class Student {
+   int roll;
+   String name;
+   int marks;
+   Student(int roll, String name, int marks){
+       this.roll = roll;
+       this.name = name;
+       this.marks = marks;
+   }
+   void show(){
+       System.out.println(roll + " " + name + " "+ marks);
+   }
+}
+Note: The ‘this’ keyword can not be used inside the static area.
+-----
+
+Student Task:-
+============
+Task 1: Inventory Item Tracker
+=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Create a class Item with:
+	* String itemName
+	* int quantity
+	* double price
+
+The constructor takes all parameters.
+Use this for assigning instance variables.
+Method calculateTotalValue() returns quantity * price.
+Display item info and total value for 2–3 objects in main().
+
+Example Output:
+--------------
+
+Item: Laptop, Quantity: 5, Price: $1200
+Total Value: $6000
+
+Task 2: Smart Device Initialization
+=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Create a class SmartDevice with:
+	* String name
+	* String type
+	* boolean isOn
+
+Constructor initializes all fields using this.
+
+Methods:
+	* turnOn() → sets isOn = true
+	* turnOff() → sets isOn = false
+	* displayStatus() → prints name, type, and current status
+
+In main(), create 2–3 devices and demonstrate turning them on/off.
+
+Example Output:
+-----------------
+Device: Living Room Light, Type: LED, Status: ON
+
+
+Constructor chaining:-
+====================
+public class Student {
+	String name;
+	int roll;
+	String collegeName;	
+	public Student() {	
+		this("Unknown");
+		System.out.println("inside no-argument constructor...");
+	}
+	public Student(String name) {
+		this(name, 1);
+	}
+	public Student(String name, int roll) {
+		this(name,roll, "Not-known");
+
+	}
+	public Student(String name, int roll, String collegeName) {
+		this.name = name;
+		this.roll = roll;
+		this.collegeName = collegeName;
+	}
+	void printDetails() {
+		System.out.println(name+"\n"+
+							roll+"\n"+
+							collegeName);
+		System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
+	}
+	
+	
+}
+
+public class Main {
+    public static void main(String[] args) { 
+    	Student s1 = new Student();
+    	s1.printDetails();
+    	
+    	Student s2 = new Student("Rahul");
+    	s2.printDetails();
+    	
+    	Student s3 = new Student("Nitish",4);
+    	s3.printDetails();
+    	
+    	Student s4 = new Student("Ram",1,"Chitkara");
+    	s4.printDetails();
+    	
+    	
+    	
+    }
+}
+
+Student Task:-
+============
+1. Vehicle Registration System with Constructor Chaining:-
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+- Create a class Vehicle with the following attributes:
+	* String brand
+	* String model
+	* int year
+	* String registrationNumber
+
+- Implement four constructors:
+	* Default constructor → sets default brand/model/year/registration.
+	* Constructor with brand → sets brand, other defaults.
+	* Constructor with brand and model → sets brand and model, other defaults.
+	* Constructor with brand, model, year, registration → initializes all fields.
+	* Implement constructor chaining in first three constructor one by one.
+		* for constructor chaining:-
+			- brand  = "Unknown-brand"
+			- model = "Unknown-model"
+			- year  = 2023
+			- Registration = "Not-Assigned"
+
+- Use constructor chaining (this()) to avoid duplicating initialization code.
+- Implement a method displayInfo() to print all vehicle details.
+- In main(), create 2–3 Vehicle objects using different constructors and display their info.
+
+
+2. Create a class with name `Student` and inside that class create a `private` no-argument constructor of student class and create some instance variable like  name, roll and a method called `printStudentDetail()` and create a object of that Student class in main method of Main class. Check if you will able to do that. 
+
+Solution:- We can create object using static method in Student class and call that method using class name.
+--------
+public class Employee {
+	
+	int empId;
+	String name;
+	
+	private Employee() {
+		
+	}
+	
+	static Employee getObject() {
+		Employee emp = new Employee();
+		return emp;
+	}
+
+}
+
+public class Main {
+public static void main(String[] args) {
+	Employee emp = Employee.getObject();
+	
+}
+}
+
+Java Bean class:-
+===============
+Rules:-
+------
+- Class should be public.
+- Members of class (instance variables) should be private.
+- There should be a no-argument constructor.
+- Argument constructor is optional.
+- getter-setter method for instance variable.
+
+
+
+Creation:-
+---------
+package com.masai;
+
+public class Student {
+	private String name;
+	private int rollNumber;
+	private String collegeName;
+	
+	public Student() {
+	}
+
+//	Optional (Argument Constructor)
+	public Student(String name, int rollNumber, String collegeName) {
+		this.name = name;
+		this.rollNumber = rollNumber;
+		this.collegeName = collegeName;
+	}
+
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getRollNumber() {
+		return rollNumber;
+	}
+	public void setRollNumber(int rollNumber) {
+		this.rollNumber = rollNumber;
+	}
+
+	public String getCollegeName() {
+		return collegeName;
+	}
+	public void setCollegeName(String collegeName) {
+		this.collegeName = collegeName;
+	}
+	
+	//Optional Method
+	public String printDetails() {
+		return "Student [name=" + name + 
+				", rollNumber=" + rollNumber + 
+				", collegeName=" + collegeName + "]";
+	}
+	
+	
+}
+
+
+Student Task:-
+=============
+- Create a Java class named EmployeeBean
+- Add the following private variables:
+	* empId → int
+	* empName → String
+	* department → String
+	* salary → double
+- Add a public no-argument constructor
+- Generate public getter and setter methods for all variables
+
+
+Scanner Class:-
+==============
+
+public class Main {
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("Please provide details:-");
+		
+		System.out.println("Provide roll number..");
+		int roll = sc.nextInt();
+		sc.nextLine();
+		
+		System.out.println("Provide full name...");
+		String name = sc.nextLine();
+		
+		System.out.println("Provide your city name...");
+		String city = sc.next();
+		
+		System.out.println("Provide percentage..");
+		double percentage = sc.nextDouble();
+		
+		System.out.println("If you available at your city..");
+		boolean available = sc.nextBoolean();
+		
+		System.out.println(roll+"\n"+
+							name+"\n"+
+							city+"\n"+
+							percentage+"\n"+
+							available);
+		sc.close();
+	}
+}
+
+
+
+hasNextInt():-
+============
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc  = new Scanner(System.in);
+		System.out.println("Provide Numbers...");
+		int sum = 0;
+		while(sc.hasNextInt()) {
+			int x = sc.nextInt();
+			sum+=x;
+			System.out.println(sum);
+			if(x==-1)
+				break;
+		}
+		System.out.println("End of Loop....");
+		
+	}	
+}
+
+
+
+| Pehle input    | Next input   | `nextLine()` chahiye? |
+| -------------- | ------------ | --------------------- |
+| `nextInt()`    | `nextLine()` | ✅ YES                |
+| `nextDouble()` | `nextLine()` | ✅ YES                |
+| `nextInt()`    | `next()`     | ❌ NO                 |
+| `nextLine()`   | `nextLine()` | ❌ NO                 |
+| `next()`       | `nextLine()` | ❌ NO                 |
+
+
+Student Task:-
+============
+Create a calculator
+======================
+- Create a Calculator class:-
+	- Implement four methods:
+		* add(double a, double b)
+		* subtract(double a, double b)
+		* multiply(double a, double b)
+		* divide(double a, double b)
+
+- In main():
+	Display a menu to the user:
+	1. Add
+	2. Subtract
+	3. Multiply
+	4. Divide
+	5. Exit
+
+
+- Take choice input from the user using Scanner.
+- Take two numbers as input.
+- Call the corresponding method based on the user's choice using a switch-case statement.
+- Loop until the user chooses Exit.
+- close the scanner class using scanner.close();
+Solution:-
+=========
+package com.chitkara;
+
+public class Calculator {
+	double add(double x, double y) {
+		return x + y;
+	}
+	double subtract(double x, double y) {
+		return x - y;
+	}
+	double multiply(double x, double y) {
+		return x * y;
+	}
+	double devide(double x, double y) {
+		if (y == 0) {
+			System.out.println("Can not devide by 0.");
+			return 0;
+		}
+		return x / y;
+	}
+}
+
+package com.chitkara;
+import java.util.Scanner;
+public class Main {
+	
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		Calculator c = new Calculator();
+		int choice;
+		do {
+			System.out.println("Please provide your choice:-");
+			System.out.println("=============================");
+			System.out.println("1. Add");
+			System.out.println("2. Subtract");
+			System.out.println("3. Multiply");
+			System.out.println("4. Devide");
+			System.out.println("5. Exit");
+			
+			choice = sc.nextInt();
+			if(choice >=1 && choice <=4) {
+				System.out.println("Inter first Number:-");
+				double x = sc.nextDouble();
+				
+				System.out.println("Inter second Number:-");
+				double y = sc.nextDouble();
+				System.out.println("***********************************************");
+				switch (choice) {
+				case 1->System.out.println("Result:- "+c.add(x,y));
+				case 2->System.out.println("Result:- "+c.subtract(x,y));
+				case 3->System.out.println("Result:- "+c.multiply(x,y));
+				case 4->System.out.println("Result:- "+c.devide(x,y));
+				}
+				
+				
+			}else if(choice !=5){
+				System.out.println("Invalid choice..");
+			}
+			
+		} while (choice !=5);
+		
+		System.out.println("Thanks for using...");
+		sc.close();
+		
+	}
+}
+
+
+************************************************************************************************************************************************************
+************************************************************************************************************************************************************
