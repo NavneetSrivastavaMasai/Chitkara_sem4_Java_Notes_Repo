@@ -1,0 +1,174 @@
+Arrays:-
+========
+In programming, we often need to store multiple values of the same type.
+Instead of creating many separate variables, Java provides arrays, which allow us to store multiple values in a single variable.
+
+Static and Dynamic Array:-
+-----------------------
+In Java, arrays are static because their size is fixed when they are created using the new keyword. Once created, their size cannot be changed during program execution, so they are not dynamic.
+
+Basic Syntax:-
+------------
+int arr[];
+
+
+Fundamentals of Arrays:-
+----------------------
+1. Object Nature
+2. Type Safety
+3. Indexing (Zero-Based)
+4. Size Constraint
+
+Characteristics of Arrays:-
+-------------------------
+
+1. Memory Address
+2. Ordered Collection
+3. Default Values
+4. Array Length
+5. Boundary Exception
+
+Ways to Create an Array:-
+-----------------------
+Method 1: Using a new Keyword
+Syntax:- Datatype VariableName [] = new Datatype [Size]; 
+
+Example:-
+double arr[] = new double[5];
+
+
+Method 2: Using Curly Brackets
+int arr1[] = {1,2,3,4,5,6,7,8};
+
+
+Accessing and Iterating Elements
+================================
+1. Accessing by Index
+
+int arr1[] = {1,2,3,4,5,6,7,8};
+		System.out.println(arr1[0]);
+		System.out.println(arr1[arr1.length-1]);
+
+
+2. Using the Standard for Loop
+public class Main {
+	public static void main(String[] args) {
+
+		int arr1[] = {1,2,3,4,5,6,7,8};
+		for(int i=0; i<arr1.length;i++) {
+			System.out.println(arr1[i]);
+		}
+	}
+}
+
+
+3. Using Enhanced for-each Loop
+public class Main {
+	public static void main(String[] args) {
+
+		int arr1[] = {1,2,3,4,5,6,7,8};
+		for(int e:arr1) {
+			System.out.println(e);
+		}
+	}
+}
+
+
+
+Example:-
+========
+Storing Student class in Array
+-----------------------------
+package com.chitkara;
+
+public class Student {
+	int rollNumber;
+	String name;
+	String collegeName;
+	int marks;
+	public Student(int rollNumber, String name, String collegeName, int marks) {
+		this.rollNumber = rollNumber;
+		this.name = name;
+		this.collegeName = collegeName;
+		this.marks = marks;
+	}
+	public String PrintDetails() {
+		return "Student [rollNumber=" + rollNumber 
+						+ ", name=" + name 
+						+ ", collegeName=" + collegeName 
+						+ ", Marks= "+marks+"]";
+	}
+	
+	
+}
+
+
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Student s1 = new Student(1, "Krish","Chitkara",90);
+		Student s2 = new Student(2, "Shiwang","Chitkara",85);
+		Student s3 = new Student(3, "Shivam","Chitkara",88);
+		Student s4 = new Student(4, "Sargam","Chitkara",10);
+		Student s5 = new Student(5, "Ishan","Chitkara",90);
+		
+		Student arr[] = new Student[5];
+		arr[0]=s1;
+		arr[1]=s2;
+		arr[2]=s3;
+		arr[3]=s4;
+		arr[4]=s5;
+		
+		for(Student x:arr) {
+			System.out.println(x.PrintDetails());
+		}
+		
+		printStudentDetailsMoreThanAGrade(arr);
+		
+	}
+	static void printStudentDetailsMoreThanAGrade(Student []arr) {
+		for(Student x:arr) {
+			if(x.marks>=90) {
+				System.out.println(x.PrintDetails());
+			}
+		}
+	}
+}
+
+
+Student Task:-
+=============
+TASK 1:
+======= 
+Student Management Using
+Requirements
+	- Create a bean class Student
+		* int id
+		* String name
+		* double marks
+	- Apply:
+		* Constructor to initialize values
+	- In Main class:
+		* Create an array of Student objects (size 5)
+		* Store student details in the array
+		* Display all student details
+		* Display students with marks > 60
+
+TASK 2:
+=======
+Employee Salary Processing
+Requirements
+	- Create a bean class Employee
+		* int empId
+		* String empName
+		* double salary
+	- Implement:
+		* Parameterized constructor
+		* Method calculateBonus()
+			- 10% bonus if salary > 50,000
+			- 5% otherwise
+	- In Main class:
+		* Store 4 employees in an array
+		* Calculate and print final salary of each employee
+
