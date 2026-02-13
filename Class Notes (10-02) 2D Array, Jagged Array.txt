@@ -1,0 +1,161 @@
+
+2D Array:-
+--------
+A 2D array is an array of arrays where data is stored in rows and columns, like a table or matrix.
+Creation:-
+int mat[][] = new int [3][4];
+int [][] mat1= {
+		{1,2,3,4},
+		{5,6,7,8},
+		{9,10,11,12}
+	};
+		
+
+
+
+Iteration:-
+--------
+
+		System.out.println(mat1[0][1]);
+		System.out.println(mat1[2][3]);
+		
+		for(int i=0; i<mat1.length; i++) {
+			for(int j=0; j<mat1[0].length; j++) {
+				System.out.println(mat1[i][j]);
+			}
+		}
+
+
+
+Example:-
+--------
+public class Main {
+	public static void main(String[] args) {	
+		int mat[][] = new int [3][4];
+		
+		Scanner s = new Scanner(System.in);
+		
+		for(int i=0; i<mat.length; i++) {
+			for(int j=0; j<mat[0].length; j++) {
+				System.out.println("Provide value for matrix:-");
+				mat[i][j] = s.nextInt();
+			}
+		}
+		for(int i=0; i<mat[0].length; i++) {
+			for(int j=mat.length-1; j>=0; j--) {
+				System.out.print(mat[j][i]+" ");
+			}
+			System.out.println();
+		}
+		
+	}
+}
+
+Input part:-
+-----------
+Provide value for matrix:-
+1
+Provide value for matrix:-
+2
+Provide value for matrix:-
+3
+Provide value for matrix:-
+4
+Provide value for matrix:-
+5
+Provide value for matrix:-
+6
+Provide value for matrix:-
+7
+Provide value for matrix:-
+8
+Provide value for matrix:-
+9
+Provide value for matrix:-
+10
+Provide value for matrix:-
+11
+Provide value for matrix:-
+12
+
+Given input:-
+-----------
+1 2 3 4
+5 6 7 8
+9 10 11 12
+
+
+Output:-
+-------
+9 5 1 
+10 6 2 
+11 7 3 
+12 8 4 
+
+
+Jagged Array:-
+------------
+A jagged array is a 2D array where each row can have a different number of columns (uneven row sizes).
+
+Example 1:-
+---------
+public class Main {
+	public static void main(String[] args) {	
+		int jaggadMat[][] = {
+				{1,2,3,4},
+				{7,3,6},
+				{1},
+				{2,3,4,5,6,7,8,9}
+		};
+		
+		for(int i=0; i<jaggadMat.length; i++) {
+			for(int j=0; j<jaggadMat[i].length; j++) {
+				System.out.print(jaggadMat[i][j]+" ");
+			}
+			System.out.println();
+		}
+		
+	}
+}
+
+Output:-
+-------
+1 2 3 4 
+7 3 6 
+1 
+2 3 4 5 6 7 8 9
+
+Example 2:-
+-----------
+package com.chitkara;
+
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {		
+		int [][] mat1 = new int[5][];
+		int num = 1;
+		for(int i=0; i<mat1.length; i++) {
+			int [] arr = new int[i+1];
+			mat1[i] = arr;
+			for(int j=0; j<mat1[i].length; j++) {
+				mat1[i][j] = num;
+				num++;
+			}
+		}
+		for(int i=0; i<mat1.length; i++) {
+			for(int j=0; j<mat1[i].length; j++) {
+				System.out.print(mat1[i][j]+" ");
+			}
+			System.out.println();
+		}
+		
+	}
+}
+Output:-
+--------
+1 
+2 3 
+4 5 6 
+7 8 9 10 
+11 12 13 14 15
