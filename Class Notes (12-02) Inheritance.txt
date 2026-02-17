@@ -1,0 +1,690 @@
+Inheritance:-
+===========
+"Inheritance is a feature in Java where one class acquires the properties (variables) and behaviors (methods) of another class."
+
+public class Animal {
+	void eat() {
+		System.out.println("Animal is eating...");
+	}
+}
+public class Dog extends Animal{
+	void sound() {
+		System.out.println("Dog barks...");
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Dog d = new Dog();
+		d.eat();
+	}
+}
+
+
+Types of Inheritance:-
+---------------------
+
+1. Single Inheritance:-
+-----------------------
+public class Animal {
+	void eat() {
+		System.out.println("Animal is eating...");
+	}
+}
+public class Dog extends Animal{
+	void sound() {
+		System.out.println("Dog barks...");
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Dog d = new Dog();
+		d.eat();
+	}
+}
+
+Output:-
+-------
+Animal is eating...
+Dog barks...
+
+2. Multilevel Inheritance:-
+------------------------
+public class Animal {
+	void eat() {
+		System.out.println("Animal is eating...");
+	}
+}
+public class Cat extends Animal{
+	void climbingTree() {
+		System.out.println("Climbing on tree....");
+	}
+}
+public class Tiger extends Cat{
+	void sound() {
+		System.out.println("Tiger roars....");
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Tiger t = new Tiger();
+		t.eat();
+		t.climbingTree();
+		t.sound();
+	}
+}
+
+Output:-
+------
+Animal is eating...
+Climbing on tree....
+Tiger roars....
+
+3. Hierarchical Inheritance:-
+----------------------------
+public class Animal {
+	void eat() {
+		System.out.println("Animal is eating...");
+	}
+}
+public class Dog extends Animal{
+	void sound() {
+		System.out.println("Dog barks...");
+	}
+}
+
+public class Cat extends Animal{
+	void climbingTree() {
+		System.out.println("Climbing on tree....");
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Dog d = new Dog();
+		d.eat();
+		
+		Cat c = new Cat();
+		c.eat();
+	}
+}
+
+Output:-
+------
+Animal is eating...
+Animal is eating...
+
+
+4. Multiple Inheritance (Not Supported with Classes):- 
+-----------------------------------------------------
+Not possible in java due to ambiguity issue....child class extends two classes gets confused which class method I have to call.
+
+5. Hybrid Inheritance:-
+---------------------
+
+
+Student Task Description:-
+------------------------
+- Create a class Employee
+	* Variable: name
+	* Method: work() → prints "Employee is working"
+
+- Create class Developer that extends Employee
+	* Method: writeCode() → prints "Developer writes code"
+
+- Create class SeniorDeveloper that extends Developer
+	* Method: reviewCode() → prints "Senior Developer reviews code"
+
+- Create class Manager that extends Employee
+	* Method: manageTeam() → prints "Manager manages team"
+
+- In main() Method
+	* Create object of SeniorDeveloper
+		* Call:
+			- work()
+			- writeCode()
+			- reviewCode()
+	* Create object of Manager
+		* Call:
+			- work()
+			- manageTeam()
+
+
+super Keyword:-
+==============
+--super keyword will represent the immediate parent class object.
+
+public class Employee {
+	String name;
+	int empId;
+
+	public Employee(String name, int empId) {
+		this.name = name;
+		this.empId = empId;
+	}
+
+	void working() {
+		System.out.println("Employee is working...");
+	}
+}
+
+public class Developer extends Employee{
+	
+	int salary;
+	
+	public Developer(int salary, String name, int empId) {
+		super(name,empId);		
+		this.salary = salary;
+	}
+
+	void writeCode() {
+		super.working();
+		String name = super.name;
+		System.out.println("Writing code...");
+	}
+}
+
+
+
+Access Modifiers
+================
+- Private -- Access Inside class only
+- Default -- Access Inside package only
+- Protected -- Access Inside package and subclass only
+- Public -- Access everywhere 
+
+Help to control visibility:-
+-------------------------
+- Class
+- Methods
+- Constructors
+- Variables
+
+
+Example:-
+--------
+package com.college;
+public class Student {
+	public String name;
+	protected String rollNumber;
+	double marks;
+	private String accountNumber;
+	protected void show() {
+		System.out.println("Inside Student class..");
+	}
+}
+
+
+
+package com.foodOutlets;
+import com.college.Student;
+public class Dominos {
+	
+	void getName(Student s) {
+		System.out.println(s.name);
+	}
+
+}
+
+
+package com.forms;
+import com.college.Student;
+public class GovermentForms extends Student{
+	void fillingForm(Student s) {
+		System.out.println(super.name);
+		System.out.println(super.rollNumber);
+	}
+	void showDetails() {
+		super.show();
+	}
+}
+
+
+package com.forms;
+public class Main {
+	public static void main(String[] args) {
+		
+		GovermentForms g1 = new GovermentForms();
+		g1.showDetails();
+
+	}
+}
+
+
+
+Class :- Can only use default or Public access Modifier.
+
+
+Method Overriding:-
+==================
+1. Same Method Name
+The method name must be identical.
+ 2. Same Parameters
+Number and type of parameters must be the same.
+3. Same Return Type
+Return type must be same.
+4. Access Modifier Rule
+The child class cannot reduce visibility.
+
+package com.chitkara;
+
+public class Animal {
+	
+	public void sound() {
+		System.out.println("Animals making sound....");
+	}
+}
+package com.chitkara;
+
+public class Dog extends Animal {
+	@Override
+	public void sound() {
+		System.out.println("Dog Barks...");
+	}
+}
+package com.chitkara;
+
+public class Cat extends Animal{
+	@Override
+	public void sound() {
+		System.out.println("Cat Meow....");
+	}
+	
+	void eat() {
+		System.out.println("Cat is eating...");
+	}
+
+}
+package com.chitkara;
+
+public class Tiger extends Cat{
+	
+	@Override
+	public void sound() {
+		System.out.println("Tiger roars...");
+	}
+	
+	@Override
+	void eat() {
+		System.out.println("Tiger only eat meat...");
+	}
+}
+
+
+We can store Child Class Object in Parent class reference.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Inheritance:- create a private constructor and use inheritance on that class.
+
+Runtime Polymorphism:-
+---------------------
+1. Inheritance
+2. Method Overriding
+3. Dynamic Method Dispatch
+
+Example:-
+--------
+package com.chitkara;
+
+public class Animal {
+	
+	void sound()
+	{
+		System.out.println("Animal making sound...");
+	}
+}
+package com.chitkara;
+
+public class Dog extends Animal {
+	@Override
+	void sound() {
+		System.out.println("Dog barks...");
+	}
+}
+package com.chitkara;
+
+public class Cat extends Animal {
+	@Override
+	void sound() {
+		System.out.println("Cat Meow...");
+	}
+	
+	void eating() {
+		System.out.println("Eats all type of food...");
+	}
+}
+package com.chitkara;
+
+public class Tiger extends Cat {
+
+	@Override
+	void sound() {
+		System.out.println("Tiges roars...");
+	}
+
+	@Override
+	void eating() {
+		System.out.println("Eats only meat....");
+	}
+	
+	void climbTree() {
+		System.out.println("Tiger is climbing on tree..");
+	}
+}
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+
+		Animal a = new Animal();
+		makeSound(a);
+
+		a = new Dog();
+		makeSound(a);
+
+		a = new Cat();
+		makeSound(a);
+
+		a = new Tiger();
+		makeSound(a);
+
+	}
+
+	public static void makeSound(Animal a) {
+		a.sound();
+	}
+}
+
+Output:-
+-------
+Animal making sound...
+Dog barks...
+Cat Meow...
+Tiges roars...
+
+
+
+
+Some important methods of Object class used in other user defined classes as inheritance:-
+=========================================================================================
+1. toString() method..
+=-=-=-=-=-=-=-=-=-=-=-=
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Student s1 = new Student(1,"Raghav", "Chitkara");
+		System.out.println(s1);
+		
+	}
+}
+
+package com.chitkara;
+public class Student {
+	int rn;
+	String name;
+	String collegeName;
+	
+	public Student(int rn, String name, String collegeName) {
+		this.rn = rn;
+		this.name = name;
+		this.collegeName = collegeName;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [rn=" + rn + ", name=" + name + ", collegeName=" + collegeName + "]";
+	}
+	
+
+}
+
+2. equals() method...
+-=-=-=-=-=-=-=-=-=-=-
+package com.chitkara;
+
+public class Student {
+	int rn;
+	String name;
+	String collegeName;
+	
+	public Student(int rn, String name, String collegeName) {
+		this.rn = rn;
+		this.name = name;
+		this.collegeName = collegeName;
+	}
+	
+	@Override
+	public boolean equals(Object s) {
+		Student s1 = (Student)s;
+		return this.rn == s1.rn;
+	}
+
+}
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Student s1 = new Student(1,"Raghav", "Chitkara");
+		Student s2 = new Student(1,"Raghav", "Chitkara");
+		
+		System.out.println(s1.equals(s2));
+
+		
+	}
+}
+
+Output:-
+------
+true
+
+
+Student Task:-
+============
+Banking System
+	- Parent
+		* BankAccount
+		* Fields:
+			- accountNumber
+			- balance
+		* Methods:
+			- deposit()
+			- withdraw()
+			- calculateInterest() (default logic -- 0.02%)
+	- Child classes
+		* SavingsAccount 
+		* CurrentAccount  
+	- Rules
+		* Override calculateInterest (for both child classes--- for SavingAccount = 0.05% and for CurrentAccount = 0.01%).
+		* Use super.balance where needed.
+	- Show runtime polymorphism:
+		* BankAccount acc = new SavingsAccount();
+		* acc.calculateInterest();
+
+
+
+
+instanceof Operator:-
+===================
+✔ Object belongs to the same class
+✔ Object belongs to child class (inheritance)
+✔ Object implements an interface
+
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Animal a = new Animal();
+		System.out.println(a instanceof Animal);
+		
+		Animal a1 = new Dog();
+		System.out.println(a1 instanceof Dog);		
+	
+		Animal a2 = new Cat();
+		System.out.println(a2 instanceof Cat);
+		
+		Animal a3 = new Tiger();
+		System.out.println(a3 instanceof Tiger);
+		
+		
+		
+	}
+
+}
+
+Output:-
+-------
+true
+true
+true
+true
+
+Object Down casting:-
+===================
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Animal a = new Cat();
+		if(a instanceof Dog) {
+			Dog d = (Dog)a;
+			d.sound();	
+		}else if(a instanceof Cat) {
+			Cat c = (Cat)a;
+			c.climbingTree();
+		}else {
+			System.out.println("Invalid Object Down casting...");
+		}
+		
+	}
+
+}
+
+Method Hiding:- Static methods can not be override.......
+=============
+Example:-
+-------
+package com.chitkara;
+
+public class Animal {
+	void eat() {
+		System.out.println("Animal is eating....");
+	}
+	public static void show() {
+		System.out.println("Seeing an animal....");
+	}
+}
+package com.chitkara;
+
+public class Dog extends Animal{
+	void sound() {
+		System.out.println("Dog barks...");
+	}
+	
+	public static void show() {
+		System.out.println("Seeing a dog...");
+	}
+
+}
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Animal a = new Dog();
+		a.show();
+		
+		Dog d = (Dog)a;
+		d.show();
+	}
+}
+
+Output:-
+------
+Seeing an animal....
+Seeing a dog...
+
+Final keyword:-
+=============
+variable:-
+-=-=-=-=-=-
+✔ can be assigned only once
+❌ cannot be reassigned later
+
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Student s = new Student();
+		
+		System.out.println(s.aadhaar);
+		
+		s.aadhaar = "1234567889";//Error-- can not reasigned
+	}
+
+}
+package com.chitkara;
+
+public class Student {
+	
+	final String aadhaar = "429343030870";
+	
+	
+}
+
+
+Method:-
+=-=-=-=-
+❌ cannot be overridden by child class
+package com.chitkara;
+
+public class Main extends Student{
+	public static void main(String[] args) {
+		Student s = new Student();
+		
+		System.out.println(s.aadhaar);
+		
+		s.aadhaar = "1234567889";//Error-- can not reasigned
+	}
+	//Error -- Cannot Override final method...
+	void printAadhaar() {
+		// TODO Auto-generated method stub
+
+	}
+
+}
+package com.chitkara;
+
+public class Student {
+	
+	final String aadhaar = "429343030870";
+	
+	final void printAadhaar() {
+		System.out.println("Aadhaar number is :- "+aadhaar);
+	}
+	
+	
+}
+
+
+Class:-
+=-=-=-=
+❌ cannot be extended (no inheritance)
+
+Reference Variables:-
+=-=--=-=-=-=-=-=-=-=-=
+If we initialize a reference variable using final keyword, we can update that object data but we can not reassign that reference to another object.
+package com.chitkara;
+
+public class Main{
+	public static void main(String[] args) {
+		final Student s = new Student();
+		s = new Student();// Error -- Cannot reassign new object
+		
+		
+	}
+
+}
+
+
