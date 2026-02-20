@@ -1,0 +1,699 @@
+Abstraction:-
+==============
+
+Definition:-
+● Abstraction means hiding internal implementation details and showing only the necessary functionality to the user.
+
+In simple words:
+- Focus on what an object does, not how it does it.
+- The user uses features without knowing the internal logic.
+
+Why Do We Need Abstraction?
+● Abstraction helps in:
+1. Hides Implementation Details: Abstraction hides the internal mechanisms and only reveals the operations that are relevant to the user.
+2. Simplifies Complexity: By only providing the essential details, abstraction reduces complexity and simplifies coding.
+3. Enhances Security: By hiding data and restricting access to certain parts of code, abstraction helps secure the system.
+4. Improves Code Maintainability: Changes to the internal implementation do not affect the user as long as the interface remains unchanged.
+
+How Abstraction is Achieved in Java?
+● In Java, abstraction can be achieved in three ways:
+	1. Using a private access modifier (Method level abstraction)
+	2. Using Abstract Class (Partial abstraction)
+	3. Using Interface (Full abstraction)
+
+1. Using a private access modifier (Method level abstraction):-
+=============================================================
+Example:-
+--------
+package com.chitkara;
+public class BankingSystem {
+	private void withdraw() {
+		System.out.println("Amount is Debited...");
+	}
+	
+	private void deposit() {
+		System.out.println("Amount is credited...");
+	}
+	
+	void doOperation(int choice) {
+		if(choice ==1) {
+			withdraw();
+		}else if(choice==2) {
+			deposit();
+		}else {
+			System.out.println("Invalid choice..");
+		}
+	}
+}
+package com.chitkara;
+import java.util.Scanner;
+public class Main {
+	public static void main(String[] args) {
+		BankingSystem bs = new BankingSystem();
+
+		Scanner sc = new Scanner(System.in);
+		System.out.println("To withdraw, press 1");
+		System.out.println("For deposit, press 2");
+		System.out.println("Please select the choice...");
+		
+		int choice  = sc.nextInt();
+		bs.doOperation(choice);
+	}
+
+}
+Output:-
+-------
+To withdraw, press 1
+For deposit, press 2
+Please select the choice...
+1
+Amount is Debited...
+
+
+2. Abstract class:
+=================
+An abstract class is a special type of class whose object cannot be created directly.
+You can only use it by inheriting (extending) it in another class.
+
+--By using an Abstract class, we achieve partial abstraction in Java.
+
+
+There are 3 differences between a normal class and an abstract class:
+=====================================================================
+
+1. For an abstract class, we can not create its object directly (the new keyword is not applicable)
+
+2. Inside an abstract class, we may have an abstract method also. (it is not mandatory)
+Note: We can have an empty abstract class also.
+
+3. The final keyword is not applicable to the abstract class (final and abstract are enemies)
+
+Note: apart from the above 3 differences between normal and abstract classes, we can do all the 
+things with the abstract class, whatever we can do with the normal class.
+
+ex:
+
+we can have variables
+we can have constructors.
+etc..
+
+abstract method:
+--------------------
+--method with body is also known as implemented method or concreate method
+--method without body is known as abstract method or unimplemented method. these types of methos should have abstract keyword.
+
+ex:
+
+public abstract void makeNoise();
+
+
+Note: - inside a normal class/concreate class, we can not have an abstract method.
+
+--if we want to place an abstract method inside our class then we need to mark
+that class also as an abstract class.
+
+
+What we can have inside an abstract class:-
+-----------------------------------------
+Many students think abstract class = only abstract methods ❌
+
+Actually:
+✔ Abstract methods
+✔ Normal methods
+✔ Variables
+✔ Constructors
+✔ Static methods
+✔ Final methods
+
+
+Example:-
+==========
+Vehicle Abstract Class:-
+----------------------
+package com.chitkara;
+
+public abstract class Vehicle {
+	String brand;
+	final int wheels;
+	static int count = 0;
+
+	public Vehicle(String brand, int wheels) {
+		this.brand = brand;
+		this.wheels = wheels;
+		count++;
+		System.out.println("New vehicle created..");
+	}
+
+	void start() {
+		System.out.println("Vehicle is starting...");
+	}
+
+	final void stop() {
+		System.out.println("Vehicle Stopped");
+	}
+
+	public abstract void moveAtMaximumSpeed();
+
+	public static void vehicleCreatedYet() {
+		System.out.println("Total Vehicle created " + count);
+	}
+}
+
+Car Class:-
+-----------
+package com.chitkara;
+
+public class Car extends Vehicle{
+
+	public Car(String brand) {
+		super(brand, 4);
+	}
+
+	@Override
+	public void moveAtMaximumSpeed() {
+		System.out.println("Car is running at Max Speed 200km/h..");
+	}
+
+}
+
+
+Bike Class:-
+-----------
+package com.chitkara;
+
+public class Bike extends Vehicle{
+
+	public Bike(String brand) {
+		super(brand, 2);
+	}
+
+	@Override
+	public void moveAtMaximumSpeed() {
+		System.out.println("Bike is running at Max Speed 130km/h...");
+	}
+
+}
+
+
+Main Class:-
+----------
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		Vehicle v1 = new Car("Toyota");
+		v1.start();
+		v1.moveAtMaximumSpeed();
+		v1.stop();
+		
+		System.out.println("&*&&*&*&*&*&*&*&&&*&*&*&*&*");
+		Vehicle v2 = new Bike("Honda");
+		v2.start();
+		v2.moveAtMaximumSpeed();
+		v2.stop();
+		
+		System.out.println("())()()()(()()()(()()()()()(()()()");
+		Vehicle.vehicleCreatedYet();
+	}
+}
+Output:-
+=======
+New vehicle created..
+Vehicle is starting...
+Car is running at Max Speed 200km/h..
+Vehicle Stopped
+&*&&*&*&*&*&*&*&&&*&*&*&*&*
+New vehicle created..
+Vehicle is starting...
+Bike is running at Max Speed 130km/h...
+Vehicle Stopped
+())()()()(()()()(()()()()()(()()()
+Total Vehicle created 2
+
+rule:
+***Note: if an abstract class having any abstract method then we must override that method inside  the child class otherwise we need to mark that child class also as an abstract class.
+
+Example:-
+========
+package com.chitkara;
+public abstract class Vehicle {
+	abstract void runAtMaximumSpeed();
+}
+
+package com.chitkara;
+public abstract class Transport extends Vehicle{
+
+	public Transport(String brand, int wheels) {
+		super(brand, wheels);
+		// TODO Auto-generated constructor stub
+	}
+
+}
+
+
+Normal class:-
+==============
+
+A a1 = ?  // 3 possible values
+
+A a1 = new A(); // same class obj
+A a1 = new AChild();//  child class obj
+A a1=null;
+
+
+Abstract class:-
+==============
+
+Abs a1 =? // 2 possible values
+
+Abs a1 = new Abs();// CE
+Abs a1 = new AbsChild(); 
+Abs a1 = null;
+
+
+* Abstract object created along with its child class object.
+
+***Note: an abstract method can not be static.
+
+
+Student Task:-
+============
+Problem Statement
+- Create an Employee Management System using only abstract class and inheritance.
+- System has different types ke employees:-
+	* Developer
+	* Manager
+	* Tester
+- Every employees has some common features, and some features will be different.
+- Step 1 — Create Abstract Class
+	* Create an abstract class:
+		- Employee
+			* Variables (use access modifiers properly)
+				- protected int empId;
+				- protected String name;
+				- protected double salary;
+				- private static int totalEmployees;
+			* Constructor
+				- Create a constructor that initializes:
+					* empId, name, salary
+					* Also increase total employee count.
+			* Concrete Methods (Normal Methods)
+				- Add these methods:
+					* public void showBasicInfo()
+						- Prints employee id and name.
+					* public final void companyPolicy()
+						- Prints: "All employees must follow company rules."
+					* public static void showTotalEmployees()
+						- Shows total objects created.
+					* Abstract Method (MANDATORY)
+						- abstract void calculateBonus();
+						- Each employee type will calculate bonus differently.
+Step 2 — Create Child Classes
+	* Create the following classes:
+		- Developer extends Employee
+			* Rules:
+				- Bonus = 20% of salary
+				- Override calculateBonus()
+		- Manager extends Employee
+			* Rules:
+				- Bonus = 30% of salary
+				- Override calculateBonus()
+		- Tester extends Employee
+			* Rules:
+				- Bonus = 15% of salary
+				- Override calculateBonus()
+Step 3 — Main Class (Testing)
+	* In main class:
+	* Create objects using polymorphism:
+		- Employee e1 = new Developer(...);
+		- Employee e2 = new Manager(...);
+		- Employee e3 = new Tester(...);
+
+- Call methods:
+	- showBasicInfo()
+	- calculateBonus()
+	- companyPolicy()
+- Finally call:
+	- Employee.showTotalEmployees();
+
+
+
+
+
+
+3. Interface:
+============
+
+--it is a full unimplemented structure in java  100 %
+
+--till Java 1.7 interface use to contains only abstract method and final
+variable.
+
+--from Jdk 1.8 onwards we can place method with body also inside an interface
+(default method or static method).
+
+--from Java 9 we can have private/private static methods as helper methods for Default/Static methods.
+
+--inside an interface if we place any method without body, that method
+will be public and abstract whether we mention it or not.
+
+--constructor concept is not applicable with an interface.
+
+
+--As a class is extended by another class, an interface need to be implemented by another class.
+
+rule:
+
+--if a class implements an interface , then that class has to override all the abstract method defined inside that interface otherwise we need to mark that implemented class as an abstract class.
+
+Note: we can not create object of an interface. but we can define a reference variable for an interface.
+
+X x1 = new X(); //CE
+
+X x1 = ?   // 2 possible value
+
+X x1 = new XImpl(); // any implemented class object
+
+X x1= null;
+
+
+Note: we can define variable of any 3 valid structure like (concrete class, abstract class or an interface)
+but the object should be created only for the concrete class.
+
+
+X x1= new XImpl();  // here also super class ref and sub class object rule is applicable .
+
+
+--inside an interface, in addition to an abstract method, we can have variables also.
+
+--if we define any variable inside an interface , it will be by default "public static final" whether we mention it or not.
+
+--that variable must be initialized at time of declaration.
+
+--variable defined inside an interface can be accessed by the implemented class object also.
+
+
+Interface as a method parameter:
+---------------------------------------
+
+--if a method is defined to take an interface, then we can call that method 
+by supplying any of its implemented class obj or null.
+
+
+interface as a method return type:
+===========================
+--if a method having return type as an interface then that method should 
+return any of the implementation class obj of that interface or null value.
+
+--interface can not extends another class and can not implement any interface also.
+****--but one interface can extends more than one interface simultaneously(multiple inheritance)
+
+--from java 1.8 onwards some new feature introduced in interface.
+
+1.default method
+
+2.static method
+
+--both method should have a body.
+
+
+1.default method:
+----------------------
+
+-- we can define a default method with the body inside an interface.
+
+--this default method need not override inside the implementation classes.
+
+--if we want , we can override this default method inside any implementation classes.
+
+--these default method are by default inherited inside the implementation classes.
+
+--we can call these default method from any implementation class object.
+
+
+2.static method:
+--------------------
+
+--we can define a static method also inside an interface from java 1.8
+
+--this static method must have body.
+
+--static method of an inteface will not be inherited inside the implementation class object.
+--so we can not call this static method of an interface by using implementation class 
+object.
+
+**Note: we can call the static method of an interface only by using Interface name.
+we can not call static method of an interface even by using interface variable also.
+
+ 
+Note:- we can define same static method as static or non-static method inside the implementation class also.
+which is already defined statically inside the interface. (this concept is called as method hinding)
+
+**************************************************************************************
+
+Example:-
+=========
+Phone Interface:-
+---------------
+package com.chitkara;
+
+public interface Phone {
+	String COUNTRY_CODE = "+91 ";
+
+	void saveContact(String number, String name);
+
+	default void makeCall(String number) {
+		number = COUNTRY_CODE + number;
+		checkNetwork();
+		System.out.println("Calling at number " + number);
+	}
+
+	default void sendMessage(String number, String message) {
+		number = COUNTRY_CODE + number;
+		checkNetwork();
+		System.out.println("Message at number " + number + " sending message that " + message);
+	}
+
+	private void checkNetwork() {
+		System.out.println("Checking network...");
+		System.out.println("Network is available...");
+	}
+
+	static void info() {
+		System.out.println("This Phone interface have 2 default methods, 1 private methods, and 1 variable");
+	}
+
+}
+
+
+MusicPlayer Interface:-
+---------------------
+package com.chitkara;
+
+public interface MusicPlayer {
+	void start();
+
+	void stop();
+
+	default void clickButton() {
+		System.out.println("Clicking button of Music Player..");
+	}
+}
+
+
+Camera Interface:-
+----------------
+package com.chitkara;
+
+public interface Camera {
+	void clickPicture();
+
+	void recordVideo();
+
+	default void clickButton() {
+		System.out.println("Clicking button of Camera..");
+	}
+}
+
+
+SmartPhone Class implemets all three Interfaces:-
+-------------------------------------------------
+package com.chitkara;
+
+public class SmartPhone implements Phone, Camera, MusicPlayer {
+	String brand;
+	static int count = 0;
+
+	public SmartPhone(String brand) {
+		this.brand = brand;
+		count++;
+		System.out.println("New phone created...");
+	}
+
+	public static void phoneCreatedYet() {
+		System.out.println("Total phones craeted yet " + count);
+	}
+
+	@Override
+	public void start() {
+		System.out.println("Starting music player...");
+	}
+
+	@Override
+	public void stop() {
+		System.out.println("Music player stops..");
+	}
+
+	@Override
+	public void clickPicture() {
+		System.out.println("Clicking a picture...");
+	}
+
+	@Override
+	public void recordVideo() {
+		System.out.println("Recording a video..");
+	}
+
+	@Override
+	public void saveContact(String number, String name) {
+		System.out.println("Contact saved with name " + name + " where number is " + number);
+	}
+
+	@Override
+	public void clickButton() {
+		System.out.println("Clicking button...");
+	}
+
+}
+
+Main class:-
+----------
+package com.chitkara;
+
+public class Main {
+	public static void main(String[] args) {
+		SmartPhone sp1 = new SmartPhone("Samsung");
+
+		sp1.start();
+		sp1.stop();
+		sp1.clickPicture();
+		sp1.recordVideo();
+		sp1.makeCall("9876543210");
+		sp1.sendMessage("9876543210", "I am available right now..");
+		sp1.saveContact("9876543210", "Navneet");
+
+		System.out.println("=================================");
+
+		SmartPhone.phoneCreatedYet();
+
+		System.out.println("===================================");
+
+		Phone.info();
+	}
+
+}
+
+
+
+Output:-
+-------
+New phone created...
+Starting music player...
+Music player stops..
+Clicking a picture...
+Recording a video..
+Checking network...
+Network is available...
+Calling at number +91 9876543210
+Checking network...
+Network is available...
+Message at number +91 9876543210 sending message that I am available right now..
+Contact saved with name Navneet where number is 9876543210
+=================================
+Total phones craeted yet 1
+===================================
+This Phone interface have 2 default methods, 1 private methods, and 1 variable
+
+
+************************************************************************************************************
+
+
+| Feature            | Interface      | Abstract Class |
+| ------------------ | -------------- | -------------- |
+| Abstract methods   | ✔              | ✔              |
+| Normal methods     | default only   | ✔ full support |
+| Static methods     | ✔              | ✔              |
+| Private methods    | ✔ (Java 9+)    | ✔              |
+| Protected methods  | ❌             | ✔              |
+| Final methods      | ❌             | ✔              |
+| Instance variables | ❌             | ✔              |
+| Static variables   | ✔ (final only) | ✔              |
+| Constructors       | ❌             | ✔              |
+
+Student Task:-
+=-=-=-=-=-=-=-=
+Problem Statement
+-------------------
+- You are developing a Smart Device Management System.
+- Your company manufactures different smart devices:
+	* Smart TV
+	* Smart Fan
+	* Smart Light
+- These devices are different from each other but share some common behaviors.
+- Your task is to design the system using Java Interfaces.
+
+PART 1 — 
+- Basic Interface (Understanding Interface)
+- Requirements
+- Create an interface named:
+	* SmartDevice
+	* Add the following abstract methods:
+		- void turnOn();
+		- void turnOff();
+- Create the following classes:
+	* SmartTV
+	* SmartFan
+	* SmartLight
+
+- All classes must implement SmartDevice.
+
+PART 2 — 
+- Interface Variables (static final)
+- New Requirement
+	* All smart devices must use a fixed power limit:
+	* MAX_POWER = 220
+- Add this variable inside the interface.
+- Print this value from any implementation class.
+
+PART 3 — 
+- Default Methods (Java 8 Feature)
+- Problem
+- All devices perform the same connection process.
+	* Add two default method inside interface:
+		- connect()
+			* This method should print:
+			* print "Authentication" 
+			* print "Device connected"
+		- reconnect()
+			* This method should print:
+			* print "Authentication" 
+			* print "Device reconnected"
+PART 4 — Static Methods in Interface
+- New Requirement
+- The company wants a utility method to validate power usage.
+- Tasks
+	* Add a static method inside interface:
+		- isValidPower(int power)
+		- Return true if power is less than or equal to MAX_POWER.
+
+PART 5 — Private Methods in Interface (Java 9)
+- Problem
+- You now have two default methods:
+	* connect()
+	* reconnect
+- Perform authentication logic.
+- Tasks
+	* Create a private method inside interface named:
+		- authenticate()
+		- Move authentication logic into this private method.
+		- Call this private method inside both default methods.

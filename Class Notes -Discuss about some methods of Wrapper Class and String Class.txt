@@ -1,0 +1,196 @@
+Wrapper classes some methods:-
+====================================
+1. Integer Class Methods:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+a. Parsing Methods
+-----------------
+Convert String → primitive
+
+int num = Integer.parseInt("123");
+
+Integer.parseInt(String s)
+
+Integer.parseInt(String s, int radix)
+
+Example:
+
+int binary = Integer.parseInt("1010", 2);  // 10
+
+b. valueOf():-
+-------------
+Convert String or int → Integer object
+
+Integer obj = Integer.valueOf("123");
+Integer obj2 = Integer.valueOf(10);
+
+c. toString():-
+--------------
+
+Convert number → String
+String str = Integer.toString(100);
+
+d. compare():-
+-------------
+int result = Integer.compare(10, 20);
+
+e. equals():-
+-------------
+Integer a = 100;
+Integer b = 100;
+System.out.println(a.equals(b)); // true
+
+f. max(), min(), sum():-
+------------------------
+Integer.max(10, 20);
+Integer.min(10, 20);
+Integer.sum(5, 3);
+
+g. Conversion to other types:-
+-------------------------------
+Integer i = 10;
+i.doubleValue();
+i.floatValue();
+i.longValue();
+
+2. Double Class Methods
+=-=-=-=-=--=-=-=-=-=-=-=
+
+a. parseDouble()
+-----------------
+double d = Double.parseDouble("12.5");
+
+b. valueOf()
+-------------
+Double d = Double.valueOf("12.5");
+
+c. compare()
+--------------
+Double.compare(5.6, 2.3);
+
+3. Boolean Class Methods
+=-=-=-=-=-=-=-=-=-=-=-=-=
+a. parseBoolean()
+------------------
+boolean b = Boolean.parseBoolean("true");
+
+4. Character Class Methods:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+a. isDigit()
+-------------
+Character.isDigit('5');
+
+b. isLetter()
+--------------
+Character.isLetter('A');
+
+c. isLetterOrDigit()
+---------------------
+Character.isLetterOrDigit('A');
+
+d. isUpperCase() / isLowerCase()
+---------------------------------
+Character.isUpperCase('A');
+Character.isLowerCase('a');
+
+e. toUpperCase() / toLowerCase()
+-----------------------------------
+Character.toUpperCase('a');
+Character.toLowerCase('A');
+
+5. Long, Float, Short, Byte:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+They mostly share similar methods:
+
+- parseLong()
+
+- parseFloat()
+
+- parseShort()
+
+- valueOf()
+
+- toString()
+
+- compare()
+
+- equals()
+
+
+String Class some basic methods:-
+==================================
+String belongs to java.lang package, so no import is required.
+
+a. length()
+=-=-=-=-=-=
+Returns number of characters.
+String str = "Java";
+System.out.println(str.length());   // 4
+
+b. charAt(int index)
+=-==-=-=-=-=-=-=-=
+
+Returns character at given index.
+String str = "Java";
+System.out.println(str.charAt(1));   // a
+
+Index starts from 0.
+
+c. toUpperCase() and toLowerCase()
+=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=
+String str = "java";
+
+System.out.println(str.toUpperCase());  // JAVA
+System.out.println(str.toLowerCase());  // java
+
+d. equals()
+=-=-=-=-=-=
+
+Compares content (case-sensitive).
+String s1 = "Java";
+String s2 = "Java";
+
+System.out.println(s1.equals(s2));   // true
+
+e. equalsIgnoreCase()
+=-=-=-=-=-=-=-=-=-=
+
+Compares ignoring case.
+
+String s1 = "java";
+String s2 = "JAVA";
+
+System.out.println(s1.equalsIgnoreCase(s2));  // true
+
+f. contains()
+=-=-=-=-=-=
+
+Checks if substring exists.
+
+String str = "Java Programming";
+System.out.println(str.contains("Program"));  // true
+
+
+g. trim()
+=-=-=-=-=
+
+Removes leading and trailing spaces.
+String str = "  Java  ";
+System.out.println(str.trim());
+
+h. split()
+=-=-=-=-=
+
+Splits string into array.
+String str = "Java,Python,C++";
+String[] arr = str.split(",");
+
+
+⚠ Important Interview Concept:-
+===============================
+Difference between == and equals()
+String s1 = new String("Java");
+String s2 = new String("Java");
+
+System.out.println(s1 == s2);       // false (reference)
+System.out.println(s1.equals(s2));  // true (content)
