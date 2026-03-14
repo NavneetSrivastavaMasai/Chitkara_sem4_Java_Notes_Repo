@@ -1,0 +1,518 @@
+String:-
+=======
+- In Java, a String is an object that represents a sequence of characters.
+
+Example:-
+--------
+	String name = "Ram";
+
+Here:
+● name: reference variable
+● "Ram": String object stored in memory
+
+Important points:
+● String is a class, not a primitive data type.
+● It belongs to the java.lang package, which is automatically imported.
+● Strings are created using double quotes (" ").
+
+Ways to Create String Objects:-
+=-=-=-=-=--=-=--=-=-=-=-=-=-=-=
+
+1. Using String Literals
+------------------------
+	String str = "Ram";
+		
+		
+		
+
+What happens internally?
+● Java stores string literals inside a special memory area called the String Pool.
+● If a string already exists in the pool, Java reuses the same object instead of creating a new one.
+● This process is called String Interning.
+
+2. Using a new Keyword
+----------------------
+
+	String strt2 = new String("Ram");
+
+● Here, since we use the new operator to create 2 different String class objects, both will be created at different locations inside the heap area, so the output will be “Not Same”.
+
+
+intern() Method:-
+=-=-=-=-=-=-=-=
+
+	String str = "Ram";
+	String str1 = "Ram";
+		
+	System.out.println(str==str1);
+	
+	String str2 = new String("Ram");
+	String str3 = str2.intern();
+	
+	System.out.println(str3==str1);
+
+	Output:-
+	true
+	true
+
+Comparing 2 String objects:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Using '==':-
+-----------
+	String str = "Ram";
+	String str1 = "Ram";
+		
+	System.out.println(str==str1);
+		
+	String str2 = new String("Ram");		
+	System.out.println(str2==str1);
+
+	Output:-
+	true
+	false
+
+Using equals() method:-
+----------------------
+	String str = "Ram";
+	String str2 = new String("Ram");
+		
+	System.out.println(str2.equals(str));
+		
+	Output:-
+	true
+
+equalsIgnoreCase():-
+------------------
+	String str = "ram";
+	String str2 = new String("Ram");
+		
+	System.out.println(str2.equalsIgnoreCase(str));
+
+Some of the constructors of the String class:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+● String(): Creates an empty String 
+	String str = new String();
+		
+● String(byte [] brr): Creates a String from the given byte array 
+
+	byte[] b = {101,102,103,104};
+	String str = new String(b);
+	System.out.println(str);
+
+	Output:-
+	efgh
+
+● String(char[] chr): Creates a String from a given character array 
+
+	char[] b = {'N','a', 'v', 'j', 'o', 't'};
+	String str = new String(b);
+	System.out.println(str);
+
+	Output:-
+	Navjot
+
+● String(String s): Creates a String from a given String object 
+
+	String str = new String("Ram");
+	System.out.println(str);
+
+	Output:-
+	Ram
+
+● String(StringBuilder sb): Creates a String from the given StringBuilder object 
+● String(StringBuffer sb): Creates a String from the given StringBuffer object
+
+Some of the Important String Methods:-
+=-=-=-=-=-=-=-=-=-=-=-=--=-=--=-==-=-=
+1. char charAt(int position): 
+
+	String str = "Navjot";
+	System.out.println(str.charAt(1));
+
+	Output:- 
+	a
+
+2. int length():
+	String str = "Navjot";
+	System.out.println(str.length()); 
+
+	Output:-
+	6
+
+
+	String str = "Navjot";
+	for(int i=0; i<str.length();i++) {
+	System.out.println(str.charAt(i));}
+
+	Output:-
+	N
+	a
+	v
+	j
+	o
+	t
+
+3. byte[] getBytes():
+	String str = "Hello";
+	byte b[] =  str.getBytes();
+	for(byte by:b) {
+		System.out.println(by);
+	}
+
+	Output:-
+	72
+	101
+	108
+	108
+	111
+
+4. char[] toCharArray():
+	String str = "Hello";
+	char ch[] =  str.toCharArray();
+	for(char c:ch) {
+		System.out.println(c);
+	}
+
+	Output:-
+	H
+	e
+	l
+	l
+	o
+
+5. valueOf()
+	a. static String valueOf(int b)
+	b. static String valueOf(float f) 
+	c. static String valueOf(boolean b) 
+	d. static String valueOf(double d) 
+	e. static String valueOf(char c) 
+	f. static String valueOf(long l)
+
+8. int compareTo(String str):
+a. 
+	String str1 = "Hello";
+	String str2 = "Hello";
+	System.out.println(str1.compareTo(str2));
+
+	Output:-
+	0
+
+b.
+	String str1 = "HeLlo";
+	String str2 = "Hello";
+	System.out.println(str1.compareTo(str2));
+
+	Output:-
+	-32
+
+c.
+	String str1 = "Hello Navneet";
+	String str2 = "Hello";
+	System.out.println(str1.compareTo(str2));
+
+	Output:-
+	8
+
+9. int compareToIgnoreCase(String str):
+
+10. boolean startsWith(String str):
+11. boolean endsWith(String str): 
+
+	String str1 = "Hello Navneet";
+	System.out.println(str1.startsWith("Hello"));
+		
+	System.out.println(str1.endsWith("Navneet"));
+
+	Output:-
+	true
+	true
+
+
+12. int indexOf(char ch):
+13. int indexOf(String str):
+
+	String str1 = "Hello Navneet";
+	System.out.println(str1.indexOf('e'));
+	System.out.println(str1.indexOf("Hello"));
+
+	Output:-
+	1
+	0
+
+14. int lastIndexOf(int ch):
+15. int lastIndexOf(String str):
+
+	String str1 = "Hello Navneet";
+	System.out.println(str1.lastIndexOf('e'));
+	System.out.println(str1.lastIndexOf("eet"));
+
+	Output:-
+	11
+	10
+
+16. String substring(int startIndex, int endIndex):
+
+	String str1 = "Hello Navneet";
+	String str2 = str1.substring(6);
+	System.out.println(str2);
+	String str3 = str1.substring(0,5);
+	System.out.println(str3);
+
+	Output:-
+	Navneet
+	Hello
+
+
+17. String replace(char original, char replacement):
+
+	String str = "Hello Reghev";
+	str = str.replace('e', 'a');
+	System.out.println(str); 
+	
+	Output:-
+	Hallo Raghav
+
+
+18. String replaceAll(String regex, String replacement):
+
+	String str = "Ram is good boy and Ram is eating...";
+	str = str.replaceAll("Ram", "Shyam");
+	System.out.println(str); 
+	String str1 = "1 is good boy and 9 is eating...";
+	str1 = str1.replaceAll("[0-9]", "Ram");
+	System.out.println(str1);
+
+	Output:-
+	Shyam is good boy and Shyam is eating...
+	Ram is good boy and Ram is eating...
+
+
+19. String trim():
+	String str = "    Ram is good boy and Ram is eating...    ";
+	System.out.println(str);
+	System.out.println(str.trim());
+	
+	Output:-
+	    Ram is good boy and Ram is eating...    
+	Ram is good boy and Ram is eating...
+
+
+
+20. String toLowerCase():
+21. String toUpperCase():
+
+	String str = "Ram is good boy and Ram is eating...";
+	str = str.toUpperCase();
+	System.out.println(str);
+		
+	str = str.toLowerCase();
+	System.out.println(str);
+
+	Output:-
+	RAM IS GOOD BOY AND RAM IS EATING...
+	ram is good boy and ram is eating...
+
+
+22. boolean contains(String s):
+	String str = "Ram is good boy and Ram is eating...";
+	System.out.println(str.contains("Ram"));
+
+	Output:-
+	true
+
+
+23. String format(String s, Object …): Creates a formatted string.
+
+	* Common format specifiers:
+		- %s: String
+		- %d: Integer
+		- %f: Float
+		- %c: Character
+		- %b: Boolean
+
+	String name = "Ram";
+	String address = "Lucknow";
+		
+	String str = String.format("Boy name is %s and he lives in %s", name, address);
+	System.out.println(str);
+
+	Output:-
+	Boy name is Ram and he live in Lucknow
+
+24. static String join(CharSequence delimiter, CharSequence... elements):
+	String str = String.join(",", "Ram", "Lives", "in", "Lucknow");
+	System.out.println(str);
+		
+	String arr[] =  {"Shyam", "lives", "in", "Lucknow"};
+	String str1 = String.join(":", arr);
+	System.out.println(str1);
+	
+	Output:-
+	Ram,Lives,in,Lucknow
+	Shyam:lives:in:Lucknow
+
+
+Tokenizing a String in Java:
+=-=--=-=-=-=-=--=-=-=--=-=-=-=
+● Tokenizing a string means breaking a large string into smaller parts called tokens
+based on a delimiter (separator).
+● A delimiter is a character that separates the tokens, such as:
+○ space " "
+○ comma ","
+○ hyphen "-"
+○ colon ":"
+
+1. Tokenizing Using StringTokenizer:-
+-----------------------------------
+Important Methods:
+1. boolean hasMoreTokens(): Checks if more tokens exist
+2. String nextToken(): Returns the next token
+3. int countTokens(): Returns the number of tokens.
+
+	String str = "Raghav,Navjot,Puneet,Aditya.Rachit.Rahul";
+	StringTokenizer st = new StringTokenizer(str, ",.");
+	System.out.println(st.countTokens());
+	while(st.hasMoreTokens()) {
+		System.out.println(st.nextToken());
+	}
+
+	System.out.println(st.countTokens());
+
+	Output:-
+	6
+	Raghav
+	Navjot
+	Puneet
+	Aditya
+	Rachit
+	Rahul
+	0
+
+
+2. Tokenizing Using the split() Method
+---------------------------------------
+a.
+	String str = "Raghav1Navjot2Puneet34Aditya456Rachit90Rahul";
+	String [] arr = str.split("[0-9]+");
+	for(String s : arr) {
+		System.out.println(s);
+	}
+
+	Output:-
+	Raghav
+	Navjot
+	Puneet
+	Aditya
+	Rachit
+	Rahul
+
+
+b.
+	String str = "Raghav Navjot Puneet   Aditya   Rachit      Rahul";
+	String [] arr = str.split("\s+");
+	for(String s : arr) {
+		System.out.println(s);
+	}
+
+	Output:-
+	Raghav
+	Navjot
+	Puneet
+	Aditya
+	Rachit
+	Rahul
+
+Different kind of regex:-
+------------------------
+
+\d	Digit
+\D	Non-digit
+\w	Word character
+\W	Non-word character
+\s	Whitespace
+
+Immutability Concept of String object:
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+● Immutability refers to the property of an object whose state cannot be changed after it is created. The String class in Java is immutable, which means that once a String object is created, it cannot be modified. If you perform any operation on a String, a new String object is created rather than modifying the original one. 
+
+
+Why is String Immutable in Java? 
+=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=
+
+1. Security 
+-----------
+Strings are widely used in security-sensitive operations, such as storing file paths, database URLs, network connections, usernames, and passwords. If strings were mutable, their values could be changed by malicious code after validation, which could lead to security vulnerabilities. Immutability ensures that once a string is created, its value cannot be altered, making the system more secure. 
+
+2. String Pooling (Memory Efficiency)
+-------------------------------------
+  Java uses a special memory area called the String Constant Pool to store string literals. When multiple variables refer to the same string value, Java stores only one copy of that string in memory. Since strings are immutable, different parts of the program can safely share the same object without worrying about unexpected modifications. This improves memory efficiency and performance. 
+
+3. Thread Safety 
+-----------------
+ Because String objects cannot be modified after creation, they are inherently thread-safe. Multiple threads can access the same string object simultaneously without causing data inconsistency or requiring synchronization. This simplifies concurrent programming and improves performance in multi-threaded environments.
+In summary, making strings immutable improves security, memory efficiency through string pooling, and thread safety, which are essential for reliable and efficient Java applications
+
+
+Student Task:-
+=-=-=-=-=-=-=
+
+Task 1 — Check if Two Strings are Anagrams
+------------------------------------------
+Problem Statement
+Write a Java program to check whether two strings are anagrams of each other.
+Two strings are considered anagrams if they contain the same characters with the same frequency, but possibly in a different order.
+
+Example 1
+
+Input
+
+listen
+silent
+
+Output
+
+Anagram
+
+
+Task 2  —
+----------
+Reverse Words but Not the Sentence
+
+Input
+
+Java is powerful
+
+Output
+
+avaJ si lufrewop
+
+Sentence order same, only reverse words.
+
+Task 3 :-
+---------
+Second Non-Repeating Character
+---------------------------------------
+Problem
+You are given a String, you have to find second not repeating character.
+
+Example
+
+Input
+
+programming
+
+Output
+
+o
+
+Explanation
+p → 1 time
+r → 2 times
+o → 1 time
+g → 2 times
+m → 2 times
+i → 1 time
+n → 1 time
+
+second non-repeating character = o
+
