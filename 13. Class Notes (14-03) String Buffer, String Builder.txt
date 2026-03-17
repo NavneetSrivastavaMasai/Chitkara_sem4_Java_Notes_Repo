@@ -1,0 +1,358 @@
+StringBuffer and StringBuilder Classes in Java:-
+===============================================
+● In Java, the String class is immutable, meaning that once a string object is created, its value cannot be changed. If we try to modify a string, a new object is created in memory. 
+● Because of this behavior, frequent string modifications can create many unnecessary objects, which may reduce performance. 
+● To solve this problem, Java provides two mutable companion classes: 
+	○ StringBuffer 
+	○ StringBuilder 
+● Both classes belong to the java.lang package and allow modifying the same object instead of creating new ones, which improves performance when performing many string operations. 
+
+
+1. StringBuilder Class 
+=-=-=-=-=-=-=-=-=-=-=-=
+● The StringBuilder class is used to create and manipulate mutable strings. It provides methods for appending, inserting, replacing, deleting, and reversing characters in a string. 
+● StringBuilder is not thread-safe, which makes it faster than StringBuffer. 
+Example:-
+	StringBuilder sb = new StringBuilder("Hello"); 
+
+2. StringBuffer Class 
+=-=-=-=-=-=-=-=-=-=-=
+● StringBuffer works almost the same as StringBuilder. The main difference is that StringBuffer is thread-safe, meaning it is safe to use in multi-threaded environments. 
+● However, because of synchronization, StringBuffer is slower than StringBuilder. 
+Example:-
+	StringBuffer sb = new StringBuffer("Hello"); 
+
+
+
+When to Use Use StringBuilder
+----------------------------
+● The program runs in a single-threaded environment 
+● Performance is important
+● Thread safety is not required. 
+
+Use StringBuffer when: 
+---------------------
+● The program runs in a multi-threaded environment OR Thread safety is required.
+
+
+Common Methods of StringBuffer / StringBuilder
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+1. append() ● Adds text at the end of the string.
+
+		StringBuilder sb = new StringBuilder("Java");
+		sb.append(" Language");
+		
+		System.out.println(sb);
+	
+		Output:-
+		Java Language
+
+2. insert() ● Inserts text at a specific position.sb.insert(4, " Language");
+
+		StringBuilder sb = new StringBuilder("Java");
+		sb.append(" Language");
+		
+		sb.insert(5, "Pragramming ");
+		
+		System.out.println(sb);
+
+		Output:-
+		Java Programming Language	
+
+3. replace() ● Replaces characters between two indexes.
+
+		StringBuilder sb = new StringBuilder("Java");
+		sb.append(" Language");
+		sb.insert(5, "Pragramming ");
+		
+		sb.replace(5, 16, "Backend");
+		System.out.println(sb);	
+
+		Output:-
+		Java Backend Language
+
+4. delete() ● Deletes characters between indexes.
+
+		StringBuilder sb = new StringBuilder("Java");
+		sb.append(" Language");
+		sb.insert(5, "Pragramming ");
+		sb.replace(5, 16, "Backend");
+		sb.delete(5, 13);
+		System.out.println(sb);	
+
+		Output:-
+		Java Language
+
+5. reverse() ● Reverses the characters of the string.
+
+		StringBuilder sb = new StringBuilder("Java");
+		sb.append(" Language");
+		sb.insert(5, "Pragramming ");
+		sb.replace(5, 16, "Backend");
+		sb.delete(5, 13);
+		sb.reverse();
+		System.out.println(sb);	
+
+		Output:-
+		egaugnaL avaJ
+
+6. length() ● Returns the number of characters currently stored in the object.
+
+7. charAt() ● Returns the character at a specific index.
+
+8. setCharAt() ● Changes the character at a specific index.
+
+		StringBuilder sb = new StringBuilder("Jeva");
+		sb.append(" Language");
+		sb.insert(5, "Pragramming ");
+		
+		sb.setCharAt(1, 'a');
+		System.out.println(sb);	
+
+
+		Output:-
+		Java Pragramming Language
+
+9. public void setLength(int newLength) ● is a method used to change the length of a StringBuffer or StringBuilder.
+		StringBuilder sb = new StringBuilder("Java");
+		sb.append(" Language");
+		sb.insert(5, "Pragramming ");
+		sb.setLength(50);
+		System.out.println(sb);
+		sb.setLength(5);
+		System.out.println(sb);
+
+		Output:-
+		Java Pragramming Language
+		Java
+
+Capacity vs Length in StringBuffer / StringBuilder
+----------------------------------------------------
+package com.chitkara;
+ 
+import java.util.StringTokenizer;
+
+public class Demo {
+	public static void main(String[] args) {
+		StringBuilder sb1 = new StringBuilder();
+		sb1.append("Java");
+		System.out.println(sb1.capacity());
+		System.out.println(sb1.length());
+		System.out.println("======================");
+		StringBuilder sb2 = new StringBuilder("Java");
+		System.out.println(sb2.capacity());
+		System.out.println(sb2.length());
+		
+		
+		sb1.append(" Programming Language");
+		sb2.append(" Programming Language");
+		System.out.println("======================");
+		System.out.println(sb1.capacity());
+		System.out.println(sb2.capacity());
+		
+	}
+}
+
+Output:-
+16
+4
+======================
+20
+4
+======================
+34
+42
+
+
+Default capacity of StringBuffer/StringBuilder:-
+------------------------------------------------
+1. 
+StringBuilder sb = new StringBuilder();
+Capacity:- 16
+
+2. 
+StringBuilder sb = new StringBuilder("Java");
+Capacity:- 20
+
+Capacity Expansion in StringBuffer / StringBuilder
+--------------------------------------------------
+New Capacity = (Old Capacity × 2) + 2
+
+
+Converting Primitive to String:
+-------------------------------
+		int x = 100;
+		
+		String str1 = x+""; // Recommended Performance wise.. 
+		
+		String str2 = String.valueOf(x);
+		//Internally:- stringBuilder().append(x).append("").toString();
+		
+
+Difference Between String, StringBuilder and StringBuffer:
+----------------------------------------------------------
+| Feature         | String                        	| StringBuffer          	| StringBuilder          
+| --------------- | ----------------------------- 	| --------------------- 	| ---------------------- 
+| Mutability      | ❌ Immutable                   	| ✅ Mutable             	| ✅ Mutable            
+| Thread Safety   | ✅ Thread-safe	             	| ✅ Thread-safe         	| ❌ Not thread-safe    
+| Performance     | Slow (creates new object)     	| Fast	                	| Fastest               
+| Synchronization | No                            	| Yes                   	| No                    
+| Introduced      | Java 1.0                      	| Java 1.0              	| Java 1.5              
+| Use Case        | When string should not change 	| Multi-thread programs 	| Single-thread programs
+
+Method chaining:-
+---------------
+			StringBuilder sb = new StringBuilder();
+			sb.append("Java ")
+			.append(" Language")
+			.insert(5, "Pragramming ")
+			.reverse();
+			System.out.println(sb);
+
+			Output:-
+			egaugnaL  gnimmargarP avaJ
+
+			
+
+Text-Block in Java:
+-------------------
+1.		String str1 = """
+				My name is Shiwang.
+				I live in Shimla.
+				""";
+		System.out.println(str1);
+
+		Output:-
+		My name is Shiwang.
+		I live in Shimla.
+
+
+		
+2. 		String str1 = """
+				Select *
+				From Student
+				where marks >50;
+				""";
+		System.out.println(str1);
+
+		Output:-
+		Select *
+		From Student
+		where marks >50;
+
+Student Task:-
+--------------
+
+Task 1 -
+--------
+Question:
+Write a program to compare the performance of String, StringBuffer and StringBuilder when appending text in a loop.
+Run a loop (e.g., 10000 iterations)
+
+Append text
+
+Measure time using------ System.nanoTime();
+
+Code:-
+-------
+package com.chitkara;
+
+import java.util.StringTokenizer;
+
+public class Demo {
+	public static void main(String[] args) {
+		String str = "Java";
+		long t1 = System.nanoTime();
+		for(int i=0; i<10000; i++) {
+			str = str.concat("Java");
+		}
+		long t2 = System.nanoTime();
+		
+		StringBuffer sf = new StringBuffer("Java");
+		long t3 = System.nanoTime();
+		for(int i=0; i<10000; i++) {
+			sf.append("Java");
+		}
+		long t4 = System.nanoTime();
+		
+		StringBuilder sb = new StringBuilder("Java");
+		long t5 = System.nanoTime();
+		for(int i=0; i<10000; i++) {
+			sb.append("Java");
+		}
+		long t6 = System.nanoTime();
+		
+		System.out.println("String taking time :- "+(t2-t1));
+		System.out.println("===============================");
+		System.out.println("StringBuffer taking time :- "+(t4-t3));
+		System.out.println("===============================");
+		System.out.println("StringBuilder taking time :- "+(t6-t5));
+		System.out.println("===============================");
+		
+	}
+}
+
+Output:-
+String taking time :- 121333100
+===============================
+StringBuffer taking time :- 3500100
+===============================
+StringBuilder taking time :- 1391300
+===============================
+
+
+Task 2  —
+----------
+Reverse Words but Not the Sentence (Without using split() method)
+
+Input
+
+Java is powerful
+
+Output
+
+avaJ si lufrewop
+
+Sentence order same, only reverse words.
+
+Code:-
+-------
+public class Demo {
+	public static void main(String[] args) {
+		String str = "Java is powerful";
+		
+		StringBuilder res = new StringBuilder();
+		StringBuilder word = new StringBuilder();
+		for(int i=0; i<str.length(); i++) {
+			char ch = str.charAt(i);
+			if(ch != ' ') {
+				word.append(ch);
+			}else {
+				res.append(word.reverse()).append(" ");
+				word.setLength(0);
+			}
+		}
+		res.append(word.reverse());
+		System.out.println(res);
+		
+	}
+}
+
+Output:-
+avaJ si lufrewop
+
+Task 3 -
+------
+Convert a String into StringBuilder, append " Programming", and convert it back to String.
+
+Expected Output:
+
+Java Programming
+
+Task 4-
+-------
+ Remove Vowels from a String using StringBuffer:
+
+
+
