@@ -1,0 +1,981 @@
+Exception
+==========
+What is an Exception? 
+ - In Java, an exception is an unwanted or unexpected event that occurs during the execution of a program, i.e., at run time, that disrupts the normal flow of the program’s execution. 
+ - Technically, in Java, exceptions are objects of some Java classes that will be created by the JVM at runtime whenever any Logical error occurs in our Java application. 
+ - The core advantage of exception handling is to maintain the normal flow of the application. An exception normally disrupts the normal flow of the application. That is why we need to handle exceptions.
+
+
+Example:-
+-------
+public class Demo {
+	public static void main(String[] args) {
+		int x = 10;
+		int y = 0;
+		System.out.println(x / y);
+	}
+}
+
+Output:-
+-------
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+	at com.chitkara.Demo.main(Demo.java:7)
+
+
+Types of Errors in Java:-
+-==-=-=-=-=-=-=-=-=-==-=-
+
+1. Syntax Error
+2. Logical Error/Runtime Error
+
+
+What Happens When an Exception Occurs? 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+1. JVM detects a runtime problem. 
+2. JVM creates an object of the corresponding Exception class. 
+3. If the exception is not handled, it is returned to the JVM. 
+4. JVM receives that exception class object and terminates the program abnormally.
+
+Exception Class Hierarchy:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Object
+ │  
+Throwable
+ ├── Error
+ │    ├── OutOfMemoryError
+ │    ├── StackOverflowError
+ │
+ └── Exception
+      ├── IOException
+      │     ├── FileNotFoundException
+      │
+      ├── SQLException
+      ├── ClassNotFoundException
+      ├── InterruptedException
+      │
+      └── RuntimeException
+            ├── ArithmeticException
+            ├── NullPointerException
+            ├── ArrayIndexOutOfBoundsException
+            ├── NumberFormatException
+            ├── IllegalArgumentException
+            ├── ClassCastException
+
+
+Difference between Exception and Error:-
+=-=--=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=
+
+Exception Handling 
+=-=-=-=-=-=-=-=-=-=
+ -  Exception Handling is the process of handling exceptions to prevent abnormal program termination. 
+ -  It allows the program to continue execution normally. 
+ -  Java provides five keywords for exception handling:
+	1. try
+	2. catch
+	3. finally
+	4. throw
+	5. throws
+
+
+Uses of Exception Handling 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+1. Ensures normal termination of the program. 
+2. Helps identify where the logical error occurred. 
+3. Prevents JVM from terminating the entire program. 
+4. Only the faulty try block terminates, not the whole program.
+
+
+try-catch Block 
+=-=-=-=-=-=-=-=
+ - The try block contains code that may generate exceptions.
+ - The catch block handles the exception.
+
+
+Example:-
+-------
+
+public class Demo {
+	public static void main(String[] args) {
+		int []arr1 = {10,20,30,40,50};
+		int []arr2 = {1,0,3,4,5};
+		
+		for(int i=0;i<5; i++) {
+			divide(arr1[i],arr2[i]);
+		}
+ 	}	
+	public static void divide(int a, int b) {
+		try {
+			System.out.println(a/b);
+		} catch (ArithmeticException ae) {
+			System.out.println(ae);
+		}
+		
+	}
+}
+
+Output:-
+------
+10
+java.lang.ArithmeticException: / by zero
+10
+10
+10
+
+
+
+Important Rules of try-catch 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+1. Once control enters the catch block, it does not return to the try block. 
+2. If no exception occurs, the catch block will not execute. 
+3. Every try block must have at least one catch or finally block. 
+4. A try block can have multiple catch blocks.
+
+Multiple catch block example:-
+----------------------------
+package com.chitkara;
+
+public class Demo {
+	public static void main(String[] args) {
+		try {
+			int x = 10;
+			int y =2;
+			System.out.println(x/y);
+			
+			int [] arr = {1,2,3};
+			System.out.println(arr[1]);
+			
+			Student st = new Student();
+			st = null;
+			System.out.println(st.name);			
+		} catch (ArithmeticException ae) {
+			System.out.println(ae);
+		}catch (IndexOutOfBoundsException ie) {
+			System.out.println(ie);
+		}catch (NullPointerException npe) {
+			System.out.println(npe);
+		}
+		System.out.println("Complete code executed....");
+ 	}
+}
+
+Output:-
+-------
+5
+2
+java.lang.NullPointerException: Cannot read field "name" because "st" is null
+Complete code executed....
+
+
+Order of Catch Blocks:-
+----------------------
+ When multiple catch blocks exist, they are checked from top to bottom.
+
+Incorrect:-
+---------
+		try {
+			
+		} catch (Exception e) {
+			System.out.println(ae);
+		}catch (RuntimeException re) {
+			System.out.println(ie);
+		}catch (NullPointerException npe) {
+			System.out.println(npe);
+		}
+
+Correct:-
+---------
+package com.chitkara;
+
+public class Demo {
+	public static void main(String[] args) {
+		try {			
+		} catch (ArithmeticException ae) {
+			System.out.println(ae);
+		}catch (RuntimeException re) {
+			System.out.println(re);
+		}catch (Exception e) {
+			System.out.println(e);
+		}
+		System.out.println("Complete code executed....");
+ 	}
+}
+
+
+
+
+Problem with Multiple Catch Blocks:-
+-----------------------------------
+ - If multiple statements in the try block may generate different exceptions, we may need many catch blocks, which becomes difficult to manage.
+
+Solution:-
+---------
+ - Use the Exception superclass.
+
+public static void main(String[] args) {
+		try {
+			int x = 10;
+			int y =2;
+			System.out.println(x/y);
+			
+			int [] arr = {1,2,3};
+			System.out.println(arr[1]);
+			
+			Student st = new Student();
+			st = null;
+			System.out.println(st.name);			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		System.out.println("Complete code executed....");
+ 	}
+
+
+Some of the important methods of the Throwable class:
+-----------------------------------------------------
+1. public void printStackTrace();- Prints detailed exception information
+
+Code:-
+public class Demo {
+	public static void main(String[] args) {
+		int []arr1 = {10,20,30,40,50};
+		int []arr2 = {1,0,3,4,5};
+		for(int i=0;i<5; i++) {
+			divide1(arr1[i],arr2[i]);
+		}
+ 	}	
+	
+	public static void divide1(int a, int b) {
+		divide2(a,b);
+	}
+
+	public static void divide2(int a, int b) {
+		divide(a,b);
+	}
+	public static void divide(int a, int b) {
+		try {
+			System.out.println(a/b);
+		} catch (ArithmeticException ae) {
+			ae.printStackTrace();
+		}
+		
+	}
+}
+
+Output:-
+------
+10
+java.lang.ArithmeticException: / by zero
+	at com.chitkara.Demo.divide(Demo.java:23)
+	at com.chitkara.Demo.divide2(Demo.java:17)
+	at com.chitkara.Demo.divide1(Demo.java:13)
+	at com.chitkara.Demo.main(Demo.java:8)
+10
+10
+10
+ 
+2. public String getMessage();- Returns the exception message
+
+Code:-
+----
+public class Demo {
+	public static void main(String[] args) {
+		int []arr1 = {10,20,30,40,50};
+		int []arr2 = {1,0,3,4,5};
+		for(int i=0;i<5; i++) {
+			divide(arr1[i],arr2[i]);
+		}
+ 	}	
+	
+	public static void divide(int a, int b) {
+		try {
+			System.out.println(a/b);
+		} catch (ArithmeticException ae) {
+			System.out.println(ae.getMessage());
+		}
+		
+	}
+}
+
+Output:-
+-------
+10
+/ by zero
+10
+10
+10
+
+Types of Exception we handle at Runtime:-
+=-=-=-=-=-=--=-=--=-=-=-=-=-=-=-=-=-=-=-=
+1. Checked Exception
+2. Unchecked Exception
+
+1. Checked Exception
+--------------------
+ - A Checked Exception is an exception that is checked by the compiler at compile time. 
+ - If your code might cause a checked exception, the compiler forces you to handle it. You must either: 
+	1. Handle it using try-catch 
+	2. Declare it using throws. 
+ - Otherwise, the program will not compile.
+
+
+Example of Common Checked Exceptions: 
+------------------------------------
+	- FileNotFoundException 
+	- ClassNotFoundException 
+	- IOException 
+	- SQLException
+
+Examples:-
+--------
+1. FileNotFoundException 
+public class Test {
+	public static void main(String[] args) {
+		File file = new File("C:\\New folder\\Detail.txt"); //Provided file name is wrong....
+		try {
+			Scanner sc = new Scanner(file);
+			
+			while(sc.hasNextLine()) {
+				System.out.println(sc.nextLine());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+Output:-
+-----
+java.io.FileNotFoundException: C:\New folder\Detail.txt (The system cannot find the file specified)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.util.Scanner.<init>(Scanner.java:645)
+	at com.chitkara.Test.main(Test.java:10)
+
+
+
+2. ClassNotFoundException 
+package com.chitkara;
+public class Test {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.db.ConfigClas"); ////Provided class name is wrong....
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Code executed successfully...");
+	}
+}
+
+package com.db;
+
+public class ConfigClass {
+	static {
+		System.out.println("Connectiong to the Database..");
+		System.out.println("Connection successfull..");
+	}
+}
+
+
+Output:-
+-------
+java.lang.ClassNotFoundException: com.db.ConfigClas
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:423)
+	at java.base/java.lang.Class.forName(Class.java:414)
+	at com.chitkara.Test.main(Test.java:6)
+Code executed successfully...
+
+2. Unchecked Exceptions 
+----------------------
+ - An Unchecked Exception is an exception that is NOT checked by the compiler at compile time. 
+ - The compiler does not force you to handle it. 
+ - These exceptions occur during program execution (runtime).
+
+Common Unchecked Exceptions
+----------------------------
+ These belong to the RuntimeException class 
+ 	Examples: 
+		- ArithmeticException 
+		- NullPointerException 
+		- ArrayIndexOutOfBoundsException 
+		- NumberFormatException 
+		- ClassCastException
+
+Examples:-
+---------
+
+1. NumberFormatException:
+
+public class Test {
+	public static void main(String[] args) {
+		try {
+			String str = "Ram";
+			int num = Integer.parseInt(str);
+			System.out.println(num+100);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		System.out.println("Code executed successfully...");
+	}
+}
+
+Output:-
+--------
+java.lang.NumberFormatException: For input string: "Ram"
+Code executed successfully...
+
+2. ClassCastException:-
+public class Test {
+	public static void main(String[] args) {
+		
+		try {
+			Object obj = "Navjot";
+			int num = (Integer)obj;
+			System.out.println(num);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		System.out.println("Code executed successfully...");
+	}
+}
+
+Output:-
+-------
+java.lang.ClassCastException: class java.lang.String cannot be cast to class java.lang.Integer (java.lang.String and java.lang.Integer are in module java.base of loader 'bootstrap')
+Code executed successfully...
+
+
+***Note:- All exceptions that extend: RuntimeException are Unchecked Exceptions. All other exceptions are Checked Exceptions.***
+
+
+finally Block:-
+=-=-=-=-=-=-=
+Example:-
+-------
+1.
+public class Test {
+	public static void main(String[] args) {
+		Scanner sc  = null;
+		try {
+			sc = new Scanner(System.in);
+			int[] arr = new int[5];
+			System.out.println("Please provide 5 number...");
+			for(int i=0; i<5; i++) {
+				System.out.println("Please provide number...");
+				arr[i] = sc.nextInt();
+			}
+			System.out.println(Arrays.toString(arr));
+			sc.close();
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally {
+			if(sc!=null) {
+				sc.close();
+				System.out.println("Scanner Closed Successfully...");
+			}
+		}		
+	}
+}
+
+Output:-
+-------
+Please provide 5 number...
+Please provide number...
+10
+Please provide number...
+20 
+Please provide number...
+Aditya
+java.util.InputMismatchException
+Scanner Closed Successfully...
+
+
+2.
+public class Test {
+	public static void main(String[] args) {
+		divide(10,0);
+	}
+	public static int divide(int x, int y) {
+		try {
+			return x/y;
+		} catch (Exception e) {
+			System.out.println(e);
+			return -1;
+		}finally {
+			System.out.println("Divide method has used...");
+		}
+	}
+}
+
+Output:-
+------
+java.lang.ArithmeticException: / by zero
+Divide method has used...
+
+Why finally is Needed:-
+----------------------
+
+
+try with finally:-
+-----------------
+- Possible but not recommended.
+
+Conditions where finally will not execute:-
+-------------------------------------------
+ - System.exit() 
+ - JVM crash 
+ - Power failure
+
+
+Nested try catch:-
+=-==-=-=-=-=-=-=-=
+Syntax:-
+-------
+		try {
+			try {
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}		
+	}
+
+
+Example:-
+--------
+public class NestedTryCatch {
+	public static void main(String[] args) {
+		int x= 10;
+		int y= 0;
+		int[] arr = {1,2,3,4};
+		try {
+			try {
+				System.out.println(arr[6]);	
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			System.out.println(x/y);
+		} catch (Exception e) {
+			System.out.println(e);
+		}		
+	}
+}
+Output:-
+-------
+java.lang.ArrayIndexOutOfBoundsException: Index 6 out of bounds for length 4
+java.lang.ArithmeticException: / by zero
+
+
+When to use:-
+-----------
+ - There are multiple independent operations
+ - Each error needs to be handled differently
+ - Resource handling and logic handling need to be separate
+
+
+The throws Keyword:-
+=-=-=-=-=-=-=-=-=-=
+ - The throws is used in the method declaration. 
+ - It informs the caller that the method may generate an exception.
+
+Example:-
+----------
+1.
+public class NestedTryCatch {
+	public static void main(String[] args){
+		try {
+			divide(10,0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+		}
+	}
+	public static void divide(int x, int y) throws Exception {
+		System.out.println(x/y);
+	}
+}
+
+Output:-
+------
+java.lang.ArithmeticException: / by zero
+
+
+2. 
+public class NestedTryCatch {
+	public static void main(String[] args){
+		try {
+			divide1(10,0);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	public static void divide1(int x, int y) throws Exception{
+		divide2(x,y);
+	}
+	public static void divide2(int x, int y) throws Exception {
+		divide(x,y);
+	}
+	public static void divide(int x, int y) throws Exception {
+		System.out.println(x/y);
+	}
+}
+
+Output:-
+------
+java.lang.ArithmeticException: / by zero
+
+
+
+
+Meaning:-
+=-=-=-=-=
+ - The method may generate these exceptions. 
+ - The caller can either: 
+	1. Handle them using try-catch 
+	2. Delegate them further using throws
+
+
+
+throws with the constructor:-
+---------------------------
+
+1. Constructor with checked exception:-
+----------------------------------------
+
+package com.db;
+
+class Student {
+	Student() throws Exception {
+		int x = 10;
+		int y = 0;
+		System.out.println(x / y);
+	}
+}
+public class Main {	
+	public static void main(String[] args) {
+		try {
+			Student st = new Student();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+
+Output:-
+-------
+java.lang.ArithmeticException: / by zero
+	at com.db.Student.<init>(Main.java:7)
+	at com.db.Main.main(Main.java:13)
+
+
+
+
+
+Important:-
+---------
+If a constructor throws a checked exception, we cannot create an object as an instance variable directly because instance variable initialization cannot contain such executable exception-handling logic.
+
+
+
+The throw keyword:-
+=-=-=-=-=-=-=-=-=-=
+throw is used to explicitly create and raise an exception at runtime.
+In simple manner we can say, This situation is invalid, stop execution and report an error.
+
+Example:-
+--------
+public class Main {
+	public static void main(String[] args) {
+		User user = new User();
+		try {
+			user.checkAge(10);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+}
+
+public class User {
+	public static void checkAge(int age) throws Exception {
+		if(age<18) {
+			throw new Exception("Age is not valid");
+		}
+		else {
+			System.out.println("Eligible for voting....");
+		}
+	}
+}
+
+Output:-
+-------
+Age is not valid
+
+
+
+Difference between if-else and throw:-
+-------------------------------------
+- To Stop Invalid Execution. If data is wrong, program should not continue
+- Instead of silent failure, Signal an Error Clearly
+- Enforce Handling, Caller is forced to deal with the problem
+
+
+Method Overriding Rules with Exceptions:-
+=-=-=--=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+1. If the superclass method does not declare any exception Subclass method: 
+	- Cannot declare checked exceptions 
+	- Can declare unchecked exceptions
+
+2. If the superclass method declares an exception Subclass method can declare: 
+	- Same exception 
+	- Child class exception 
+	- No exception But cannot declare parent exception.
+
+
+Superclass Constructor Exception:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- When a subclass object is created: 
+		- Superclass constructor executes first
+		- Then the subclass constructor executes
+- If superclass constructor throws an exception we need to handle them in parent class.
+
+
+User-Defined Exception:-
+=-=-=-=--=-=-=-=-=-=-=
+- A Custom Exception (also called User-Defined Exception) is an exception that we create ourselves in Java to represent specific business errors in our application.
+- We have many built-in exceptions but sometimes these built-in exceptions are not meaningful enough for our program logic.
+
+Example:-
+---------
+public class Main {
+	public static void main(String[] args) {
+		User user = new User();
+		try {
+			user.checkAge(10);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+}
+public class User {
+	public static void checkAge(int age) throws AgeIsNotValid {
+		if(age<18) {
+			throw new AgeIsNotValid("Age is not valid");
+		}
+		else {
+			System.out.println("Eligible for voting....");
+		}
+	}
+}
+public class AgeIsNotValid extends Exception {
+	AgeIsNotValid(String message) {
+		super(message);
+	}
+}
+
+Output:-
+-------
+Age is not valid
+
+Why Do We Need Custom Exceptions:-
+---------------------------------
+- Provide meaningful error messages 
+- Represent business logic errors clearly 
+- Improve code readability 
+- Make debugging easier 
+- Handle application-specific conditions
+
+
+Step by step explanation of Creating Custom Exception:-
+-------------------------------------------------------
+1. Create a normal class
+2. Extend this class with Exception or RuntimeException class — now it becomes a custom exception class
+3. Create a constructor in the class and call super(message) to pass the custom exception message to the parent class
+4. Use the throw keyword to throw the exception where required
+
+
+Types of Custom Exceptions:-
+--------------------------
+1. Checked Custom Exception
+
+public class InvalidAgeException extends Exception {
+	InvalidAgeException(String msg) {
+		super(msg);
+	}
+}
+public class InsufficientBalanceException extends Exception{
+	InsufficientBalanceException(String msg){
+		super(msg);
+	}
+}
+public class User {
+	
+	public static void checkAge(int age) throws InvalidAgeException {
+		if(age<18) {
+			throw new InvalidAgeException("Age is not valid...");
+		}
+		System.out.println("Valid age....");
+	}
+
+}
+public class BankAccount {
+	int balance = 1000;
+	public void withdraw(int amount) throws InsufficientBalanceException {
+		if(amount>balance) {
+			throw new InsufficientBalanceException("Your account do not have suffiecient balance..");
+		}
+		balance = balance-amount;
+		System.out.println("Amount withdraw successfully...");
+		System.out.println("Remaining balance is "+balance);
+	}
+}
+public class Main {
+	public static void main(String[] args) {
+		User user = new User();
+		BankAccount ba = new BankAccount();
+		try {
+			user.checkAge(19);
+			ba.withdraw(2000);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+}
+
+Output:-
+-------
+Valid age....
+Your account do not have suffiecient balance..
+
+
+2. Unchecked Custom Exception
+
+public class InvalidInputException extends RuntimeException{
+	InvalidInputException(String msg){
+		super(msg);
+	}
+}
+public class UnauthorizedAccessException extends RuntimeException{
+	UnauthorizedAccessException(String msg) {
+		super(msg);
+	}
+}
+public class LoginUserSystem {
+	
+	public static void userLogin(String userName, String password) {
+		if(userName==null || password==null) {
+			throw new InvalidInputException("User-name and Password can not be null");
+		}
+		
+		if(userName!="admin" || password !="1234") {
+			throw new UnauthorizedAccessException("Invalid user or username and password is wrong...");
+		}
+		
+		System.out.println("login successfully...");
+	}
+
+}
+public class Demo {
+	public static void main(String[] args) {
+		LoginUserSystem lus = new LoginUserSystem();
+		lus.userLogin("admin", "1111");
+	}
+}
+
+Output:-
+-------
+Exception in thread "main" com.db.UnauthorizedAccessException: Invalid user or username and password is wrong...
+	at com.db.LoginUserSystem.userLogin(LoginUserSystem.java:11)
+	at com.db.Demo.main(Demo.java:6)
+
+Important Java 7 Features:-
+-------------------------
+1. Multiple Exceptions in One Catch:-
+
+catch(ClassNotFoundException | IOException e) { 
+	e.printStackTrace(); 
+}
+
+Rules: 
+	- Use | (pipe symbol) 
+	- The variable becomes implicitly final. 
+	- Cannot combine exceptions of the same hierarchy
+
+2. Try-With-Resources:-
+	- Automatically closes resources. 
+	- Resources must implement: java.lang.AutoCloseable
+
+Example:
+try(Scanner sc = new Scanner(System.in)) { }
+
+	- The scanner will automatically close.
+
+
+Exception Propagation:-
+=-==-=-=-=-=-=-=-=-=-=
+- When an exception occurs in a method and is not handled, it is passed to the calling method.
+- Exceptions travel upward until they are handled.
+- If an exception occurs in method5() and if none of the methods in the call stack didn’t handle the exception, then the exception will keep propagating till it reaches the end of the method stack, which is the main() method.
+
+
+Rules while handling exceptions:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+1. You can not have catch/finally without try.
+2. Between try/catch/finally code is not allowed.
+3. Alone try block is not allowed. There should be catch or finally or both.
+4. We can only have try with resource block without catch or finally.
+
+
+Student Task:-
+=-=-=-=-=-=-=-=
+1.
+Problem Statement: Password Validation System
+----------------------------------------------
+- You are building a user registration system.
+- The password must satisfy the following rules:
+	* Minimum length 8 characters
+	* Must contain at least one digit
+- If the password does not follow these rules, throw a custom exception:
+	* InvalidPasswordException
+
+Example Output
+Enter password: abc123
+Exception: Password must contain at least 8 characters
+
+2. Create Custom Exception for Negative Number
+----------------------------------------------
+- Problem:
+- Create:
+	- NegativeNumberException
+- Program should:
+	- Accept number
+	- If number < 0 → throw exception
+	- Otherwise print square of number
+
+3. Calculator with Exception Handling
+-------------------------------------
+Use:-
+- try
+- Multiple catch
+- finally
+
+- Support:
+	- Addition
+	- Subtraction
+	- Multiplication
+	- Division
+
+- Handle:
+	- Invalid input (InputMismatchException)
+	- Invalid operator (IllegalArgumentException)
+	- Divide by zero (ArithmeticException)
