@@ -906,19 +906,104 @@ catch(ClassNotFoundException | IOException e) {
 	e.printStackTrace(); 
 }
 
+
+Example:-
+--------
+public class UsingMultiCatch {
+	public static void main(String[] args) {
+		try(Scanner sc = new Scanner(System.in)) {
+			int x = 10;
+			int y = 5;
+			System.out.println(x/y);
+			
+			int []arr = {1,23,4};
+			System.out.println(arr[0]);
+			
+			
+			System.out.println("Please provide number...");
+			int z = sc.nextInt();
+			System.out.println(x);			
+		} catch (ArithmeticException | ArrayIndexOutOfBoundsException | InputMismatchException e) {
+			System.out.println(e);
+		}	
+	}
+}
+
+Output:-
+-------
+2
+1
+Please provide number...
+ram
+java.util.InputMismatchException
+
 Rules: 
 	- Use | (pipe symbol) 
 	- The variable becomes implicitly final. 
 	- Cannot combine exceptions of the same hierarchy
 
 2. Try-With-Resources:-
+-----------------------
 	- Automatically closes resources. 
 	- Resources must implement: java.lang.AutoCloseable
 
 Example:
-try(Scanner sc = new Scanner(System.in)) { }
+1. 
+public class TryWithResource {
+	public static void main(String[] args) {
+		try(Scanner sc = new Scanner(System.in)) {
+			System.out.println("Please provide number....");
+			int x = sc.nextInt();
+			System.out.println(x);
+		}catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+}
 
-	- The scanner will automatically close.
+Output:-
+------
+Please provide number....
+ram
+java.util.InputMismatchException
+
+****Note:- The scanner will automatically close.
+
+2. 
+
+package com.db;
+public class ResourceClass implements AutoCloseable{
+	
+	public static void providingConnection() {
+		System.out.println("Connection establish successfully....");
+	}
+
+	@Override
+	public void close() throws Exception {
+		System.out.println("Connection closed....");
+	}
+
+}
+
+package com.db;
+public class TryWithResources {
+	
+	public static void main(String[] args) {
+		try (ResourceClass rc = new ResourceClass()){
+			rc.providingConnection();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+}
+
+Output:-
+-------
+Connection establish successfully....
+Connection closed....
+
+
 
 
 Exception Propagation:-
@@ -979,3 +1064,92 @@ Use:-
 	- Invalid input (InputMismatchException)
 	- Invalid operator (IllegalArgumentException)
 	- Divide by zero (ArithmeticException)
+
+
+Code:-
+-------
+
+public class CalculatorWithException {
+
+	public static void main(String[] args) {
+		try (Scanner sc = new Scanner(System.in)) {
+			System.out.println("Please provide 1st number..");
+			double x = sc.nextDouble();
+
+			System.out.println("Please provide 2nd number..");
+			double y = sc.nextDouble();
+
+			System.out.println("Please provide operator..(+,-,/,*)");
+			char operator = sc.next().charAt(0);
+
+			double result;
+			switch (operator) {
+			case '+': {
+				result = x + y;
+				System.out.println("Result is " + result);
+				break;
+			}
+			case '-': {
+				result = x - y;
+				System.out.println("Result is " + result);
+				break;
+			}
+			case '*': {
+				result = x * y;
+				System.out.println("Result is " + result);
+				break;
+			}
+			case '/': {
+				if (y == 0) {
+					throw new ArithmeticException("Second number can not be 0 for divide...");
+				}
+				result = x / y;
+				System.out.println("Result is " + result);
+				break;
+			}
+			default:
+				throw new IllegalArgumentException("Invalid operator: " + operator);
+			}
+
+		} catch (InputMismatchException e) {
+			System.out.println("Invalid Input! please provide numeric value..");
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+		} catch (ArithmeticException e) {
+			System.out.println(e.getMessage());
+		}
+		System.out.println("Calculator executed successfully...");
+	}
+}
+Output:-
+------
+Please provide 1st number..
+10
+Please provide 2nd number..
+0
+Please provide operator..(+,-,/,*)
+/
+Second number can not be 0 for divide...
+Calculator executed successfully...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
