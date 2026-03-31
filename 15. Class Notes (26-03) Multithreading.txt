@@ -1,0 +1,996 @@
+Introduction to Multithreading (Java)
+========================================
+
+
+--Before learning multithreading, we must understand multitasking.
+
+--Consider the following program:
+
+class Test {
+
+    void fun1() { }
+    void fun2() { }
+    void fun3() { }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+        t.fun1();
+        t.fun2();
+        t.fun3();
+    }
+}
+
+
+Execution Flow (Normal Execution)
+
+First fun1() executes completely, then control comes back to the main method and then fun2() executes completely then again control comes to the main and then fun3() executes completely.
+
+--This is called Sequential Execution.
+
+
+CPU Idle Problem:
+-----------------
+
+--Suppose fun1() contains I/O operation (file reading, data transfer, network call, etc.)
+
+--I/O operation is handled by DMA (Direct Memory Access)
+--CPU does not perform data transfer(CPU assign this job to the DMA)
+--During I/O operation, CPU remains idle
+
+--This is a waste of CPU time
+
+--This made s/w developers to think that,efficiency of the processor(CPU) would be increased if processor is made to do some other useful work during this idle state.
+
+--The useful work is nothing but,executing other functions/methods present in the program.
+
+
+--this need lead to the concept of multitasking..
+
+
+--Remember that processor is also an electric circuit and at any instance of time,it can execute only one instruction.it can not execute multiple instructions simultaneously unless it is a multi-core processor.
+
+
+What is Multitasking?
+---------------------
+
+--Multitasking is a technique in which CPU executes multiple tasks by switching between them very fast, giving the illusion that tasks are running simultaneously.
+
+Important Point:
+
+--A single CPU core executes one instruction at a time
+--But switches between tasks very fast
+--This is called Context Switching
+
+
+--If we apply multitasking then a part of the one fun get executed then control switchs to the another fun now here also some part of second fun get executed then conrol switchs to the third fun then again control comes back to the fun1 now it continues fun1 from where it had stopped earliar.
+
+--now when we see the output we feel that three fun executing simulteneously.
+
+--Thus,The concept of multitasking come into existence to avoid the idle state of the CPU.
+
+
+
+Context Switching:
+------------------
+
+--Context Switching is the process of saving the state of one task and switching the CPU to another task.
+
+Example:
+
+--CPU runs fun1 for some time
+--Switches to fun2
+--Switches to fun3
+--Comes back to fun1
+
+--So all functions appear to run simultaneously.
+
+
+--In multitasking ,a part of a functionality is executed one at a time and in that part how many statement will be executed will be decided by the scheduling.
+
+
+
+Scheduling:
+----------
+
+--It is the process in which a specific time period(Time Slice) is allocated to a functionality where the control remains in that particular functionality for that specific time period(Time Slice).
+
+--once time period lapsed control switches another fun with another time slice and so on.
+
+--Scheduling is supervised by the Scheduler(either OS-schedular  or Thread-scheduler).
+
+Types of Scheduler:
+-------------------
+
+1. OS scheduler: Works on Processes (different applications)
+
+2. Thread scheduler: Works on Threads (Single application)
+
+
+---Thread-Schedular in Java is the part of the JVM, that decides which thread should run.
+
+--In Java, thread scheduling is done by JVM Thread Scheduler, but actual execution is performed by OS.
+
+--The time slice is very small (usually milliseconds or nanoseconds depending on OS and scheduler).. thus by the time our eye recognize the execution of one part control switches to another part of the program.
+
+
+
+
+Advantage of multitasking:
+
+--It is invented to avoid Idle states of the cpu.
+
+1. Make the functionalities get executed independently(mostly used becoz for a small project idle state of a cpu is not a big concern).
+
+2. Better CPU utilization
+3. Faster execution
+4. Improved performance
+5. Reduced response time
+6. Allows simultaneous tasks
+
+Multitasking is useful for:
+
+--Games
+--Animations
+--Video streaming
+--Web servers
+--Banking systems
+--GUI applications
+
+
+
+Multiprogramming vs Multitaksing:
+---------------------------------
+
+--Multiprogramming and multitasking are similar because both involve multiple programs sharing the CPU. However, in multiprogramming CPU switches when a program waits for I/O operations, while in multitasking CPU switches after a fixed time slice for better response time.
+
+--In other word, Multitasking is an advanced version of multiprogramming where CPU switches between tasks after a fixed time interval instead of waiting for I/O operations.
+
+
+| Term             | Trigger to Switch |
+| ---------------- | ----------------- |
+| Multiprogramming | I/O Wait          |
+| Multitasking     | Time Slice        |
+
+
+
+
+
+Types of Multitasking:
+----------------------
+
+--Multitasking is of two types:
+
+1. Process based multitasking
+2. Thread based multitasking
+
+
+
+1. process based multitasking:
+------------------------------
+
+--A Process is a program under execution.
+
+Example:
+
+Running Chrome: Process
+Running VLC player: Process
+Running MS-Word : Process
+
+
+--The concept of executing more than one program simultaneously which are present in the different location of RAM is known as process based multitasking.
+
+--Here processer has to maintain the address of both the program since control has to switch from one part of ram to another.
+
+--it incerase overhead on processor.
+
+--Here OS (OS-scheduler) perform the scheduling.
+
+Example
+
+--Chrome
+--VLC Player
+--MS Word
+
+--All running at same time.
+
+
+
+2. Thread Based multitasking:
+-----------------------------
+
+--The concept of executing more than one functionality simultaneously belonging to the same memory domain is known as Thread based multitasking.
+
+--Running multiple tasks within the same program.
+
+--Here Java Thread-scheduler performs the scheduling.
+
+Note: A Thread is the smallest unit of execution(lightweight sub-process) inside a process.
+
+
+Example:
+
+--Typing in MS Word while auto-save running
+--Web server handling multiple users
+--A program running with animation.
+
+
+Process vs Thread:
+------------------
+
+| Process                         | Thread                         |
+| ------------------------------- | ------------------------------ |
+| Program under execution         | Part of process                |
+| Heavyweight                     | Lightweight                    |
+| Separate memory                 | Shared memory                  |
+| Slow                            | Fast                           |
+| OS managed                      | JVM+OS managed                    |
+| Interprocess communication slow | Interthread communication fast |
+
+
+
+
+Real Life Analogy:
+------------------
+
+Example 1: Food Stall (Process based multi-tasking)
+
+Without multitasking:
+
+Order fruit salad : Wait : Eat
+Order paratha : Wait : Eat
+Order tea : Wait : Drink
+
+With multitasking:
+
+Order fruit salad
+Order paratha
+Order tea
+Collect all when ready
+
+--Here all the tasks running simultaneously.
+
+Saves time => Better resource utilization
+
+
+Example 2: Paratha Cooking (Thread based multi-tasking)
+
+--Suppose at paratha stall what that person is doing, he is taking some aata and giving shape for that and then puting that on the tawa then after cooking of paratha completly again he is taking some aata and giving shape....here till tawa is heating and gas is also wasting...not utilizing the proper resourse.
+
+--then what that person has to do..while cooking paratha there at tawa, in the same time he can prepare shape for another pratha.
+
+--This is Multithreading (doing multiple tasks in same process).
+
+
+What is a Thread in Java?
+=========================
+
+
+--A Thread is the smallest unit of execution inside a process.
+
+--A thread is a separate flow of execution that executes some functionality of a program simultaneously with other parts of the program.
+
+
+
+Multithreaded Application:
+-------------------------
+
+
+
+--In Java, every program/application has a default flow of execution, a defult thread, it is called as a "Main thread".
+
+--main() method runs inside the Main thread. 
+
+--If we can start another flow of execution(another thread) along with main thread simultenously then it is called a multithreaded application or program.
+ 
+
+--When a Java program starts, one thread is automatically created called Main Thread.
+--If we create additional threads, then the program becomes a Multithreaded Program.
+
+
+Concurrency vs Parallelism:
+===========================
+
+
+Concurrency = Managing multiple tasks at the same time
+Parallelism = Executing multiple tasks at the same time
+
+
+Concurrency
+-----------
+
+--Concurrency is a situation where multiple tasks are in progress at the same time, but CPU executes them one by one by switching between them very fast.
+
+--Uses context switching
+--Usually happens in single-core CPU
+--Tasks appear to run simultaneously, but actually they are not
+
+Example
+
+You are:
+
+--Writing an assignment
+--Talking on phone
+--Drinking tea
+
+--You are not doing all at the exact same time, but switching between tasks, This is Concurrency.
+
+
+Parallelism:
+------------
+
+--Parallelism is a situation where multiple tasks are executed at the exact same time using multiple CPU cores.
+
+--Requires multi-core processor
+--Tasks actually run simultaneously
+
+Example
+
+In a restaurant kitchen:
+
+One person making roti
+One person making sabji
+One person making tea
+
+--All tasks happening at the same time, This is Parallelism.
+
+
+Concurrency vs Parallelism:
+---------------------------
+
+
+| Concurrency               | Parallelism                 |
+| ------------------------- | --------------------------- |
+| Tasks appear simultaneous | Tasks actually simultaneous |
+| Single CPU core           | Multiple CPU cores          |
+| Context switching         | True simultaneous execution |
+| Slower than parallelism   | Faster                      |
+| Example: Multithreading   | Example: Multiprocessing    |
+
+
+
+
+Real Life Example:
+ 
+--One teacher teaching 3 students one by one: Concurrency
+
+--Three teachers teaching 3 students: Parallelism
+
+
+
+Multiprocessing
+---------------
+
+--Multiprocessing is a technique where multiple processes execute simultaneously using multiple CPU cores.
+
+--In a multi-core CPU, each core can execute a separate process (application).
+--Inside each process, multiple threads can run concurrently.
+--These threads share the same memory of the process.
+
+
+Note: In a multi-core CPU system, the operating system schedules processes and threads on different CPU cores. Each process can contain multiple threads, and these threads can run concurrently or in parallel depending on the number of CPU cores available.
+
+
+Note: Multithreading provides concurrency and can provide parallelism on multi-core CPU.
+
+
+Program vs Process vs Thread:
+------------------------------
+
+Program: A program is a passive set of instructions stored on disk.
+Process: When a program is loaded into memory and starts execution, it becomes a process.
+Thread: A thread is a unit of execution inside a process.
+
+
+
+
+Implementing Thread in Java:
+============================
+1. Extending Thread Class:-
+--------------------------
+- Create a new class that extends the Thread class (this defines your custom thread type)
+- Override the run() method inside that class (this contains the task the thread will perform)
+- Create an object of your thread class (this prepares the thread instance)
+- Call the start() method on that object (this starts a new thread of execution)
+- The thread moves to runnable state and waits for CPU scheduling (execution timing depends on the system)
+- The run() method executes when the thread gets CPU time
+- After run() finishes, the thread terminates (its lifecycle ends)
+
+Code Example:-
+-------------
+public class Main {
+    public static void main(String[] args) {
+        ThreadA ta = new ThreadA();
+        ThreadB tb = new ThreadB();
+        ta.start();
+        tb.start();
+        for(int i=100; i<121;i++){
+            System.out.println(i);
+        }
+
+    }
+}
+public class ThreadA extends  Thread{
+    @Override
+    public void run() {
+        for(int i=0; i<26;i++){
+            char ch = (char)('A'+i);
+            System.out.println(ch);
+        }
+    }
+}
+public class ThreadB extends  Thread{
+    @Override
+    public void run() {
+        for(int i=0; i<26;i++){
+            System.out.println(i);
+        }
+    }
+}
+
+Output:-
+----------
+100 (Main Thread numbers)
+101
+A (ThreadA characters)
+B
+102
+103
+C
+D
+E
+F
+G
+H
+0(ThreadB numbers)
+1
+2
+3
+4
+5
+.....
+
+***Three threads running simultaneously. 
+
+
+Problem with Thread Class:-
+- - - - - - - - - - - - - 
+- Java does not support multiple inheritance. If you extend Thread, your class cannot extend any other class.
+
+
+2. Implements Runnable Interface:-
+---------------------------------
+- Create a class that implements the Runnable interface (this defines the task, not the thread)
+- Override the run() method in that class (this contains the code to be executed by the thread)
+- Create an object of your class (this prepares the runnable task)
+- Create a Thread object and pass the runnable object to it (this binds the task to a thread)
+- Call the start() method on the Thread object (this starts a new thread of execution)
+- The thread moves to runnable state and waits for CPU scheduling (execution timing depends on the system)
+- The run() method executes when the thread gets CPU time
+- After run() finishes, the thread terminates (its lifecycle ends)
+Code Example:-
+-------------
+public class Main {
+    public static void main(String[] args) {
+        ThreadA ta = new ThreadA();
+        ThreadB tb = new ThreadB();
+        Thread tr1 = new Thread(ta);
+        Thread tr2 = new Thread(tb);
+        tr1.start();
+        tr2.start();
+        for(int i=100; i<121;i++){
+            System.out.println(i);
+        }
+    }
+}
+public class ThreadA implements  Runnable {
+    @Override
+    public void run() {
+        for(int i=0; i<26;i++){
+            char ch = (char)('A'+i);
+            System.out.println(ch);
+        }
+    }
+}
+public class ThreadB implements Runnable{
+    @Override
+    public void run() {
+        for(int i=0; i<26;i++){
+            System.out.println(i);
+        }
+    }
+}
+Output:-
+------
+100 (Main Thread numbers)
+101
+0 (ThreadB numbers)
+1
+2
+3
+4
+102
+103
+104
+105
+106
+107
+108
+A (ThreadA characters)
+B
+C
+D
+.........
+
+***Three threads running simultaneously. 
+
+
+
+What happen when a start() method call:-
+---------------------------------------
+- Calling start() creates a new thread in the Java Virtual Machine.
+- The thread moves from NEW state to RUNNABLE state.
+- The thread becomes ready, and the thread scheduler decides when it will run.
+- The JVM automatically calls the run() method internally.
+- The thread executes its task independently (concurrently).
+- After completing execution, the thread goes to the TERMINATED state.
+
+
+
+Finding sum using single/double thread time difference:-
+=======================================================
+Using Single Thread:-
+--------------------
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ThreadA ta = new ThreadA();
+        long t1 = System.currentTimeMillis();
+        ta.start();
+        ta.join();
+        long t2 = System.currentTimeMillis();
+        System.out.println(t2-t1);
+        System.out.println(ta.getSum());
+    }
+}
+public class ThreadA extends Thread {
+    long sum = 0;
+    @Override
+    public void run() {
+        for(int i=0; i<Integer.MAX_VALUE;i++){
+            sum+=i;
+        }
+    }
+    public long getSum(){
+        return sum;
+    }
+}
+Output:-
+------
+509 milliseconds
+2305843005992468481
+
+Using double Thread:-
+--------------------
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ThreadA ta = new ThreadA();
+        ThreadB tb = new ThreadB();
+        long t1 = System.currentTimeMillis();
+        ta.start();
+        tb.start();
+        ta.join();
+        tb.join();
+
+        long t2 = System.currentTimeMillis();
+        System.out.println((t2-t1)+" milliseconds");
+        System.out.println(ta.getSum()+tb.getSum());
+    }
+}
+public class ThreadA extends Thread{
+    long sum = 0;
+    @Override
+    public void run() {
+        for(int i=0; i<Integer.MAX_VALUE/2;i++){
+            sum+=i;
+        }
+
+    }
+    public long getSum(){
+        return sum;
+    }
+}
+public class ThreadB extends Thread{
+    long sum = 0;
+    @Override
+    public void run() {
+        for(int i=Integer.MAX_VALUE/2; i<Integer.MAX_VALUE;i++){
+            sum+=i;
+        }
+    }
+    public long getSum(){
+        return sum;
+    }
+}
+Output:-
+--------
+279 milliseconds
+2305843005992468481
+
+***Note:- Time usage almost half when we are calculating sum using 2 Threads.
+
+
+get and set a name of Thread:-
+=============================
+1. Using super() class constructor:-
+-----------------------------------
+Code:-
+
+public class MyThread extends  Thread{
+    MyThread(String name){
+        super(name);
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        MyThread mt = new MyThread("MyThread");
+        System.out.println(mt.getName());
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+
+Output:-
+-------
+MyThread
+main
+
+2. Using setName() method:-
+---------------------------
+Code:-
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread mt = new MyThread();
+        mt.setName("MyThread");
+        System.out.println(mt.getName());
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+public class MyThread extends  Thread{
+}
+
+Output:-
+---------
+MyThread
+main
+
+3. Using overloaded constructor of Thread passing name with implemented Runnable interface Class object:-
+--------------------------------------------------------------------------------------------------------
+Code:-
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread mt = new MyThread();
+        Thread tr = new Thread(mt,"MyThread");
+        System.out.println(tr.getName());
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+public class MyThread implements Runnable{
+    @Override
+    public void run() {
+    }
+}
+
+Output:-
+------
+MyThread
+main
+
+
+Thread Priority:-
+================
+Thread priority is a number assigned to a thread that tells the scheduler how important that thread is compared to others. Threads with higher priority are more likely to get CPU time before lower-priority threads.
+
+Range: 1 (MIN_PRIORITY) to 10 (MAX_PRIORITY)
+Default: 5 (NORM_PRIORITY)
+
+        (Thread.MAX_PRIORITY--10)
+        (Thread.NORM_PRIORITY--5)
+        (Thread.MIN_PRIORITY--1)
+
+- What happens if you set max priority? (10)
+
+	- The thread becomes more preferred by the scheduler.
+	- It may run more often or sooner than lower-priority threads.
+	- However, there is NO guarantee it will always run first.
+
+In short:-
+Setting max priority suggests the system to favor that thread, but it doesn’t strictly control execution order.
+
+Example:-
+-------
+
+public class Main {
+    public static void main(String[] args) {
+        Thread1 t1 = new Thread1();
+        Thread2 t2 = new Thread2();
+        Thread3 t3 = new Thread3();
+        
+        t1.setPriority(Thread.MAX_PRIORITY);
+        t2.setPriority(Thread.NORM_PRIORITY);
+        t3.setPriority(Thread.MIN_PRIORITY);
+
+        System.out.println(t1.getPriority());
+        System.out.println(t2.getPriority());
+        System.out.println(t3.getPriority());
+        System.out.println("=====================");
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+
+public class Thread1 extends Thread{
+    @Override
+    public void run() {
+        for(int i=1; i<=50; i++){
+            System.out.println(i);
+        }
+    }
+}
+public class Thread2 extends Thread{
+    @Override
+    public void run() {
+        for(int i=51; i<=100; i++){
+            System.out.println(i);
+        }
+    }
+}
+public class Thread3 extends Thread{
+    @Override
+    public void run() {
+        for(int i=101; i<=150; i++){
+            System.out.println(i);
+        }
+    }
+}
+
+Output:-
+-------
+10
+5
+1
+=====================
+1
+2
+3
+4
+5
+51
+52
+53
+54
+55
+56
+57
+101
+102
+103
+58
+59
+6
+7.......
+
+
+
+Suspending a Thread:-
+=====================
+1. Time Based (sleep(time in milliseconds))
+------------------------
+- Pauses the execution of the current thread for a specified amount of time.
+
+Key points:
+- It makes the thread do nothing (wait) for given milliseconds.
+- After time is over, the thread becomes runnable again.
+
+Example 1:-
+=-=-=-=-=-=
+public class Main {
+    public static void main(String[] args) {
+        Common c = new Common();
+        c.start();
+    }
+}
+public class Common extends Thread{
+    @Override
+    public void run() {
+        System.out.println("Hello");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("Students");
+    }
+}
+Output:-
+-------
+Hello
+//Pause for 2 seconds
+Students
+
+Example 2:-
+=-=-=-=-=-=
+public class Main {
+    public static void main(String[] args) {
+        Racer r1 = new Racer("Raghav");
+        Racer r2 = new Racer("Aditya");
+        Racer r3 = new Racer("Pushkar");
+        Racer r4 = new Racer("Puneet");
+        r1.start();
+        r2.start();
+        r3.start();
+        r4.start();
+    }
+}
+public class Racer extends Thread{
+    public Racer(String name){
+        super(name);
+    }
+    @Override
+    public void run() {
+        for(int i=1; i<=3; i++){
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(Thread.currentThread().getName()+" reached at "+i+"th step..");
+        }
+        System.out.println(Thread.currentThread().getName()+" finishes the race....");
+    }
+}
+Output:-
+------
+Pushkar reached at 1th step..
+Raghav reached at 1th step..
+Puneet reached at 1th step..
+Aditya reached at 1th step..
+Puneet reached at 2th step..
+Pushkar reached at 2th step..
+Raghav reached at 2th step..
+Aditya reached at 2th step..
+Raghav reached at 3th step..
+Pushkar reached at 3th step..
+Raghav finishes the race....
+Pushkar finishes the race....
+Puneet reached at 3th step..
+Puneet finishes the race....
+Aditya reached at 3th step..
+Aditya finishes the race....
+
+
+
+2. Conditionally (Join())
+-------------------------
+ - Makes one thread wait until another thread finishes its execution.
+
+Key points:
+- Used when one thread depends on another.
+- The calling thread waits until the target thread dies.
+- Helps maintain execution order.
+
+Example 1:-
+----------
+Without join() method:-
+- - - - - - - - -
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        GetSum gs1 = new GetSum();
+        gs1.start();
+        System.out.println(gs1.returnSum());
+    }
+}
+public class GetSum extends Thread{
+    int sum = 0;
+    @Override
+    public void run() {
+        for(int i=1; i<=10; i++){
+            sum+=i;
+        }
+    }
+    public int returnSum(){
+        return sum;
+    }
+}
+Output:-
+------
+0
+
+With join() method:-
+-- - - - - -- - - -
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        GetSum gs1 = new GetSum();
+        gs1.start();
+        gs1.join();
+        System.out.println(gs1.returnSum());
+    }
+}
+
+public class GetSum extends Thread{
+    int sum = 0;
+    @Override
+    public void run() {
+        for(int i=1; i<=10; i++){
+            sum+=i;
+        }
+    }
+    public int returnSum(){
+        return sum;
+    }
+}
+Output:-
+-------
+55
+
+
+
+
+Example 2:-
+=-=-=-=-=
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+
+        ThreadA ta = new ThreadA();
+        ThreadB tb = new ThreadB();
+        ta.start();
+        tb.start();
+        ta.join();
+        tb.join();
+
+        System.out.println("Main thread is running....");
+        
+    }
+}
+public class ThreadA extends  Thread{
+
+    @Override
+    public void run() {
+        for(int i=1; i<=100; i++){
+            System.out.println(i);
+        }
+    }
+}
+public class ThreadB extends  Thread{
+
+    @Override
+    public void run() {
+        for(int i=101; i<=300; i++){
+            System.out.println(i);
+        }
+    }
+}
+
+Output:-
+------
+1
+101
+102
+103
+104
+105
+106
+107
+108
+109
+2
+3
+4
+5
+6
+7
+8
+.....
+Main thread is running....
