@@ -994,3 +994,752 @@ Output:-
 8
 .....
 Main thread is running....
+
+isAlive():-
+---------
+isAlive() is used to check whether a thread is still running or not.
+
+Key points:
+- It returns a boolean value:
+	- true → thread is still executing
+	- false → thread has not started or has finished
+- A thread is considered “alive”:
+	- after start() is called
+	- until the run() method completes
+
+Example:-
+-------
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        DownloadMovie dm= new DownloadMovie();
+        dm.start();
+        while(dm.isAlive()){
+            System.out.println("Please wait movie is downloading.....");
+            Thread.sleep(500);
+        }
+        System.out.println("Movie downloaded successfully...");
+        System.out.println("You can watch the movie now.....");
+    }
+}
+public class DownloadMovie extends  Thread{
+    @Override
+    public void run() {
+        System.out.println("Movie start downloading....");
+        for(int i=1; i<=5;i++){
+            System.out.println("Movie downloaded "+(i*20)+"% done..");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
+Output:-
+-------
+Please wait movie is downloading.....
+Movie start downloading....
+Movie downloaded 20% done..
+Please wait movie is downloading.....
+Movie downloaded 40% done..
+Please wait movie is downloading.....
+Movie downloaded 60% done..
+Please wait movie is downloading.....
+Movie downloaded 80% done..
+Please wait movie is downloading.....
+Movie downloaded 100% done..
+Please wait movie is downloading.....
+Movie downloaded successfully...
+You can watch the movie now.....
+
+
+Race condition:-
+===============
+A race condition happens when multiple threads access and modify the same data at the same time, and the final result depends on which thread runs first, leading to unpredictable or incorrect outcomes.
+
+Why race condition occurs in concurrency (even without true parallelism):-
+-------------------------------------------------------------------------
+Even on a single core, threads don’t run all at once—they switch very fast.
+
+Step-by-step:
+- - - - - -
+- Thread A starts → reads value (say count = 0)
+- CPU switches to Thread B before A finishes
+- Thread B reads same value (count = 0)
+- Thread B increments → writes 1
+- CPU switches back to Thread A
+- Thread A increments its old value → also writes 1
+Final result = 1 instead of 2
+
+Example:-
+--------
+1.
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        MyThread tr1 = new MyThread(counter);
+        MyThread tr2 = new MyThread(counter);
+        tr1.start();
+        tr2.start();
+        tr1.join();
+        tr2.join();
+        System.out.println(counter.returnCount());
+    }
+}
+public class MyThread extends Thread{
+    Counter counter;
+    MyThread(Counter counter){
+        this.counter = counter;
+    }
+    @Override
+    public void run() {
+        for(int i=0; i<10000;i++){
+            counter.increment();
+        }
+    }
+}
+public class Counter {
+    int count =0;
+    void increment(){
+        count++;
+    }
+    int returnCount(){
+        return count;
+    }
+}
+Output:-
+-------
+14090
+
+2. Difference btw StringBuilder and StringBuffer:-
+-------------------------------------------------
+a. StringBuilder:-
+-----------------
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        StringBuilder sb = new StringBuilder();
+        StringThreadSafety sts1 = new StringThreadSafety(sb);
+        StringThreadSafety sts2 = new StringThreadSafety(sb);
+        sts1.start();
+        sts2.start();
+        sts1.join();
+        sts2.join();
+        System.out.println(sb.length());
+    }
+}
+public class StringThreadSafety extends Thread{
+    StringBuilder sb;
+    StringThreadSafety(StringBuilder sb){
+        this.sb = sb;
+    }
+    @Override
+    public void run() {
+        for(int i=0; i<1000; i++){
+            sb.append('a');
+        }
+    }
+}
+Output:-
+-------
+1398
+
+b. StringBuffer:-
+----------------
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        StringBuffer sb = new StringBuffer();
+        StringThreadSafety sts1 = new StringThreadSafety(sb);
+        StringThreadSafety sts2 = new StringThreadSafety(sb);
+        sts1.start();
+        sts2.start();
+        sts1.join();
+        sts2.join();
+        System.out.println(sb.length());
+    }
+}
+public class StringThreadSafety extends Thread{
+    StringBuffer sb;
+    StringThreadSafety(StringBuffer sb){
+        this.sb = sb;
+    }
+    @Override
+    public void run() {
+        for(int i=0; i<1000; i++){
+            sb.append('a');
+        }
+    }
+}
+Output:-
+-------
+2000
+
+***StringBuffer output is correct and StringBuilder output is wrong.
+
+
+
+
+Synchronization:-
+===============
+Synchronization is a technique used to control access to shared resources so that only one thread can use them at a time, preventing problems like race conditions and ensuring correct results.
+
+Code:-
+-----
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        MyThread tr1 = new MyThread(counter);
+        MyThread tr2 = new MyThread(counter);
+        MyThread tr3 = new MyThread(counter);
+        tr1.start();
+        tr2.start();
+        tr3.start();
+        tr3.join();
+        tr1.join();
+        tr2.join();
+        System.out.println(counter.returnCount());
+    }
+}
+public class MyThread extends Thread{
+    Counter counter;
+    MyThread(Counter counter){
+        this.counter = counter;
+    }
+    @Override
+    public void run() {
+        for(int i=0; i<10000;i++){
+            counter.increment();
+        }
+    }
+}
+public class Counter {
+    int count =0;
+    synchronized void increment(){
+        count++;
+    }
+    int returnCount(){
+        return count;
+    }
+}
+
+Output:-
+-------
+30000
+
+Lock:-
+-----
+A lock is a way to control access to shared resources by allowing only one thread to enter a critical section at a time, while other threads must wait until the lock is released.
+
+How Locks Work Internally:-
+--------------------------
+
+- Every shared resource (or object) has a lock.
+- When a thread enters a synchronized block/method, it tries to acquire the lock.
+- If the lock is free → thread gets it immediately
+- If the lock is busy → thread cannot enter
+- If another thread already holds the lock, the current thread goes into a waiting/block state.
+- The thread that acquired the lock executes the code that accesses shared data.
+- Remaining threads keep waiting until the lock becomes available.
+- After finishing execution, the thread exits the synchronized block and releases the lock.
+- One of the waiting threads gets the lock and starts execution.
+
+Think of a bathroom with one key:-
+--------------------------------
+- Whoever has the key can enter
+- Others must wait outside
+- When the key is returned, the next person can use it
+
+
+
+
+
+1. Object Level lock
+--------------------
+An object-level lock is a lock that is associated with a specific object (instance), so only one thread can access that object's synchronized code at a time.
+
+How it Works:
+-------------
+- Each object has its own separate lock
+- When a thread enters a synchronized method/block of that object → it acquires that object's lock
+- Other threads trying to use the same object must wait
+- Threads can still access different objects simultaneously
+- Lock is applied to a particular object, not the whole class
+
+Example:-
+--------
+- Object A → locked by Thread 1
+- Object B → can still be used by Thread 2
+- No conflict because locks are separate per object
+
+If an object-level lock is acquired, other threads can still access:-
+---------------------------------------------------------------------
+- Non-synchronized methods 
+- Non-critical members (variables) directly 
+- But they cannot access synchronized methods/blocks of that same object.
+
+Step-by-step understanding:-
+------------------------------
+- Thread A acquires object lock
+- It enters a synchronized method/block of Object X.
+- Lock is now held by Thread A
+- Only Thread A can execute synchronized code of that object.
+- Thread B tries to access same object
+	- Case 1: Calls a synchronized method
+		- Blocked → must wait until lock is released
+	- Case 2: Calls a non-synchronized method
+		- Allowed → runs immediately
+	- Case 3: Accesses variables directly
+		- Allowed (but dangerous → can cause race condition)
+- Object lock only controls synchronized parts, not the entire object.
+- Even if one thread holds an object lock, another thread can still access a static synchronized method, because they use different locks.
+
+Example:-
+---------
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Common common = new Common();
+        ThreadA tr1 = new ThreadA(common, "Aditya");
+        ThreadA tr2 = new ThreadA(common, "Riya");
+        tr1.start();
+        tr2.start();
+    }
+}
+public class ThreadA extends Thread{
+    Common common;
+    String name;
+
+    public ThreadA(Common common, String name) {
+        this.common = common;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        common.fun1(name);
+    }
+}
+public class Common {
+    synchronized void fun1(String name){
+        System.out.println("Welcome...");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(name);
+    }
+}
+Output:-
+------
+Welcome...
+Riya
+Welcome...
+Aditya
+
+Example of Using Another methods which are non-synchronized of same object:-
+-------------------------------------------------------------------------------
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        PrintNumbers pn = new PrintNumbers();
+        ThreadB tr1 = new ThreadB(pn);
+        ThreadB tr2 = new ThreadB(pn);
+        tr1.start();
+        tr2.start();
+    }
+}
+public class ThreadB extends  Thread{
+    PrintNumbers pn;
+    ThreadB(PrintNumbers pn){
+        this.pn = pn;
+    }
+    @Override
+    public void run() {
+        pn.print1();
+        pn.print2();
+    }
+}
+public class PrintNumbers {
+    synchronized void print1() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+        }
+    }
+    void print2(){
+        for(int i=0; i<10; i++){
+            char ch = (char)('A'+i);
+            System.out.println(ch);
+        }
+    }
+}
+
+Output:-
+------
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+0
+1
+A
+B
+C
+D
+E
+F
+G
+H
+I
+2
+3...... so on...
+
+2. Class Level lock
+-------------------
+A class-level lock is a lock associated with the class itself, not any particular object. It ensures that only one thread can execute any static synchronized method of the class at a time, no matter how many objects exist.
+
+How It Works :
+-------------
+- Every class in Java has a hidden Class object. Class-level locks use this object.
+- When a thread enters a static synchronized method, it tries to acquire the class lock.
+- If no thread holds the class lock → thread acquires it
+- If another thread holds it → thread waits
+- Only one thread can execute static synchronized methods of that class at a time.
+- When finished, the lock is released → next waiting thread can enter.
+
+
+Key Points:
+-----------
+- Locks all static synchronized methods of that class, not just one method
+- Does not block object-level synchronized methods (different lock)
+- Prevents race conditions on shared static data
+
+Situation:-
+=-=-=-=-=-=
+- Thread A acquires class-level lock by entering a static synchronized method of a class.
+- There is an object of that class associated with Thread B.
+- What Thread B Can Access:
+	- Non-synchronized methods (static or instance)
+		- No lock is needed → thread can run immediately
+	- Non-static variables
+		- Object-level data is independent of class-level lock
+	- Static variables
+		- If accessed without synchronized →  allowed
+		- If accessed inside static synchronized method →  blocked until class lock is released
+	- Instance synchronized methods (object-level lock)
+		- Object-level lock is different from class-level lock → thread can enter
+
+Example:-
+---------
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Common common1 = new Common();
+        Common common2 = new Common();
+        Common common3 = new Common();
+        ThreadA tr1 = new ThreadA(common1, "Aditya");
+        ThreadA tr2 = new ThreadA(common2, "Riya");
+        ThreadA tr3 = new ThreadA(common3, "Radhika");
+        tr3.start();
+        tr1.start();
+        tr2.start();
+    }
+}
+public class ThreadA extends Thread{
+    Common common;
+    String name;
+
+    public ThreadA(Common common, String name) {
+        this.common = common;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        common.fun1(name);
+    }
+}
+public class Common {
+    static synchronized void fun1(String name){
+        System.out.println("Welcome...");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(name);
+    }
+}
+Output:-
+------
+Welcome...
+Radhika
+Welcome...
+Riya
+Welcome...
+Aditya
+
+***Important Concept***
+-----------------------
+- Object-level lock → locks a specific object
+- Static synchronized method → locks the class (Class object)
+- These two locks are different and independent
+
+Synchronized Block:-
+-------------------
+- A synchronized block is a section of code that is locked on a specific object so that only one thread can execute that block at a time for that object, instead of locking the whole method.
+- Think of a synchronized block as locking only a specific room in a building, instead of locking the entire building.
+
+1. synchronized(this)
+---------------------
+ Locks the current object, so only one thread can execute synchronized code of that object at a time.
+
+Code Example:-
+--------------
+public class Common {
+    void fun1(String name){
+//        1000 lines of code
+        synchronized (this){
+            System.out.println("Welcome...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(name);
+        }
+//        1000 lines of code
+    }
+}
+public class ThreadA extends Thread{
+    Common common;
+    String name;
+
+    public ThreadA(Common common, String name) {
+        this.common = common;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        common.fun1(name);
+    }
+}
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Common c = new Common();
+        ThreadA tr1 = new ThreadA(c,"Radhika");
+        ThreadA tr2 = new ThreadA(c, "Riya");
+        tr1.start();
+        tr2.start();
+    }
+}
+
+Output:-
+------
+Welcome...
+Radhika
+Welcome...
+Riya
+
+
+2. synchronized(lock)
+--------------------
+ Locks a custom object (usually private), so only threads using that lock object are blocked, making it safer than this.
+
+Code Example:-
+------------
+public class Common {
+    final private Object lock = new Object(); //Using custom lock...
+    void fun1(String name){
+//        1000 lines of code
+        synchronized (lock){
+            System.out.println("Welcome...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(name);
+        }
+//        1000 lines of code
+    }
+}
+public class ThreadA extends Thread{
+    Common common;
+    String name;
+
+    public ThreadA(Common common, String name) {
+        this.common = common;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        common.fun1(name);
+    }
+}
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Common c = new Common();
+        ThreadA tr1 = new ThreadA(c,"Radhika");
+        ThreadA tr2 = new ThreadA(c, "Riya");
+        tr1.start();
+        tr2.start();
+    }
+}
+
+Output:-
+------
+Welcome...
+Radhika
+Welcome...
+Riya
+
+
+Why we should use custom 'lock' object instead of 'this':-
+--------------------------------------------------------
+- We should use a private lock object instead of this because this can be accessed by external code.
+- External code might accidentally acquire the same lock and block our threads.
+- Using a private lock ensures that only code inside the class can acquire it.
+- This makes synchronization safer and more predictable.
+- It also reduces the risk of outside interference.
+- Additionally, it allows fine-grained control, so different parts of the class can be locked independently.
+
+3. synchronized(MyClass.class)
+-------------------------------
+ Locks the class itself, so only one thread can execute static synchronized code for the class at a time, across all objects.
+
+Code Example:-
+-------------
+public class Common {
+
+    void fun1(String name){
+//        1000 lines of code
+        synchronized (Common.class){ //Using class level lock...
+            System.out.println("Welcome...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(name);
+        }
+//        1000 lines of code
+    }
+}
+public class ThreadA extends Thread{
+    Common common;
+    String name;
+
+    public ThreadA(Common common, String name) {
+        this.common = common;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        common.fun1(name);
+    }
+}
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Common c = new Common();
+        ThreadA tr1 = new ThreadA(c,"Radhika");
+        ThreadA tr2 = new ThreadA(c, "Riya");
+        tr1.start();
+        tr2.start();
+    }
+}
+
+Output:-
+------
+Welcome...
+Radhika
+Welcome...
+Riya
+
+
+
+
+Student Task:-
+==============
+Task 1:-
+-------
+Thread Racing Game
+
+- Create two threads representing 
+	- Rabbit :rabbit
+	- Turtle :turtle---- running a race.
+
+- Use:
+	- Thread names
+	- Thread priority
+	- sleep() for delay
+
+- Create a class Racer that extends Thread.
+- Set thread names:
+	- Rabbit
+	- Turtle
+- Set priorities:
+	- Rabbit → MAX_PRIORITY
+	- Turtle → MIN_PRIORITY
+- Inside run():
+	- Print running steps from 1 to 5
+- Use:
+	- Thread.sleep(1000);
+- Start both threads.
+
+Expected Output (Example):-
+---------------------------
+Rabbit running step 1
+Turtle running step 1
+Rabbit running step 2
+Turtle running step 2
+...
+
+Task 2:-
+-------
+Sum from 1 to 100 using join()
+
+Create a thread that calculates sum from 1 to 10, and main thread waits for it using join().
+
+- Create class SumThread extending Thread.
+- Inside run():
+- Calculate:
+	1 + 2 + 3 + ... + 100
+- In main method:
+- Create thread object
+- Start thread
+- Use:
+	- join()
+- Print sum after thread finishes.
+
+Task 3
+------
+Bank Withdrawal (Race Condition → Synchronization) 
+
+Simulate bank withdrawal using two threads and fix race condition using synchronization.
+
+- Step 1 
+	- Create BankAccount
+	- balance = 50000
+	- Method:
+		- withdraw(int 200) //Every time withdraw will be 200
+- Step 2 — Create Two Threads
+	- Thread names:
+		- ATM Thread
+		- PhonePay Thread
+
+	- Both withdraw:
+		- 20000
+- Step 3 — First Run WITHOUT synchronization
+	- Observe:
+		- Wrong balance :x:
+
+- Step 4 — Fix using synchronization
+
