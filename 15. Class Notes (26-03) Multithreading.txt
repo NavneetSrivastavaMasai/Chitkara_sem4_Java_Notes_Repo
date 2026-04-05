@@ -1743,3 +1743,219 @@ Simulate bank withdrawal using two threads and fix race condition using synchron
 
 - Step 4 — Fix using synchronization
 
+Inter-Thread Communication:-
+==========================
+- Inter-thread communication is a mechanism that allows threads to talk to each other and coordinate their actions while sharing resources.
+- It is mainly used to avoid conflicts and ensure threads wait for conditions instead of continuously running.
+
+Why we need Inter-Thread Communication:-
+--------------------------------------
+- When Threads are using shared resource
+- When one Thread's needed another thread's Result.
+
+We use following three methods for Inter-Thread Communication:-
+---------------------------------------------------------------
+
+wait():-
+------
+wait() is a method that makes the current thread pause and release the lock it holds, allowing other threads to run. The thread stays in a waiting state until another thread notifies it using notify() or notifyAll().
+
+Key Points:-
+------------
+- Must be called inside a synchronized method or block.
+- Releases the lock on the object, so other threads can enter synchronized blocks on the same object.
+- The thread remains waiting until:
+	- Another thread calls notify() or notifyAll() on the same object
+- Used for inter-thread communication to coordinate actions.
+
+notify():-
+--------
+notify() is a method used to wake up one thread that is waiting on the same object.
+
+ How it works:-
+- A thread calls wait() → it goes into waiting state
+- Another thread calls notify() → one waiting thread wakes up
+- The awakened thread does not run immediately — it must first re-acquire the lock
+
+Key Points:-
+- Must be used inside a synchronized block or method
+- Works on the same object whose lock is held
+- Wakes up only ONE waiting thread
+
+Why we need synchronized with wait() and notify():-
+===================================================
+- We need a synchronized block or method when using wait() and notify() because these methods work with something called a lock (monitor) that belongs to every object in Java.
+- First, understand that a thread must own the lock of an object before it can control that object. When a thread enters a synchronized block, it gets that lock.
+- Now, when a thread calls wait(), it is basically saying: “I am done for now, I will release the lock and go into waiting state.”
+- But a thread can only release a lock if it actually has that lock.
+- So if the thread is not inside a synchronized block, it never got the lock in the first place, and therefore it cannot call wait().
+- Next, when a thread calls notify() or notifyAll(), it is saying: “I will wake up one or more waiting threads.”
+- But this action also needs control over the same object’s lock, because the waiting threads are associated with that lock.
+- So again, the thread must be inside a synchronized block to have the authority to notify others.
+- If we try to call wait() or notify() without synchronization, Java will immediately throw an error called IllegalMonitorStateException.
+- This happens because Java checks whether the thread owns the lock or not, and if it doesn’t, it stops the program to prevent unsafe behavior.
+-Another important reason is safety. Without synchronization, multiple threads could try to call wait() or notify() at the same time on the same object, which could create confusion, missed signals, or inconsistent data.
+
+Example:-
+=-=-=-=
+1. find Sum from 1 to 100 using another thread:-
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ThreadA ta = new ThreadA();
+        ta.start();
+        Thread.sleep(1000);
+        synchronized (ta){
+            System.out.println("Main thread is going into waiting state....");
+            ta.wait(2000);
+            System.out.println("Main thread resumes......");
+        }
+        System.out.println(ta.sum);
+    }
+}
+public class ThreadA extends Thread{
+    int sum = 0;
+    @Override
+    public void run() {
+        synchronized (this){
+            System.out.println("Sum is going to start....");
+            for(int i=1; i<=100; i++){
+                sum+=i;
+            }
+            System.out.println("Sum added successfully....");
+            notify();
+        }
+
+    }
+}
+
+Output:-
+-------
+Sum is going to start....
+Sum added successfully....
+Main thread is going into waiting state....
+Main thread resumes......
+5050
+
+2. Producer and Consumer Example:-
+-----------------------------------
+public class Resource {
+    int data;
+    boolean hasData;
+    synchronized void producer(int value) throws InterruptedException {
+        while(hasData){
+            wait();
+        }
+        data = value;
+        Thread.sleep(1000);
+        hasData = true;
+        System.out.println(Thread.currentThread().getName()+" Producing data "+data);
+        notify();
+    }
+    synchronized void consumer() throws InterruptedException {
+        while(!hasData){
+            wait();
+        }
+        Thread.sleep(1000);
+        hasData =false;
+        System.out.println(Thread.currentThread().getName()+" Consumed data "+data);
+        notify();
+    }
+}
+public class Producer extends Thread{
+    Resource r;
+    Producer(Resource r){
+        this.r = r;
+    }
+    @Override
+    public void run() {
+        for(int i=1; i<=3; i++){
+            try {
+                r.producer(i);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
+public class Consumer extends Thread{
+    Resource r;
+    Consumer(Resource r){
+        this.r = r;
+    }
+    @Override
+    public void run() {
+        for(int i=1; i<=3; i++){
+            try {
+                r.consumer();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
+public class Main2 {
+    public static void main(String[] args) {
+        Resource r = new Resource();
+        Producer pr = new Producer(r);
+        Consumer cr = new Consumer(r);
+        pr.setName("Producer");
+        cr.setName("Consumer");
+        pr.start();
+        cr.start();
+    }
+}
+
+Output:-
+-------
+Producer Producing data 1
+Consumer Consumed data 1
+Producer Producing data 2
+Consumer Consumed data 2
+Producer Producing data 3
+Consumer Consumed data 3
+
+notifyAll():-
+-----------
+notifyAll() is used to wake up all threads that are waiting on the same object.
+
+How it works:-
+- Multiple threads call wait() → they go into waiting state
+- One thread calls notifyAll()
+- All waiting threads are awakened
+
+Key Points:-
+- Must be used inside a synchronized block or method
+- Works on the same object whose lock is held
+- Wakes up all waiting threads
+- Threads run one by one after acquiring the lock
+- Safer than notify() in many cases.
+
+
+
+
+Student Task:-
+=============
+Odd-Even Number Printer
+------------------------
+- Two threads print numbers in order: OddPrinter prints odd numbers, EvenPrinter prints even numbers.
+- Use wait() and notify() or notify() to coordinate.
+
+Requirements:
+- Shared resource contains a current number.
+- OddPrinter prints only odd numbers; EvenPrinter prints only even numbers.
+- Each thread waits if it’s not its turn.
+- Stop printing after a maximum number (say 10).
+
+Expected Output:
+
+OddPrinter prints: 1
+EvenPrinter prints: 2
+OddPrinter prints: 3
+EvenPrinter prints: 4
+
+
+
+
+
+
