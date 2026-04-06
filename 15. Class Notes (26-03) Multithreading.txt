@@ -1932,6 +1932,92 @@ Key Points:-
 - Safer than notify() in many cases.
 
 
+Example:-
+--------
+public class ClassRoom {
+    boolean classStarted = false;
+    boolean homeWorkGiven = false;
+    public synchronized void waitForClass() throws InterruptedException {
+        while(!classStarted){
+            wait();
+        }
+        System.out.println(Thread.currentThread().getName()+" studying in class..");
+    }
+    public synchronized void waitForHomeWork() throws InterruptedException {
+        while(!homeWorkGiven){
+            wait();
+        }
+        System.out.println(Thread.currentThread().getName()+" is working on home work..");
+
+    }
+    public synchronized void classStart(){
+        classStarted = true;
+        System.out.println("Teacher: Class Start....");
+        notifyAll();
+    }
+    public synchronized void homeWorkGiving(){
+        homeWorkGiven = true;
+        System.out.println("Teacher: giving home work...");
+        notifyAll();
+    }
+}
+
+public class Student extends Thread{
+    ClassRoom cr;
+    boolean forHomeWork;
+    Student(ClassRoom cr, boolean forHomeWork, String name){
+        super(name);
+        this.cr = cr;
+        this.forHomeWork = forHomeWork;
+    }
+    @Override
+    public void run() {
+        try{
+            if(forHomeWork){
+                cr.waitForHomeWork();
+            }else {
+                cr.waitForClass();
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        ClassRoom cr = new ClassRoom();
+        Student s1 = new Student(cr, false, "Navjot");
+        Student s2 = new Student(cr, true, "Aditya");
+        Student s3 = new Student(cr, false, "Ravi");
+        Student s4 = new Student(cr, true, "Raghav");
+        Student s5 = new Student(cr, false, "Rahul");
+        Student s6 = new Student(cr, true, "Puneet");
+        s1.start();
+        s2.start();
+        s3.start();
+        s4.start();
+        s5.start();
+        s6.start();
+        cr.classStart();
+        Thread.sleep(2000);
+        cr.homeWorkGiving();
+    }
+}
+
+Output:-
+-------
+Teacher: Class Start....
+Navjot studying in class..
+Rahul studying in class..
+Ravi studying in class..
+Teacher: giving home work...
+Aditya is working on home work..
+Raghav is working on home work..
+Puneet is working on home work..
+
+
 
 
 Student Task:-
@@ -1944,7 +2030,7 @@ Odd-Even Number Printer
 Requirements:
 - Shared resource contains a current number.
 - OddPrinter prints only odd numbers; EvenPrinter prints only even numbers.
-- Each thread waits if it’s not its turn.
+- Each thread waits if it’s not their turn.
 - Stop printing after a maximum number (say 10).
 
 Expected Output:
@@ -1958,4 +2044,147 @@ EvenPrinter prints: 4
 
 
 
+Deadlock in Java:-
+================
+Deadlock happens when two or more threads are waiting for each other to release resources.
+Result: no thread can proceed → the program gets stuck.
+--The program does not crash.
+--No exception is thrown.
+--The affected threads simply stop progressing forever.
+--The rest of the application may continue, but the deadlocked part becomes unresponsive.
+
+Simple Analogy:-
+----------------
+Imagine two people trying to cross a narrow bridge:
+- Person A is coming from the left.
+- Person B is coming from the right.
+- The bridge is too narrow, so only one person can cross at a time.
+- If both refuse to move, waiting for the other to go first → they are stuck. That’s deadlock!
+
+Conditions for Deadlock
+------------------------
+Deadlock occurs when all four conditions exist at the same time:
+- Mutual Exclusion → A resource can be used by only one thread at a time.
+- Hold and Wait → A thread is holding at least one resource and waiting for another.
+- No Preemption → A resource cannot be forcibly taken from a thread.
+- Circular Wait → Threads form a cycle, each waiting for a resource held by the next thread.
+
+
+--If even one condition is broken, deadlock cannot occur.
+Note: Deadlock cannot be completely eliminated, but it can be prevented, avoided, or detected and recovered.
+
+Code Example:-
+-------------
+
+public class Main {
+    public static void main(String[] args) {
+        Resource r1 = new Resource("Resource : -1");
+        Resource r2 = new Resource("Resource : -2");
+
+        Thread1 t1 = new Thread1(r1,r2);
+        Thread2 t2 = new Thread2(r1,r2);
+
+        t1.setName("Rudra");
+        t2.setName("Vansh");
+
+        t1.start();
+        t2.start();
+    }
+}
+public class Resource {
+    String name;
+    Resource(String name){
+        this.name = name;
+    }
+    String getName(){
+        return name;
+    }
+}
+public class Thread1 extends Thread{
+    Resource r1;
+    Resource r2;
+    Thread1(Resource r1, Resource r2){
+        this.r1 = r1;
+        this.r2 = r2;
+    }
+    @Override
+    public void run() {
+        synchronized (r1){
+            System.out.println(Thread.currentThread().getName()+" holds "+r1.getName());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            synchronized (r2){
+                System.out.println(Thread.currentThread().getName()+" holds "+r2.getName());
+            }
+        }
+    }
+}
+public class Thread2 extends Thread{
+    Resource r1;
+    Resource r2;
+    Thread2(Resource r1, Resource r2){
+        this.r1 = r1;
+        this.r2 = r2;
+    }
+    @Override
+    public void run() {
+        synchronized (r2){
+            System.out.println(Thread.currentThread().getName()+" holds "+r2.getName());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            synchronized (r1){
+                System.out.println(Thread.currentThread().getName()+" holds "+r1.getName());
+            }
+        }
+    }
+}
+
+Output:-
+-------
+Rudra holds Resource : -1
+Vansh holds Resource : -2
+.......Threads waiting for locks.....application running continue.....
+
+
+
+
+Solution:-
+---------
+- Deadlock happens when threads wait for each other in a cycle and cannot proceed.
+- To handle deadlock, we can prevent it, avoid it, or detect and recover.
+- Prevention: Break one of the deadlock conditions (e.g., always acquire resources in a fixed order).
+- Avoidance: Check before allocating a resource that the system remains in a safe state.
+- Detection and Recovery: Let deadlock occur, then detect it and resolve it by aborting threads or preempting resources.
+- Prevention is simple and safe, avoidance is used for critical systems, and detection is used when deadlock is possible but cannot be prevented completely.
+
+Wrong sequence:-
+---------------
+Thread1 {
+	synchronized(r1){
+		synchronized(r2);
+	}
+}
+Thread2 {
+	synchronized(r2){
+		synchronized(r1);
+	}
+}
+Right sequence:-
+---------------
+Thread1 {
+	synchronized(r1){
+		synchronized(r2);
+	}
+}
+Thread2 {
+	synchronized(r1){
+		synchronized(r2);
+	}
+}
 
