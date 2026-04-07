@@ -2188,3 +2188,338 @@ Thread2 {
 	}
 }
 
+
+
+Thread Starvation:-
+=================
+
+A thread does not get CPU time or resources for a long time because other threads keep taking them.
+					or
+Thread Starvation is a condition where a thread is unable to gain regular access to shared resources or CPU time due to other threads continuously consuming them.
+
+In simple words:
+- Some threads are greedy
+- One unlucky thread keeps waiting forever
+
+Real-life analogy:
+Imagine:
+- 5 students (threads) want to use a single computer (CPU)
+- 4 students are teachers’ favorites (high priority)
+- 1 student is ignored (low priority)
+
+Thread starvation usually occurs due to:-
+----------------------------------------
+
+1. Thread Priority:-
+
+Java threads have priorities:
+
+Thread.MIN_PRIORITY  // 1
+Thread.NORM_PRIORITY // 5 (default)
+Thread.MAX_PRIORITY  // 10
+
+- Scheduler may prefer higher-priority threads
+- Low-priority threads may never execute
+
+2. Synchronized Blocks (Locks)
+
+If a thread holds a lock for too long:
+
+synchronized(lock) {
+    while(true) {
+        // never releases lock 
+    }
+}
+
+-Other threads waiting for this lock → starvation
+
+3. Unfair Scheduling
+
+- Java’s thread scheduler is:
+	- Not strictly fair
+	- Depends on OS
+
+- Some threads may repeatedly get CPU
+- Others may be ignored
+
+Example code:-
+-------------
+public class Thread1 extends Thread{
+    @Override
+    public void run() {
+        while(true){
+            System.out.println("High Priority Thread....");
+        }
+    }
+}
+public class Thread2 extends Thread{
+    @Override
+    public void run() {
+        while(true){
+            System.out.println("Low Priority Thread....");
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Thread1 tr1 = new Thread1();
+        Thread2 tr2 = new Thread2();
+        tr1.setPriority(10);
+        tr2.setPriority(1);
+        tr1.start();
+        tr2.start();
+    }
+}
+
+Output:-
+-------
+High Priority Thread....
+High Priority Thread....
+High Priority Thread....
+High Priority Thread....
+High Priority Thread....
+High Priority Thread....
+High Priority Thread....
+High Priority Thread....
+High Priority Thread....
+.............................and so on......
+
+** Thread1 getting more time.....Thread2 is waiting for time slice....
+
+How to Prevent Thread Starvation:-
+---------------------------------
+1. Avoid extreme priorities
+- thread.setPriority(Thread.NORM_PRIORITY);
+
+2. Use notifyAll() instead of notify()
+- lock.notifyAll();
+- All waiting threads get a chance
+
+3. Keep synchronized blocks short
+
+Bad:-
+synchronized(lock) {
+    longTask();
+}
+
+Good:-
+longTask();
+synchronized(lock) {
+    // small critical section
+}
+
+
+Daemon Thread:-
+=============
+Daemon thread is a background thread in Java that runs automatically and provides services for other threads.
+- Unlike normal (user) threads, a daemon thread does not prevent the JVM from exiting.
+- When all user threads finish, the JVM automatically stops all daemon threads.
+- Daemon threads are usually used for background tasks like garbage collection...etc.
+
+Code Example:-
+-------------
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        DaemonThread tr = new DaemonThread();
+        tr.setDaemon(true);
+        for(int i=0; i<=10;i++){
+            System.out.println(i);
+        }
+        tr.start();
+    }
+}
+public class DaemonThread extends Thread{
+
+    @Override
+    public void run() {
+        while(true){
+            System.out.println("Running inside Daemon thread....");
+        }
+    }
+}
+
+Output:-
+--------
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+Running inside Daemon thread....
+Running inside Daemon thread....
+Running inside Daemon thread....
+Running inside Daemon thread....
+
+
+
+
+Volatile key word:-
+===================
+
+ The volatile keyword is a modifier you can apply to variables (fields) in Java.
+
+Example:
+
+private volatile boolean flag = false;
+private volatile int counter = 0;
+
+
+Purpose of volatile:
+
+--It tells the Java compiler and JVM:
+“Do not cache this variable in the thread’s local memory (CPU cache). Always read and write it from the main memory.”
+
+--It guarantees visibility of changes across threads.
+
+
+In simple words:
+volatile ensures that when one thread updates a variable, all other threads immediately see the latest value.
+
+
+Q/- Why Do We Need volatile? (The Visibility Problem)
+
+--In multithreaded programs, each thread may keep a private copy (cache) of variables for performance reasons. This is like your friend copying the whiteboard into his notebook.
+
+--Thread A updates a variable.
+--Thread B may still see the old cached value for a long time (or forever).
+
+Result: Thread B acts on stale (old) data:  bugs, infinite loops, or wrong behavior.
+volatile forces every read/write to go directly to main memory, so changes are visible to all threads immediately.
+
+
+
+
+Example:-
+--------
+public class SharedResource {
+    private volatile boolean doneWithWriting = false; // using volatile here to update this value at runtime...
+
+    public void writerWriting(){
+        System.out.println("Done with writing....now reader can read..");
+        doneWithWriting = true;
+    }
+    public void reader(){
+        while(!doneWithWriting){
+//            do nothing....just wait...
+        }
+        System.out.println("Reader can read now");
+        System.out.println("Reading starts.....");
+    }
+}
+public class Reader extends Thread{
+
+    SharedResource sr;
+    Reader(SharedResource sr){
+        this.sr = sr;
+    }
+
+    @Override
+    public void run() {
+        sr.reader();
+    }
+}
+public class Writer extends Thread{
+    SharedResource sr;
+    Writer(SharedResource sr){
+        this.sr = sr;
+    }
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        sr.writerWriting();
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        SharedResource sr = new SharedResource();
+
+        Reader r = new Reader(sr);
+        Writer w = new Writer(sr);
+
+        r.start();
+        w.start();
+    }
+}
+Output:-
+------
+Done with writing....now reader can read..
+Reader can read now
+Reading starts.....
+
+
+
+
+
+Student Task:-
+==============
+
+Reverse Greeting using Multithreading
+=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=
+- Create a multithreaded Java program where:
+- Each thread creates another thread
+- Threads print messages in reverse order
+
+Problem Statement
+- Write a class ReverseGreet that:
+- Takes an integer input N
+- Creates threads in a chain:
+	- Thread1 creates Thread2
+	- Thread2 creates Thread3
+	- … continue till ThreadN
+
+- Each thread should print:
+	- "Welcome Thread<num>"
+- Important Condition:
+	- The output must be printed in reverse order
+	(i.e., ThreadN prints first, Thread1 prints last)
+
+Solution:-
+---------
+import java.util.Scanner;
+// Complete the class below as sopecified above.
+class ReverseGreet extends Thread
+{
+    int maxThread;
+    ReverseGreet(int maxThread){
+        this.maxThread = maxThread;
+    }
+    @Override
+    public void run() {
+        System.out.println("CodeQuotient Thread"+maxThread);
+        if(maxThread>1){
+            ReverseGreet rg = new ReverseGreet(maxThread-1);
+            rg.start();
+            try {
+                rg.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        ReverseGreet rg = new ReverseGreet(n);
+        rg.start();
+    }
+}
+
+
+
+
+
+
+
