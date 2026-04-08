@@ -1648,9 +1648,10 @@ public class ThreadA extends Thread{
 }
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        Common c = new Common();
-        ThreadA tr1 = new ThreadA(c,"Radhika");
-        ThreadA tr2 = new ThreadA(c, "Riya");
+        Common c1 = new Common();
+		Common c2 = new Common();
+        ThreadA tr1 = new ThreadA(c1,"Radhika");
+        ThreadA tr2 = new ThreadA(c2, "Riya");
         tr1.start();
         tr2.start();
     }
