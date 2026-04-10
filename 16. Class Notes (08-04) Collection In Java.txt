@@ -544,3 +544,242 @@ Methods Specific to ArrayList Class Only:-
 - void ensureCapacity(int minCapacity) →  Increases the internal array capacity to at least the specified minimum.
 - void trimToSize() →  Trims the capacity of the internal array to match the current size.
 
+Examples of User Defined Class:-
+-------------------------------
+public class Main {
+    public static void main(String[] args) {
+        Student s1 = new Student(1,"Ishan");
+        Student s2 = new Student(2,"Krish");
+        Student s3 = new Student(3,"Sarthak");
+        Student s4 = new Student(4,"Khushi");
+        Student s5 = new Student(5,"Sargam");
+
+        List<Student> li = new ArrayList<>();
+        li.add(s1);
+        li.add(s2);
+        li.add(s3);
+        li.add(s4);
+        li.add(s5);
+        for(Student s : li){
+            System.out.println(s);
+        }
+    }
+
+public class Student {
+    int roll;
+    String name;
+    Student(int roll,String name){
+        this.roll = roll;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "roll=" + roll +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}
+Output:-
+------
+Student{roll=1, name='Ishan'}
+Student{roll=2, name='Krish'}
+Student{roll=3, name='Sarthak'}
+Student{roll=4, name='Khushi'}
+Student{roll=5, name='Sargam'}
+
+
+
+
+Student Task:-
+-=-=-=-=-=-=-
+Step 1: Create Employee Bean Class
+- Create a class Employee with:
+	- empId (int)
+	- name (String)
+	- salary (double)
+- Include:
+	- Constructors
+	- Getters & Setters
+	- toString() method
+Step 2: Store Objects in ArrayList
+- Create an ArrayList<Employee>
+- Add at least 5 employees
+Step 3: Perform Operations
+- Implement the following tasks:
+	- 1. Display All Employees
+		- Print all employee details using a loop.
+	- 2. Search Employee by ID
+		- Input: Employee ID
+		- Output: Display employee details if found
+	- 3. Find Highest Salary Employee
+		- Print employee with maximum salary
+	- 4. Increase Salary
+		- Increase salary of all employees by 10%
+	- 5. Remove Employee
+		- Remove employee using empId
+
+
+2. LinkedList:-
+=-=-=-=-=-=-=
+- LinkedList is a doubly linked list implementation of the List interface.
+- It allows dynamic memory allocation (no fixed size limitation).
+- It maintains insertion order, allows duplicate elements, and nulls.
+- Implements:
+	- List<E>
+	- Deque<E>
+	- Cloneable
+	- Serializable
+
+- Does NOT implement RandomAccess (slow index-based access)
+
+Internal Storage of LinkedList
+------------------------------
+- Internally, LinkedList uses a doubly linked list.
+- Each element is stored in a Node.
+- Each node contains:
+	- data (element)
+	- reference to next node
+	- reference to previous node
+
+Default Size and Capacity
+-------------------------
+- LinkedList does NOT have capacity concept like ArrayList.
+- It grows dynamically as elements are added.
+
+Key distinction:
+----------------
+- size() → number of elements currently in list
+- capacity →  Not applicable in LinkedList
+
+How LinkedList Grows (Memory Behavior)
+--------------------------------------
+- No resizing like ArrayList.
+- Each element is stored in a new node.
+
+Steps:
+- Create a new node
+- Link it with previous and next node
+- Update pointers
+
+Example:
+
+Add element → new node created
+No copying of old elements required
+
+Creation of a LinkedList:-
+=-=-=-=-=-=-=-=-=-=-=-=-=
+
+1. Using default constructor without any type safety:-
+2. Using default constructor with type safety:-
+Example:-
+	LinkedList li = new LinkedList();
+	LinkedList<String> li1 = new LinkedList<>();
+
+Methods Specific to LinkedList Class Only:-
+=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=
+Specific for Linked List:-
+-------------------------
+- void addFirst(E e) → Inserts element at the beginning.
+- void addLast(E e) → Inserts element at the end.
+- E getFirst() → Returns first element.
+- E getLast() → Returns last element.
+- E removeFirst() → Removes first element.
+- E removeLast() → Removes last element.
+- E push(E e) → Adds element at front.(Can help to implement Stack)
+- E pop() → Removes element from front.(Can help to implement Stack)
+
+Methods from Deque:-
+-------------------
+- boolean offer(E e) → Adds element at end (queue style).(Can help to implement Queue)
+- boolean offerFirst(E e) → Adds element at beginning.(Can help to implement deque)
+- boolean offerLast(E e) → Adds element at end.(Can help to implement deque)
+- E peek() → Retrieves head without removing.
+- E poll() → Retrieves and removes head. (Can help to implement Queue)
+
+Example code:-
+=-=-=-=-=-=-=
+public class LinkedListExample {
+    public static void main(String[] args) {
+        LinkedList<String> li1 = new LinkedList<>();
+        
+        //Adding elements at the last Methods
+        li1.add("Krish");
+        li1.offer("Himanshu");
+        li1.addLast("Satyam");
+        li1.offerLast("Koushik");
+        System.out.println(li1);
+
+        //Adding elements at the first Methods
+        li1.addFirst("Nikita");
+        li1.push("Khushi");
+        li1.offerFirst("Sargam");
+
+        System.out.println(li1);
+
+        //Other Methods
+
+        System.out.println(li1.getFirst());
+        System.out.println(li1.getLast());
+        System.out.println(li1.peek());
+        System.out.println(li1.removeFirst());
+        System.out.println(li1.removeLast());
+        System.out.println(li1.poll());
+
+        System.out.println(li1);
+    }
+}
+
+Output:-
+-------
+[Krish, Himanshu, Satyam, Koushik]
+[Sargam, Khushi, Nikita, Krish, Himanshu, Satyam, Koushik]
+Sargam
+Koushik
+Sargam
+Sargam
+Koushik
+Khushi
+[Nikita, Krish, Himanshu, Satyam]
+
+Why we can use LinkedList as Queue, Deque, and Stack Operations:-
+--------------------------------------------------------
+- LinkedList is a data structure that allows fast insertion/deletion at both ends, which perfectly matches the Deque contract.
+- ArrayList cannot efficiently implement Deque because adding/removing from head requires shifting all elements.
+
+
+
+Student Task:-
+-=-=-=-=-=-=-
+Implement Stack and Queue using LinkedList Class.
+
+
+
+
+
+
+Basic difference btw ArrayList and LinkedList:-
+------------------------------------------------
+Feature			ArrayList								LinkedList
+-------                 ---------                       ----------
+Data Structure		Dynamic Array						Doubly Linked List
+Memory Storage		Continuous (array)					Non-contiguous (nodes)
+Access Time			Fast (O(1))							Slow (O(n))
+Insertion			Slow (O(n))							Fast (O(1) at ends)
+Deletion			Slow (O(n))							Fast (O(1) at ends)
+Memory Usage		Less (no extra pointers)			More (extra prev & next pointers)
+Resizing			Required (1.5x growth)				Not required
+Implements			List, RandomAccess					List, Deque
+
+
+Why we need LinkedList when we have ArrayList:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Even though ArrayList is faster in many cases, LinkedList is useful in specific scenarios :-
+------------------------------------------------------------------------------------------
+- Frequent Insertions/Deletions
+- When Data Size Changes Frequently
+- No resizing overhead (ArrayList needs copying)
+- When Insertion in Middle is Frequent, Faster than ArrayList (no shifting of all elements)
+
+
