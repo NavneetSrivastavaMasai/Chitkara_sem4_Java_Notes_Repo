@@ -1,0 +1,546 @@
+Collection In Java:-
+===================
+
+Array:-
+=-=-=-=
+Arrays are a fundamental data structure used to store multiple values of the same type in a single variable. They have a fixed size and allow indexed access to elements.
+
+	int []arr = new int[5];
+	for(int i=1; i<=5; i++){
+		arr[i-1] = i;
+	}
+        System.out.println(Arrays.toString(arr));
+
+Output:-
+------
+[1, 2, 3, 4, 5]
+
+Examples:-
+----------
+- Can we store different types of data inside an Array???
+
+public class Main{
+    public static void main(String[] args) {
+       Object []arr = new Object[3];
+       arr[0] = 10;
+       arr[1] = "Aditya";
+       arr[2] = 5.56;
+       
+        System.out.println(Arrays.toString(arr));
+    }
+}
+Output:-
+--------
+[10, Aditya, 5.56]
+
+
+
+Limitations of an Array:-
+=-=-=-=-=-=--=--=-=--=-=
+1. Fixed Size:-
+- Once an array is created, its size cannot be changed.
+- You must know the size in advance.
+- Problem: If you need more space, you must create a new array and copy elements.
+
+2. Homogeneous Data
+- Arrays can only store elements of the same data type (except Object[] arrays).
+
+3. No Built-in Methods for Manipulation
+- Arrays lack rich utility methods like adding, removing, or searching elements.
+
+4. Memory Waste (for Large Arrays)
+- If you declare a large array but use only a few elements, memory is wasted.
+- Fixed size can lead to under-utilization.
+
+
+
+
+
+
+
+Let's create a Dynamic Array:-
+=-=-==-=-=-=-=-=-=-=-=-=-=-=
+Code:-
+-----
+public class DynamicArray {
+    Object arr[];
+    int size;
+    int capacity;
+    DynamicArray(){
+        capacity =10;
+        arr = new Object[capacity];
+        size=0;
+    }
+    DynamicArray(int capacity){
+        this.capacity =capacity;
+        arr = new Object[capacity];
+        size=0;
+    }
+    void increaseCapacity(){
+        int newCapa = capacity+(capacity/2);
+        Object[] newArr = new Object[newCapa];
+        for(int i=0; i<size; i++){
+            newArr[i] = arr[i];
+        }
+        arr = newArr;
+        capacity = newCapa;
+    }
+    void add(Object ele){
+        if(size==capacity){
+            increaseCapacity();
+        }
+        arr[size] = ele;
+        size++;
+    }
+    int searchEle(Object ele){
+        for(int i=0; i<size; i++){
+            if(arr[i]==ele){
+                return i;
+            }
+        }
+        return -1;
+    }
+    int getSize(){
+        return size;
+    }
+    void display(){
+        for(int i=0; i<size;i++){
+            System.out.print(arr[i]+" ");
+        }
+        System.out.println();
+    }
+}
+public class Demo {
+    public static void main(String[] args) {
+        DynamicArray da = new DynamicArray();
+        for(int i=0; i<20; i++){
+            da.add(i);
+        }
+
+        da.display();
+        System.out.println(da.getSize());
+        System.out.println(da.searchEle(10));
+        System.out.println(da.searchEle(30));
+    }
+}
+
+Output:-
+-------
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+20
+11
+-1
+
+
+Collection :-
+=-=-=-=-=-=-=
+A Collection in Java is a framework that provides a set of classes and interfaces to store, manage, and manipulate groups of objects dynamically.
+							or
+A collection is a group of individual data that are grouped together to form a single unit. Collections are containers that hold multiple data items as a single unit.
+
+The two root interfaces of java collection class are:
+	- Collection interface(java.util.collection)
+	- Map interface(java.util.Map)
+
+
+Collection Framework in Java:-
+=-=-=-=-=-=-=-=-=-=--==-=-=-=
+The Java Collection Framework (JCF) is a set of classes and interfaces that provide predefined data structures to store, retrieve, and manipulate groups of objects efficiently. It is part of the java.util package.
+
+
+Hierarchy of Collection F/W:-
+=-=-=-=-=-=-=-=-==-=-=-=-=-=
+Collection (Interface)
+|
+|----> List (Interface)
+|
+|----> Set (Interface)
+|
+|----> Queue (Interface)
+
+
+
+Basic Functionalities of List, Set, and Queue Interface:-
+=-=-=-=-=-=-=-==-=-=-=-=-=-=-==-=--=-=-=-=--=-=-=--=-=-=-=
+
+1. List Interface
+------------------
+Functionality
+- Ordered collection (maintain insertion order)
+- Duplicates allowed
+- Index-based access (0,1,2…)
+- Null values allowed
+
+Use Case
+- Order important ho
+- When need duplicate values
+- Element need access by Index
+
+
+2. Set Interface
+---------------
+Functionality
+- No duplicates allowed
+- Order generally not guaranteed (except some implementations)
+- No index-based access
+- Null allowed (usually only one)
+
+Use Case
+- Need unique elements 
+- Avoid duplicate 
+
+3. Queue Interface
+------------------
+Functionality
+- FIFO (First In First Out)
+- Elements process in Order
+- Mainly used for processing tasks
+- No index access
+
+Use Case
+- Use in Line/queue system (like ticket counter)
+- Need Task scheduling 
+
+
+Hierarchy of List interface or Implementation classes of List Interface:-
+=-=-=-=-=-==-=-=-=-=-=-=-=-=-==-=-=-=-=-==-=-=-=--=-=-==-=-=-=-=-=-=-=-=
+List (Interface)
+|
+|----> ArrayList (Implemented Class)
+|
+|----> LinkedList (Implemented Class)
+|
+|----> Vector (Implemented Class)-----> Stack(Implemented Class)
+
+
+1. ArrayList:-
+=-=-=-=-=-=-=
+- ArrayList is a resizable array implementation of the List interface.
+- It allows dynamic growth, unlike arrays which have fixed size.
+- It maintains insertion order, allows duplicate elements, and nulls.
+- Implements:
+	- List<E>
+	- Cloneable
+	- Serializable
+- RandomAccess (supports fast index-based access)
+
+Internal Storage of ArrayList
+-----------------------
+- Internally, ArrayList uses a dynamic array, specifically an Object[] array called elementData.
+- This array is not exposed directly; all operations like add, get, remove work through methods.
+
+Default Size and Capacity
+--------------------
+Default initial capacity (Java 8+): 10
+
+- ArrayList<Integer> list = new ArrayList<>(); // capacity = 10
+
+If you provide an initial capacity:
+
+- ArrayList<Integer> list = new ArrayList<>(20); // capacity = 20
+
+Key distinction:
+----------------
+size() → number of elements currently in list
+capacity → length of the internal array
+
+How ArrayList Grows (Resizing Behavior)
+---------------------------------
+- When an element is added and the internal array is full, ArrayList resizes:
+	- New Capacity Formula :
+		newCapacity = oldCapacity + (oldCapacity/2);
+
+- This means capacity increases by 50% each time.
+- Steps:
+	- Check if size < capacity → add element directly
+	- If full → create a new array with 1.5× capacity
+	- Copy old elements → new array
+	- Add the new element
+Example:
+- Default capacity = 10
+- Add 11th element → new capacity = 15
+- Add 16th element → new capacity = 22
+
+**Note: In Java 6-7, capacity increased by 100%, i.e., doubled.
+
+
+
+Creation of an ArrayList:-
+=-=-=-=-=-=-=-=-=-=-=-=
+1. Using default constructor without any type safety:-
+-----------------------------------------------------
+
+	List li = new ArrayList();
+
+2. Using default constructor with type safety:-
+-----------------------------------------------
+        List<String> li = new ArrayList<>();
+
+** We cannot provide primitive data inside angle brackets (Type safety--Generics) so for Primitive data we can pass Wrapper classes**** 
+
+3. Using overloaded constructor with initial capacity:-
+------------------------------------------------------
+        List<String> li = new ArrayList<>(66);
+
+
+Common methods of Collection Interface which are applied for All collection Hierarchy:-
+--------------------------------------------------------------------------------------
+1. Adding Elements
+- boolean add(E e); → adds single element
+Example:-
+-------
+a. With heterogeneous Data:-
+
+public class Demo {
+    public static void main(String[] args) {
+        List li = new ArrayList();
+        li.add(1);
+        li.add("String");
+        li.add(5.56);
+
+        for(Object x:li){
+            System.out.println(x);
+        }
+    }
+}
+Output:-
+------
+1
+String
+5.56
+
+b. With Homogeneous Data (Type safety):-
+-------------------------------------- 
+public class Demo {
+    public static void main(String[] args) {
+        List<String> li = new ArrayList<>();
+        li.add("String");
+        li.add("Java");
+        li.add("Python");
+        li.add("Java Script");
+
+        for(String x:li){
+            System.out.println(x);
+        }
+    }
+}
+Output:-
+-------
+String
+Java
+Python
+Java Script
+
+- boolean addAll(Collection<? extends E> c); → adds another collection
+Example:-
+--------
+public class Demo {
+    public static void main(String[] args) {
+        List<String> li = new ArrayList<>();
+        li.add("String");
+        li.add("Java");
+        li.add("Python");
+        li.add("Java Script");
+
+        List<String> li2 = new ArrayList<>();
+        li2.add("React");
+        li2.add("Spring");
+
+        li.addAll(li2);
+
+        for(String x:li){
+            System.out.println(x);
+        }
+    }
+}
+Output:-
+------
+String
+Java
+Python
+Java Script
+React
+Spring
+
+
+2. Removing Elements
+- boolean remove(Object o); → removes specific element
+- boolean removeAll(Collection<?> c); → removes all matching elements
+
+Example:-
+public class Demo {
+    public static void main(String[] args) {
+        List<String> li = new ArrayList<>();
+        li.add("String");
+        li.add("Java");
+        li.add("Python");
+        li.add("Java Script");
+        li.add("React");
+        li.add("Spring");
+
+        li.remove("String");
+
+        System.out.println(li);
+
+        List<String> remo = new ArrayList<>();
+        remo.add("Java");
+        remo.add("Python");
+        remo.add("Java Script");
+
+        li.removeAll(remo);
+        System.out.println(li);
+
+    }
+}
+Output:-
+-------
+[Java, Python, Java Script, React, Spring]
+[React, Spring]
+
+
+- boolean retainAll(Collection<?> c); → keeps only common elements
+Example:-
+-------
+public class Demo {
+    public static void main(String[] args) {
+        List<String> li = new ArrayList<>();
+        li.add("String");
+        li.add("Java");
+        li.add("Python");
+        li.add("Java Script");
+        li.add("React");
+        li.add("Spring");
+
+        List<String> reta = new ArrayList<>();
+        reta.add("Java");
+        reta.add("Python");
+        reta.add("Java Script");
+
+        li.retainAll(reta);
+        System.out.println(li);
+    }
+}
+Output:-
+-----
+[Java, Python, Java Script]
+
+
+- void clear(); → removes everything
+
+3. Searching / Checking
+boolean contains(Object o); → checks element
+boolean containsAll(Collection<?> c); → checks collection
+boolean isEmpty(); → check empty or not
+
+
+4. Size Operations
+int size(); →  Returns number of elements
+
+5. Traversal
+Iterator<E> iterator(); → Used for looping elements
+public class Demo {
+    public static void main(String[] args) {
+        List<String> li = new ArrayList<>();
+        li.add("String");
+        li.add("Java");
+        li.add("Python");
+        li.add("Java Script");
+        li.add("React");
+        li.add("Spring");
+
+        Iterator<String> i = li.iterator();
+        while(i.hasNext()){
+            System.out.println(i.next());
+        }
+    }
+}
+Output:-
+String
+Java
+Python
+Java Script
+React
+Spring
+
+6.Inserting data at the time of creation an ArrayList (two types using Arrays class and List class):-
+Code:-
+-----
+public class Demo {
+    public static void main(String[] args) {
+        List<String> li = Arrays.asList("String","Java","Python");
+        li.set(0, "Collection");
+        List<String> li1 = List.of("String","Java","Python");
+//        li1.set(0, "Collection");//Not allowed
+        System.out.println(li);
+        System.out.println(li1);
+
+    }
+}
+output:-
+------
+[Collection, Java, Python]
+[String, Java, Python]
+
+
+
+| Feature      | Arrays.asList() 	| List.of() |
+| ------------ | --------------- 	| --------- |
+| Add/Remove   |  No            	|  No       |
+| Modify (set) |  Yes           	|  No       |
+| Null allowed |  Yes           	|  No       |
+| Type         | Fixed-size      	| Immutable |
+
+Methods Specific to the List Interface:-
+-----------------------------------------
+- void add(int index, E element) →  Inserts element at a specific position.
+- E get(int index) →  Returns the element at a given index.
+- E set(int index, E element) →  Replaces the element at a given index.
+- E remove(int index) →  Removes the element at a given index.
+- int indexOf(Object o)	 →  Finds the first occurrence of an element.
+- int lastIndexOf(Object o) →  Finds the last occurrence of an element.
+- List<E> subList(int fromIndex, int toIndex) →  Returns a view of the list in a specific range.
+
+Example code:-
+------------
+public class Demo {
+    public static void main(String[] args) {
+        List<String> li = new ArrayList<>();
+        li.add("String");
+        li.add("Java");
+        li.add("Python");
+        li.add("Java");
+
+        li.add(0,"JavaScript");
+        System.out.println(li);
+
+        System.out.println(li.get(1));
+
+        li.set(1,"React");
+        System.out.println(li);
+
+        li.remove(1);
+        System.out.println(li);
+
+        System.out.println(li.indexOf("Java"));
+        System.out.println(li.lastIndexOf("Java"));
+
+        List<String> li1 = li.subList(1,3);
+        System.out.println(li1);
+
+    }
+}
+Output:-
+-------
+[JavaScript, String, Java, Python, Java]
+String
+[JavaScript, React, Java, Python, Java]
+[JavaScript, Java, Python, Java]
+1
+3
+[Java, Python]
+
+Methods Specific to ArrayList Class Only:-
+-----------------------------------------
+- void ensureCapacity(int minCapacity) →  Increases the internal array capacity to at least the specified minimum.
+- void trimToSize() →  Trims the capacity of the internal array to match the current size.
+
