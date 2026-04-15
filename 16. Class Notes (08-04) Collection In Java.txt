@@ -783,3 +783,198 @@ Even though ArrayList is faster in many cases, LinkedList is useful in specific 
 - When Insertion in Middle is Frequent, Faster than ArrayList (no shifting of all elements)
 
 
+
+Vector
+=-=-=-=
+- Vector is a resizable array implementation of the List interface.
+- It is synchronized (thread-safe) unlike ArrayList.
+- Maintains insertion order, allows duplicate elements, and nulls.
+- Implements:
+	- List<E>
+	- Cloneable
+	- Serializable
+
+Internal Storage of Vector
+---------------------------
+- Internally, Vector uses an Object[] array to store elements.
+- Initial capacity can grow dynamically.
+- Default Size and Capacity
+	- Default initial capacity = 10
+		- Vector<Integer> v = new Vector<>(); // capacity = 10
+	- If you provide an initial capacity:
+		- Vector<Integer> v = new Vector<>(20); // capacity = 20
+
+Key distinction:
+----------------
+- size() → number of elements currently in vector
+- capacity → length of the internal array
+
+How Vector Grows (Resizing Behavior)
+-------------------------------------
+- When elements exceed capacity, Vector doubles the capacity (100% increase).
+Steps:
+- Create a new array with double size
+- Copy old elements → new array
+- Add new element
+
+Example:
+
+- Default capacity = 10
+- Add 11th element → new capacity = 20
+- Add 21st element → new capacity = 40
+
+Creation of a Vector
+=-=-=-=-=-=-=-=-=-=
+
+- Using default constructor:
+	Vector<Integer> v = new Vector<>();
+
+- Using constructor with initial capacity:
+	Vector<Integer> v = new Vector<>(50);
+
+- Using constructor with another collection:
+	Vector<Integer> v = new Vector<>(Arrays.asList(1,2,3));
+
+Methods Specific to Vector Class Only
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+- void ensureCapacity(int minCapacity) → Increases internal array capacity if needed
+- void trimToSize() → Trims capacity to match current size
+- synchronized methods for thread-safety, e.g., add(), remove(), get(), etc.
+
+
+Stack
+=-=-=
+- Stack is a LIFO (Last In First Out) data structure implemented as a subclass of Vector.
+- Maintains insertion order, allows duplicates and nulls.
+- Implements:
+	- List<E>
+	- Cloneable
+	- Serializable
+
+Internal Storage of Stack
+--------------------------
+- Internally, Stack uses Vector for storage.
+- Elements are stored in an array (dynamic).
+
+Default Size and Capacity
+-------------------------
+- Inherits Vector’s default capacity = 10
+- Resizes automatically when full (doubles capacity).
+
+How Stack Works (Memory Behavior)
+----------------------------------
+- Stack follows LIFO (Last In First Out).
+- Push → adds element at top
+- Pop → removes element from top
+- Peek → returns element at top without removing
+
+Creation of a Stack
+=-=-=-=-=-=-=-=-=-=
+- Using default constructor:
+	- Stack<Integer> s = new Stack<>();
+
+Methods Specific to Stack Class Only
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- void push(E e) - Adds element at top of stack
+- E pop() - Removes and returns element from top
+- E peek() - Returns element at top without removing
+- boolean empty() - Returns true if stack is empty
+- int search(Object o) - Returns 1-based position from top; -1 if not found
+
+
+Example Code:-
+------------
+public class Demo {
+	public static void main(String[] args) {
+		Stack<String> st = new Stack<String>();
+		st.push("String");
+		st.push("Collection");
+		st.push("Generics");
+		st.push("Abstraction");
+		for(int i=0; i<st.size();i++) {
+			System.out.println(st.get(i));
+		}
+		System.out.println("**********************************");
+		System.out.println(st.peek());
+		System.out.println("**********************************");
+		System.out.println(st.search("Abstraction"));
+		System.out.println("**********************************");
+		while(!st.isEmpty()) {
+			String str = st.pop();
+			System.out.println(str);
+			
+		}
+	}
+}
+Output:-
+-------
+String
+Collection
+Generics
+Abstraction
+**********************************
+Abstraction
+**********************************
+1
+**********************************
+Abstraction
+Generics
+Collection
+String
+
+
+Basic difference between Stack and LinkedList:-
+-----------------------------------------------
+
+| Feature      		| Stack 		| LinkedList  
+| ------------ 		| ----- 		| ------------ 
+| Performance  		| Slow  		| Good         
+| Thread-safe  		| Yes   		| No           
+| Modern Usage 		| No  			| Yes       
+| Recommended  		| Not Recommended	| Sometimes 
+
+
+
+Student Tasks:-
+=-=-=-=-=-=-=-=
+1. Train Reservation Queue (Using LinkedList)
+---------------------------------------------
+- Problem Statement
+- Create a Train Reservation System using LinkedList.
+- Program should:
+	- Add passenger names
+	- Display all passengers
+	- Remove first passenger (boarding)
+	- Add new passenger at beginning
+	- Display updated list
+- Requirements
+- Use:
+	- LinkedList<String>
+- Must include:
+	- add()
+	- addFirst()
+	- removeFirst()
+	- getFirst()
+
+
+2. Browser History System (Using Stack)
+---------------------------------------
+- Problem Statement
+- Create a Browser History System using Stack.
+- Program should:
+	- Visit 5 websites
+	- Display current page
+	- Go back (pop)
+	- Show remaining history
+	- Check if stack is empty
+- Requirements
+- Use:
+	- Stack<String>
+- Must include:
+	- push()
+	- pop()
+	- peek()
+	- isEmpty()
+
+
