@@ -1,0 +1,733 @@
+Problem without Generics when Generics were not there:-
+=-=-==-=-=-=-=-=-=-=-==-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+public class Demo {
+	public static void main(String[] args) {
+		ArrayList li = new ArrayList();
+		li.add("String");
+		li.add(123);
+		li.add(5.56);
+		String str = (String) li.get(0);
+		String str1 = (String) li.get(1);	
+	}
+}
+
+Output:-
+-------
+Exception in thread "main" java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.String (java.lang.Integer and java.lang.String are in module java.base of loader 'bootstrap')
+	at Demo/com.chitkara1.Demo.main(Demo.java:14)
+
+
+There is following problems without Generics:-
+--------------------------------------------
+- Type Safety (Runtime Error Problems)
+- Manual Casting
+- No Compile-Time Error Detection 
+
+Generics:-
+=========
+- Generics were introduced in Java to provide type safety, eliminate runtime errors caused by type casting, and enable reusable and flexible code.
+					or
+- Generics allow us to write one class, method, or interface that can work with different types of data (like String, Integer, Double) safely.
+							
+
+
+- Why It Is Used:
+	- To make code:
+		- Safer (no wrong data types)
+		- Reusable
+		- Easy to maintain
+
+- Real-Life Examples:
+a.  Water Bottle
+	- One bottle can store water, juice, or milk — same bottle, different liquids.
+
+b. USB Drive
+	- Same USB can store photos, videos, or documents.
+
+c. School Bag
+	- One bag can carry books, lunch, or clothes.
+
+
+
+But Why Generics Beyond Collections?
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+1. Reusable Storage Class
+- Imagine you want to create:
+	- String Box
+	- Integer Box
+	- Double Box
+- Without Generics:
+	- You must write separate classes.
+
+2 Banking System
+- Imagine:
+- Bank stores:
+	- Account Number → Integer
+	- Customer Name → String
+	- Balance → Double
+- You need reusable containers.
+- Without Generics
+	- You create:
+		- IntegerContainer
+		- StringContainer
+		- DoubleContainer
+
+3. Utility Methods
+- Why generics in methods?
+- Because we want generic reusable logic.
+- Problem Without Generic Method:- 
+- Print method for each type:
+
+	void printString(String s) {
+    		System.out.println(s);
+	}
+
+
+	void printInteger(Integer i) {
+    		System.out.println(i);
+	}
+
+	void printDouble(Double d) {
+    		System.out.println(d);
+	}
+
+- Bad:	
+	- Repeated logic
+	- Many methods
+
+- With Generic Method
+
+	public static <T> void print(T value) {
+		System.out.println(value);
+	}
+
+- Usage:
+	- print("Java");
+	- print(100);
+	- print(5.5);
+
+- Now:
+	- One method
+	- Works for all types
+
+Generic Types:-
+=-=--==-=-=--=-
+- A generic type is a class or interface that uses type parameters like <T>.
+				or 
+- Generic types allow you to define a class, interface, or method with placeholders (type parameters) for the data types they will work with.
+
+
+
+Generic in Class:-
+=-=-=-=-=-=-=-=-=
+
+With single parameter:-
+---------------------
+public class Box<T> {
+
+	private T value;
+
+	public T getValue() {
+		return value;
+	}
+	public void setValue(T value) {
+		this.value = value;
+	}
+	
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Box<String> str = new Box<>();
+		str.setValue("String");
+		System.out.println(str.getValue());
+		
+		Box<Integer> inte = new Box<>();
+		inte.setValue(10);
+		System.out.println(inte.getValue());
+		
+		Box<Double> dou = new Box<>();
+		dou.setValue(5.56);
+		System.out.println(dou.getValue());
+		
+	}
+}
+Output:-
+------
+String
+10
+5.56
+
+
+
+With multiple parameter:-
+-----------------------
+public class Pair<K,V> {
+	private K key;
+	private V value;
+	
+	public Pair(K key, V value) {
+		this.key = key;
+		this.value = value;
+	}
+	public K getKey() {
+		return key;
+	}
+	public V getValue() {
+		return value;
+	}
+	
+}
+public class Main {
+	public static void main(String[] args) {
+		Pair<String, Integer> pair = new Pair<>("Key", 123);
+		String key = pair.getKey();
+		Integer val = pair.getValue();
+		System.out.println(key+" :- "+val);
+	}
+}
+
+Output:-
+--------
+Key :- 123
+
+
+
+Naming conventions:-
+-=-=-=-=-=-=-=-=-=-=-
+
+E - Elements in Collection
+T - Type
+K - Used in maps (key)
+V - Used in maps (Value)
+N - Number
+
+
+
+Advantage of Generics:
+----------------------
+
+1. Type Safety
+
+--Compiler prevents you from adding wrong types (e.g., you can't add a String to List<Integer>).
+
+2. No More Downcasting / ClassCastException
+
+--You get the exact type back without casting.
+
+3. Code Reusability
+
+--Write once, use with any type.
+
+4. Compile-time Bug Detection
+
+--Errors are caught early instead of at runtime.
+
+5. Cleaner and More Readable Code
+
+
+Important Rule:
+---------------
+
+Generics work only with Reference Types, means does not support Primitive Types:
+
+List<int> //Invalid
+List<Integer> //Valid
+
+
+
+
+Generic Interface:-
+=-=-=-=-=-==-=-=-=
+
+interface Printable<T> {
+	
+	void setAndPrint(T data);
+	
+	T getData();
+}
+public class Data<T> implements Printable<T>{
+	T data;
+	@Override
+	public void setAndPrint(T str) {
+		this.data = str;
+		System.out.println(str);
+	}
+	@Override
+	public T getData() {
+		return data;
+	}
+}
+public class Main {	
+	public static void main(String[] args) {
+		Printable<String> pr = new Data<>();
+		pr.setAndPrint("String");
+		
+		Printable<Integer> pr1 = new Data<>();
+		pr1.setAndPrint(123);		
+	}
+}
+Output:-
+-------
+String
+123
+
+
+
+Bounded Types (Constraints on Type Parameters):-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+--In Generic Classes, we can apply the constraint or bound the type parameter for a particular range by using "extends" keyword.
+							or
+-- Bounded Type allows us to restrict what type can be passed to generic class.
+
+
+A. Unbounded type
+-------------------------
+
+class Test<T>
+{
+}
+
+--It is unbounded type (without any constraint), we can pass any type of parameter.
+
+Test<String> t=new Test<>();
+Test<Integer> t=new Test<>();
+
+
+B. Bounded type:
+----------------------
+
+
+class Test<T extends X>
+{
+}
+
+
+--If X is a class type then we can pass either X type elements or sub class elements of X type as parameter types.
+
+Example:
+--------
+1. Payment Gateway:
+------------------
+public interface Payment {
+	void pay();
+}
+public class Cash implements Payment {
+	@Override
+	public void pay() {
+		System.out.println("Payment by Cash....");
+	}
+}
+public class OnlinePayment implements Payment {
+	@Override
+	public void pay() {
+		System.out.println("Payment done by Online...");
+	}
+}
+public class Purchase <T extends Payment>{
+	T payNow;
+	public Purchase(T payNow) {
+		this.payNow = payNow;
+	}
+	void paid() {
+		payNow.pay();
+	}
+}
+public class Main {
+	public static void main(String[] args) {
+		OnlinePayment op = new OnlinePayment();
+		Purchase<OnlinePayment> pur = new Purchase<OnlinePayment>(op);
+		pur.paid();
+		
+		Cash cash = new Cash();
+		Purchase<Cash> pur1 = new Purchase<>(cash);
+		pur1.paid();		
+	}
+}
+
+Output:-
+=------
+Payment done by Online...
+Payment by Cash....
+
+2. Number Class (Square Number):-
+-------------------------------
+public class Main {
+	public static void main(String[] args) {
+		CalculateData<Integer> data =new CalculateData<>(100);
+		data.calculateSquare();
+		
+//		Compile time error
+//		CalculateData<String> data1 =new CalculateData<>("Str");
+//		data.calculateSquare();
+	}
+}
+class CalculateData <T extends Number> {
+	private T data;
+
+	public CalculateData(T data) {
+		this.data = data;
+	}
+
+	void calculateSquare() {
+		double d = data.doubleValue()*data.doubleValue();
+		System.out.println(d);
+	}
+}
+
+Output:-
+---------
+10000.0
+
+
+
+
+Multiple Bounds (using &):-
+=-=-=-=-=-=-=-=-=
+Multiple Bounds means restricting a generic type to extend one class and implement one or more interfaces.
+	
+						or
+Multiple Bounds allow a generic type to have more than one restriction.
+
+Syntax:-
+--------
+class Test<T extends Number & Serializable>
+{
+}
+
+
+--Here Test class is able to allow the elements which must be either same as Number or sub classes to the number and must be the implementations of Serializable interface.
+
+Test<Integer> t=new Test<Integer>();--> Valid
+Test<Float> t=new Test<Float>();--> Valid
+Test<String> t=new Test<String>--> Invalid.(Because String type is not a subtype of Number, but its implements the Serializable interface)
+
+
+***Note:  The "extends" keyword will not allow two class types at a time.
+
+class Test<T extends Number & Thread>
+{
+}
+
+
+Status: Invalid
+
+
+But the "extends" keyword is able to allow more than one interface type.
+
+class Test<T extends Runnable & Serializable>
+{
+}
+
+Statis: valid.
+
+
+--The "extends" is able to allow both class type and interface type , but, first we have to specify class type then we have to specify Interface type. i.e first class name and then interface name.
+
+
+
+
+class Test<T extends Number & Runnable>
+{
+}
+
+
+Status: Valid.
+
+class Test<T extends Runnable & Number>
+{
+}
+
+Status: Invalid.
+
+
+
+Example:-
+--------
+//Marker interface
+interface Swimable {
+}
+public class Animal {
+	void eat() {
+		System.out.println("Animal is eating...");
+	}
+	void sleep() {
+		System.out.println("Animal is sleeping...");
+	}
+}
+public class Dog extends Animal{
+// Dog specific Methods...
+}
+
+public class Fish extends Animal implements Swimable{
+//fish specific Methods....
+}
+public class Swim <T extends Animal & Swimable>{
+	T animal;
+	public Swim(T animal) {
+		this.animal = animal;
+	}
+	void canSwim() {
+		System.out.println("This animal can swim....");
+	}
+}
+public class Main {
+	public static void main(String[] args) {
+		Fish fish = new Fish();
+		Swim<Fish> swim = new Swim<>(fish);
+		swim.canSwim();
+
+//		Dog dog = new Dog();
+//		Swim<Dog> swim1 = new Swim<>(dog); compile time error...
+//		swim1.canSwin();
+	}
+}
+Output:-
+-------
+This animal can swim....
+
+
+
+Rule:-
+-------
+- Class always comes first,
+- Interfaces come after that.
+
+
+
+
+***NOTE: Bounded parameters or constraint at class level are not allowing "implements" keyword and "super" keyword.
+
+
+Example:
+
+
+class Test<T implements Runnable>
+{
+}
+
+Status: Invalid
+
+
+class Test<T super String>
+{
+}
+
+Status: Invalid
+
+
+
+Generic methods:
+===============
+
+---we can also declare a generic method inside a generic or non-generic class.
+
+Syntax: Type parameter(s) declared before the return type.
+
+syntax:-
+
+TypeParameter(<T>) returnType methodName(){}
+
+
+
+Example
+--------
+1. With single parameter:-
+------------------------
+public class Main {
+	public static void main(String[] args) {
+		print("String");
+		print(123);
+		print(5.56);
+	}
+	static <T> void print(T str) {
+		System.out.println(str);
+	}
+}
+
+Output:-
+------
+String
+123
+5.56
+
+
+2. With Multiple parameter:-
+--------------------------
+public class Main {
+	public static void main(String[] args) {
+		print("Key","Value");
+		print(1000,10);
+		print("Key", 1234);
+		
+	}
+	static <K,V> void print(K key, V value) {
+		System.out.println(key+" :- "+value);
+	}
+}
+Output:-
+-------
+Key :- Value
+1000 :- 10
+Key :- 1234
+
+
+
+Covariance type in Java:
+========================
+
+--As we know that to the super class reference variable we can store any of its subclass object.
+
+
+Example:
+
+
+String s = "Hello";
+
+Object obj = s;
+
+
+--Covariance allows a type to accept its subtypes while preserving the "is-a" relationship.
+
+--In Java arrays are the covariance types, means we can store array of any object to the reference variable of Object[] array also.
+
+
+Example:
+--------
+
+String[] fruits = {"Apple", "Mango", "Banana", "Pineapple"};
+
+Object[] objArray = fruits; //allowed
+
+
+Problem:
+
+objArray[0] = new A(); // Heap Pollution, ArrayStoreException
+
+Here, no error at compiled time, compiler is not able to detect it but at runtime we get an exception.
+
+
+
+Invariant:-
+---------
+Means does not follow parent-child relationship. In Java Generics are Invariant by default.
+
+
+Example:
+---------
+		List<String> li = new ArrayList<>(List.of("A","B","C","D"));
+		List<Object> li1 = li; // Compile time error
+
+
+--To make our Collection to work as a covariance type and make them flexible, we need to make use of wildcard.
+
+--With the collections we can use following 3 types of wildcards:
+
+1. Unbounded Wildcard 
+
+2. Subtype or upper bound wildcards: Covariance (for reading/producing)
+
+3. SuperType or Lower bound wildcards: Contravariance (for writing/consuming)
+
+
+ 
+
+PECS Principle (Producer Extends, Consumer Super)
+
+--Producer (you only get/read values) : Use ? extends T
+--Consumer (you only put/write values):  Use ? super T
+
+
+
+
+1. Unbounded wildcard:
+---------------------
+
+List<?>
+
+
+--In Java Generics, a wildcard (?) represents an unknown type.
+
+--Unbounded Wildcard (?) means:  "any type"
+
+--Unbounded wildcard is used when you don’t care about the type, but still want type safety.
+
+--There are two scenarios where using unbounded wildcard is useful.
+
+1. When writing a method that relies on Object class functionality, If a method uses only methods defined in the Object class (like toString(), equals()), then the exact type is not important.
+
+2. If a method uses operations that do not depend on the generic type (such as size(), clear(), isEmpty()), then <?> can be used.
+
+
+List<?> means a list typed to an unknown type. This could be a List<A>, a List<B>, a List<String> etc.
+
+Since  you do not know what type the List is typed to, you can only read from the collection, and you can only treat the objects read as being Object instances. 
+
+Here is an example:
+-------------------
+Example 1:-
+---------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("A", "B", "C", "D"));
+		List<Integer> list1 = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+		
+		
+		List<?> wildList = list;
+		List<?> wildList1 = list1;
+		
+	}
+}
+
+
+Example 2:-
+---------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("A", "B", "C", "D"));
+		List<Integer> list1 = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+		List<Double> list2 = new ArrayList<>(List.of(1.1, 2.2, 3.3, 4.4));
+		printData(list);
+		printData(list1);
+		printData(list2);
+	}
+
+	static void printData(List<?> list) {
+		for(Object obj : list) {
+			System.out.println(obj);
+			System.out.println(obj.getClass().getName());
+		}
+	}
+}
+Output:-
+-------
+A
+java.lang.String
+B
+java.lang.String
+C
+java.lang.String
+D
+java.lang.String
+1
+java.lang.Integer
+2
+java.lang.Integer
+3
+java.lang.Integer
+4
+java.lang.Integer
+5
+java.lang.Integer
+1.1
+java.lang.Double
+2.2
+java.lang.Double
+3.3
+java.lang.Double
+4.4
+java.lang.Double
+
+
+
