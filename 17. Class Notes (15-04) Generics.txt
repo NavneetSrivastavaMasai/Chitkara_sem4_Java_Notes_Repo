@@ -194,7 +194,7 @@ Key :- 123
 
 
 Naming conventions:-
--=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=
 
 E - Elements in Collection
 T - Type
@@ -487,6 +487,65 @@ Output:-
 -------
 This animal can swim....
 
+Example 2:- Employee with subclass:-
+=-=-=-=-=-=-
+
+public class Employee {
+
+	private String name;
+	private double salary;
+	public Employee(String name, double salary) {
+		this.name = name;
+		this.salary = salary;
+	}
+	public String getName() {
+		return name;
+	}
+	public double getSalary() {
+		return salary;
+	}
+}
+
+public interface BonusEligible {
+	double calculateBonus();
+}
+public class Developer extends Employee implements BonusEligible, Serializable{
+
+	public Developer(String name, double salary) {
+		super(name, salary);
+	}
+	@Override
+	public double calculateBonus() {
+		return getSalary()*0.10;
+	}
+}
+
+public class Payroll <T extends Employee & BonusEligible & Serializable>{
+	private T emp;
+
+	public Payroll(T emp) {
+		this.emp = emp;
+	}
+	
+	void calculateTotalSalary() {
+		System.out.println("Name :- "+emp.getName());
+		System.out.println("Salary :- "+emp.getSalary());
+		System.out.println("Bonus :- "+emp.calculateBonus());
+	}
+}
+public class Main {
+	public static void main(String[] args) {
+		Developer dev = new Developer("Shiwang", 5000000);
+		Payroll<Developer> pay = new Payroll<>(dev);
+		pay.calculateTotalSalary();
+	}
+}
+
+Output:-
+-==-=-=-
+Name :- Shiwang
+Salary :- 5000000.0
+Bonus :- 500000.0
 
 
 Rule:-
@@ -605,13 +664,13 @@ Problem:
 
 objArray[0] = new A(); // Heap Pollution, ArrayStoreException
 
-Here, no error at compiled time, compiler is not able to detect it but at runtime we get an exception.
+Here, no error at compile time; the compiler is not able to detect it, but at runtime, we get an exception.
 
 
 
 Invariant:-
 ---------
-Means does not follow parent-child relationship. In Java Generics are Invariant by default.
+Means does not follow the parent-child relationship. In Java, Generics are Invariant by default.
 
 
 Example:
@@ -620,15 +679,15 @@ Example:
 		List<Object> li1 = li; // Compile time error
 
 
---To make our Collection to work as a covariance type and make them flexible, we need to make use of wildcard.
+--To make our Collection work as a covariance type and make it flexible, we need to make use of a wildcard.
 
---With the collections we can use following 3 types of wildcards:
+--With the collections, we can use the following 3 types of wildcards:
 
 1. Unbounded Wildcard 
 
 2. Subtype or upper bound wildcards: Covariance (for reading/producing)
 
-3. SuperType or Lower bound wildcards: Contravariance (for writing/consuming)
+3. Supertype or Lower bound wildcards: Contravariance (for writing/consuming)
 
 
  
@@ -729,5 +788,463 @@ java.lang.Double
 4.4
 java.lang.Double
 
+Difference between <T> and <?>:-
+=-=-=-=-===-=-=-==-=-=-=-=-=-=-=
+
+| Feature       	| `<T>`                   	| `<?>`                    |
+| ------------- 	| ----------------------- 	| ------------------------ |
+| Meaning       	| Specific type parameter 	| Unknown type             |
+| Type known?   	| Yes (compiler knows T)  	| No (unknown type)        |
+| Add elements? 	| Yes                   	| No (except null)         |
+| Use case      	| When type matters       	| When type doesn't matter |
+
+
+**Why do we need wildcards when we already have <T>?
+- Wildcards provide flexibility to accept multiple generic types without defining a specific type parameter, especially when the actual type is not important.
+
+
+2. Subtype or upper bound wildcards: (? extends T)
+--------------------------------------------------
+
+--Using this we can achieve the covariance type of feature in collections also.
+
+syntax:
+
+<? extends T> 
+
+--means a type that is either T or a child of T, 
+
+
+Example (Employee):
+------------------
+public static void printArray(List<? extends Employee> employees){
+
+	for(Employee employee: employees){
+		System.out.println(employee);
+		// employeed.add(new Employee());       // Compile error - cannot add
+	}
+
+}
+-This method can accept at max or upper bound of Employee class object. we are trying to restrict the boundary at max to Employee class
+
+-The wildcard type <? extends Employee> indicates some unknown subtype of Employee. we can call this method with List<Developer> or List<Manager> as well.
+
+
+Note: When we are using Subtype or Upper bound Wildcard, we can't add a new element/object inside the collection. For example inside the above method, if we try to add an object of Employee or its subtype we get a compilation error.
+
+
+-The reason is, the ? inside ? extends Employee, could refer to any subclass, perhaps Developer or Manager, Since we can't add a Developer to a List<Manager>.
+
+
+Example:-
+---------
+1. Calculate Sum of Any Number List
+
+public class Demo {
+	public static double sum(List<? extends Number> list) {
+		double sum  = 0;
+		for(Number x : list) {
+			sum+=x.doubleValue();
+		}
+		return sum;
+	}
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>(List.of(1,2,3,5,6));
+		List<Double> list1 = new ArrayList<>(List.of(1.1,2.2,3.3,5.5,6.6));
+		List<Number> list2 = new ArrayList<>(List.of(1.11,2,3.33,5));
+		
+		List<String> list4 = new ArrayList<>(List.of("A","B","C"));
+		
+//		System.out.println(sum(list4)); // compile time error
+		
+		System.out.println(sum(list));
+		System.out.println(sum(list1));
+		System.out.println(sum(list2));	
+	}
+}
+
+Output:-
+------
+17.0
+18.7
+11.440000000000001
+
+
+2. Print Details of Any Subclass of Employee
+
+public class Employee {
+	private String name;
+	public Employee(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Employee [name=" + name + "]";
+	}
+}
+public class Developer extends Employee {
+
+	public Developer(String name) {
+		super(name);
+	}
+}	
+public class Manager extends Employee{
+
+	public Manager(String name) {
+		super(name);
+	}
+}
+public class Demo1 {
+	public static void showDetails(List<? extends Employee> list) {
+		for(Employee x : list) {
+			System.out.println(x.getClass().getSimpleName() +" "+ x);
+		}
+	}
+	public static void main(String[] args) {
+		List<Developer> developer = new ArrayList<>();
+		developer.add(new Developer("Satvik"));
+		developer.add(new Developer("Krish"));
+		developer.add(new Developer("Satyam"));
+		
+		List<Manager> manager = new ArrayList<>();
+		manager.add(new Manager("Sarthak"));
+		manager.add(new Manager("Khushi"));
+		manager.add(new Manager("Tripti"));
+		
+		showDetails(manager);
+		showDetails(developer);
+	}
+}
+Output:-
+--------
+Manager Employee [name=Sarthak]
+Manager Employee [name=Khushi]
+Manager Employee [name=Tripti]
+Developer Employee [name=Satvik]
+Developer Employee [name=Krish]
+Developer Employee [name=Satyam]
+
+3. Supertype or Lower bound wildcards:
+-----------------------------------
+
+--Contravariance is the opposite of covariance, and it refers to the ability of a type to accept more generic(broader) types.
+
+--Contravariance allows a generic type to work with its supertypes using ? super.
+
+--Lower bounded wildcard (? super T) allows a generic type to accept T and its supertypes, making it suitable for write operations.
+
+syntax:
+
+<? super A> 
+
+Means:
+
+Accepts:
+
+T
+Parent of T
+Grandparent of T
+
+
+Note: We can specify an upper bound for a wildcard, or we can specify a lower bound but we can not specify both.
+
+
+
+
+-Suppose, we want to write a method that puts Integer object into a list, To maximize flexibility, we would like that method to work on List<Integer>, List<Number> or List<Object>: Anything that can hold an Integer value.
+
+Example with Numbers:-
+----------------------
+public class Demo {
+	public static void addElement(List<? super Integer> list) {
+		for(int i=100; i<105;i++) {
+			list.add(i);
+		}
+	}
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>(List.of(1,2,3,5,6));
+		List<Double> list1 = new ArrayList<>(List.of(1.1,2.2,3.3,5.5,6.6));
+		List<Number> list2 = new ArrayList<>(List.of(1.11,2,3.33,5));
+		
+		System.out.println(list.size());
+		System.out.println(list1.size());
+		System.out.println(list2.size());
+		
+		addElement(list);
+//		addElement(list1);compile time error
+		addElement(list2);
+		
+		System.out.println("***********************");
+		System.out.println(list.size());
+		System.out.println(list1.size());
+		System.out.println(list2.size());
+	}
+}
+Output:-
+------
+5
+5
+4
+***********************
+10
+5
+9
+
+Key properties:
+--------------
+
+1. Write (Allowed)
+
+list.add(10); // Integer allowed, Because all these lists can store Integer
+
+
+2. Read (Restricted):
+
+Object obj = list.get(0); // Only Object allowed, because Compiler doesn't know exact type
+
+
+Example2:
+=======
+
+
+Rule:-
+-----
+extends = read
+super = write
+
+
+
+
+
+Type Erasure in Java:
+=-=-=-=-=-=-=-=-=-=-=
+
+--Type Erasure is a mechanism used by Java to implement Generics.
+
+--Type Erasure means removing Generic type information at compile time.
+
+
+Definition:
+-----------
+
+--Type Erasure is the process of removing generic type information at compile time so that generic code is converted into non-generic code for JVM execution.
+
+Need for Type Erasure:
+---------------------
+
+--Java introduced generics in Java 5 without changing JVM
+
+So:
+
+--JVM does not understand generics
+--Compiler converts Generic code to normal code
+-- No Generic Information at Runtime:
+
+
+This ensures:
+
+--Backward compatibility with older Java versions
+
+
+How Type Erasure Works:
+---------------------
+
+Case 1: Unbounded Type
+
+class Box<T> {
+    T value;
+}
+
+
+After compilation:
+
+class Box {
+    Object value;
+}
+
+
+Case 2: Bounded Type:
+
+class Box<T extends Number> {
+    T value;
+}
+
+After compilation:
+
+class Box {
+    Number value;
+}
+
+
+
+Example:
+
+List<String> list = new ArrayList<>();
+list.add("Hello");
+
+After type erasure:
+
+List list = new ArrayList();
+list.add("Hello");
+
+
+
+Key Effects of Type Erasure:
+-------------------------
+
+
+1. Method Overloading Restriction
+
+
+void fun1(List<Integer> list) {
+		
+}
+	
+void fun1(List<String> list) {
+		
+} // Not allowed
+
+
+2. Type Casting Inserted by Compiler
+
+List<String> slist = List.of("Java", "Pyhton", "C++");
+
+String s = slist.get(0);
+	
+Compiler internally adds:
+
+String s = (String) list.get(0);
+
+
+Important Note
+
+--Generics provide compile-time type safety, not runtime safety.
+
+
+
+Gift Box Analogy:
+
+At compile time:  box has label (String, Integer)
+At runtime: label removed:  only box remains
+
+
+Limitations of Generics:-
+=-=-==-=-=-=-=-=-=-=-=-=
+1. We can not use Primitive Types 
+	- Generics does not support primitive types
+		Wrong:
+			List<int> list = new ArrayList<>();
+		Correct:
+			List<Integer> list = new ArrayList<>();
+	- Why:-
+		Generics works only with objects, primitive (int, double, char) are not the objects.
+
+- That's why we use Wrapper classes
+
+	Primitive	Wrapper
+	int		Integer
+	double		Double
+	char		Character
+
+
+2. We can not create Object using Type Parameter.
+
+- You can not object of T directly.
+
+-Wrong:
+
+class Test<T> {
+    
+    T obj = new T(); // ERROR
+    
+}
+
+
+Why?
+
+- After type Erasure Compiler don't know:-
+
+	- What type of T actually is?
+- That's why:- 
+
+	- new T()
+	- Is not possible.
+
+3. We can not create Array of Generic Type. 
+	- Generic array creation is not allowed.
+
+Wrong:
+
+T[] arr = new T[5]; // ERROR
+
+or
+
+List<String>[] arr = new List<String>[5]; // ERROR
+
+Why:-
+- Arrays checks type on runtime.
+- Generics checks type on compile-time.
+- This create Mis-match problem.
+
+4. We can not use Type parameter with Static members.
+
+ Wrong:
+
+class Test<T> {
+    
+    static T obj; // ERROR
+    
+}
+
+Why:-
+- Static members are class level.
+- But decides on Object level.
+- That why create a conflict.
+
+5. We can not check Generic Type with "instanceof" operator.
+
+Wrong:
+
+if(obj instanceof List<String>) { } // ERROR
+
+Edge case:-
+---------
+if(obj instanceof List<?>) { } // Allowed
+
+Why:-
+
+	- On Runtime:
+		- List<String>
+	- After Type Erasure:-
+		- List
+- That is why we do not know actual type of Generic.
+
+6. Method Overloading using Generic Type is not allowed:-
+
+Wrong:
+
+- void fun(List<Integer> list) {}
+
+- void fun(List<String> list) {} // ERROR
+
+Why:-
+
+After Type Erasure :
+
+- void fun(List list)
+
+- void fun(List list)
+
+Same signature → Compile error.
+
+7. We can not use Generic type with Exceptions:-
+
+
+- Wrong:
+	- class MyException<T> extends Exception { } // ERROR
+
+Why:-
+- Exception handling happens runtime.
+- Generics at compile-time.
 
 
