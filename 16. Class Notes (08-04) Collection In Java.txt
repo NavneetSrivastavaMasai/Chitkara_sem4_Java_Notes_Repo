@@ -977,4 +977,497 @@ Student Tasks:-
 	- peek()
 	- isEmpty()
 
+************************************************************************************************************************************************************
+Iterator interface:
+===================
+--This interface gives us a standardize way of accessing the elements from any Collection object.
+--while iterating objects by iterator we can perform remove operation in addition to read operation.
+--It is a Universal cursor (Works with List, Set and Queue).
+
+Methods in Iterator interface:
+-----------------------------
+
+public boolean hasNext();  // check if next element exists
+public E next();           // get next element
+void remove();      // remove current element safely
+
+
+
+
+-To get the Iterator object, we need to call iterator() method on any Collection object.
+
+Example:
+	Iterator itr= al.iterator();
+
+--It creates an iterator object that points to the same ArrayList object.
+
+
+Example:
+-------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		//find the element "b" AND "c" from list and remove it.
+		Iterator itr = list.iterator();
+		while(itr.hasNext()) {
+			System.out.print(itr.next()+" ");
+		}
+	}
+}
+Output:-
+-------
+a b c d e f 
+
+
+Note: If we are trying to remove the element while iterating for enhanced for loop, It will throw the ConcurrentModificationException.
+
+Example for removing an element while iterating from list using enhanced loop: 
+------------------------------------------------------------------------------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		//find the element "b" AND "c" from list and remove it.
+		for(String str : list) {
+			if(str.equals("b")||str.equals("c")) {
+				list.remove(str);
+			}
+		}
+		System.out.println(list);
+	}
+}
+Output:-
+Exception in thread "main" java.util.ConcurrentModificationException
+	at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1095)
+	at java.base/java.util.ArrayList$Itr.next(ArrayList.java:1049)
+	at Demo4/com.chitkara.Main.main(Main.java:9)
+
+
+Reason:
+--Enhanced for-loop internally uses Iterator
+--Direct modification breaks iterator consistency (fail-fast)
+
+
+Fail-Fast behavior: 
+------------------
+
+--Most collection classes (ArrayList, HashSet, etc.) are fail-fast. They throw
+ConcurrentModificationException if the collection is structurally modified while iterating, except through the iterator’s own remove() method.
+
+Note: while iterating with normal for loop if we try to remove the element, it will be removed but the normal for-loop is not the universal way to iterating any collection object, it will not work with the Set or Queue objects, because they do not support the index (We can see in above example).
+	
+
+
+Experiment: Remove element using simple for loop.
+-----------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		//find the element "b" AND "c" from list and remove it.
+		for(int i=0; i<list.size();i++) {
+			String str = list.get(i);
+			if(str.equals("b") || str.equals("c")) {
+				list.remove(str);
+			}
+		}
+		System.out.println(list);
+	}
+}
+Output:-
+-------
+[a, c, d, e, f]
+
+Here the output: [a, c, d, e, f]: not expected, because after removing "b" the next element "c" shifted to the previous index.
+
+--To fix this problem we can use the following approaches:
+
+Approach1: Decrement the index after removing.
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		for(int i= 0; i<list.size();i++) {
+			String str = list.get(i);
+			if(str.equals("b")||str.equals("c")) {
+				list.remove(str);
+				i--;
+			}
+		}
+		System.out.println(list);
+	}
+}
+Output:-
+--------
+[a, d, e, f]
+
+Approach2: Use list from the last index.
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		for(int i= list.size()-1; i>=0;i--) {
+			String str = list.get(i);
+			if(str.equals("b")||str.equals("c")) {
+				list.remove(str);
+			}
+		}
+		System.out.println(list);
+	}
+}
+Output:-
+[a, d, e, f]
+		
+Approach3: Using Iterator:
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		Iterator itr = list.iterator();
+		
+		while(itr.hasNext()) {
+			String str = (String) itr.next();
+			if(str.equals("b")||str.equals("c")) {
+				itr.remove();
+			}
+		}
+		System.out.println(list);
+	}
+}
+
+
+limitations of Iterator:
+----------------------
+
+1. By using Iterator we can always move forward direction, but can't move backward direction, it is a single direction cursor.
+
+2. By using the Iterator we can perform only read and remove operation, but we can't perform the replace and add operation.
+
+
+
+
+ListIterator interface:
+========================
+
+--It is the child interface of the Iterator interface.
+
+--By using ListIterator we can move either to the forward direction or to the backward direction. It is a bi-directional cursor.
+
+--By using ListIterator we can also perform replace or add operation while iterating over the List elements.
+
+Note: ListIterator is the most powerful cursor but its limitation is, It is not a universal cursor, we can use it only with List objects not with the Set or Queue objects.
+
+
+
+ListIterator interface contains the following 9-methods:
+
+1. public boolean hasNext()
+
+2. public Object next()
+
+3. public int nextIndex()
+
+4. public boolean hasPrevious()
+
+5. public Object previous()
+
+6. public int previousIndex()
+
+7. public void remove()
+
+8. public void set(Object o)
+
+9. public void add(Object o)
+
+
+
+--To get the ListIterator object, we need to call listIterator() method on the List object.
+
+
+ListIterator ltr= al.listIterator();
+
+
+
+
+Example:
+--------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		ListIterator liItr = list.listIterator();
+		
+		while(liItr.hasNext()) {
+			String str = (String)liItr.next();
+			System.out.print(str+" ");
+		}
+		System.out.println();
+		System.out.println("+++++++++++++++++++++++++++");
+		while(liItr.hasPrevious()) {
+			System.out.print(liItr.previous()+" ");
+		}
+	}
+}
+		
+Output:-
+-------
+a b c d e f 
++++++++++++++++++++++++++++
+f e d c b a 
+
+--First move forward then move backward. because when the ListIterator object is created, Cursor is at the start (before first element)
+
+So to go backward:
+
+--First move to end using next()
+--Then use previous()
+
+
+Shortcut (Start from End)
+=-=-=-===-=-=-=-=-=-=-=-=-=
+ListIterator<String> ltr = al.listIterator(al.size()); // we can pass any number from where we want to move backward.
+
+Example:-
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","c","d","e","f"));
+		ListIterator liItr = list.listIterator(list.size());
+		
+		while(liItr.hasPrevious()) {
+			String str = (String)liItr.previous();
+			System.out.print(str+" ");
+		}
+	}
+}
+
+Output:-
+f e d c b a 
+		
+
+Example: Adding the new element while iterating:
+------------------------------------------------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","d","e","f"));
+		ListIterator liItr = list.listIterator();
+		
+		while(liItr.hasNext()) {
+			String str = (String)liItr.next();
+			if(str.equals("b")) {
+				liItr.add("c");
+			}
+			
+		}
+		System.out.println(list);
+	}
+}
+
+Output:-
+[a, b, c, d, e, f]
+
+
+
+Example: Replacing the new element while iterating:
+---------------------------------------------------
+public class Main {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(List.of("a","b","d","e","f"));
+		ListIterator liItr = list.listIterator();
+		
+		while(liItr.hasNext()) {
+			String str = (String)liItr.next();
+			if(str.equals("b")) {
+				liItr.set("c");
+			}
+			
+		}
+		System.out.println(list);
+	}
+}
+Output:-
+-------
+[a, c, d, e, f]
+
+
+
+************************************************************************************************************************************************************
+
+Time Complexity of various methods of Collection and List interface:
+====================================================================
+
+add(E e) : O(1) amortized : May become O(n) during resizing.
+
+add(index, e): O(n): shift elements
+
+remove(Object o) : O(n): Need to search the element.
+
+remove(index): O(n): Shift elements
+
+contains(Object o): O(n): linear search
+
+addAll(Collection c): O(n): Depends on size of input
+
+removeAll(Collection c): O(n * m): worst case
+
+retainAll(Collection c): O(n * m): comparison required
+
+get(index): O(1)
+
+set(index, e): O(1)
+
+indexOf(): O(n): Linear serach
+
+lastIndexOf(): O(n): Reverse serach
+
+
+************************************************************************************************************************************************************
+Commonly used methods of the Collections class:
+===============================================
+1. sort():
+=-=-=-=-=-=
+--It sort the original List objects
+
+Collections.sort(list); 
+Collections.sort(List list, Comparator c);
+
+
+Example:-
+public class CollectionsClassUse {
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>(List.of(4,5,6,1,3,5,1));
+		Collections.sort(list);
+		System.out.println(list);
+		
+		List<String> list1 = new ArrayList<>(List.of("A","Z","X","B","C"));
+		Collections.sort(list1);
+		System.out.println(list1);
+	}
+}
+Output:-
+[1, 1, 3, 4, 5, 5, 6]
+[A, B, C, X, Z]
+	
+
+
+2. reverse():
+=-=-=-=-=-=-=
+--To reverse the elements of the List
+
+Collections.reverse(List list);
+
+Example:
+Prefer list data from above Collection.sort() method:-
+
+		Collections.reverse(list);
+		Collections.reverse(list1);
+		System.out.println(list);
+		System.out.println(list1);
+
+
+Output:-
+[6, 5, 5, 4, 3, 1, 1]
+[Z, X, C, B, A]
+
+
+3. max() and min():
+=-=-=-=-=-=-=-=-=
+--To find min and max elements from a List
+
+
+Example:
+Prefer list data from above Collection.sort() method:-
+
+		int x = Collections.min(list);
+		System.out.println(x);
+		int y = Collections.max(list);
+		System.out.println(y);
+
+Output:-
+1
+6
+
+
+
+4. binarySearch():
+=-==-=-=-=-=-=-=-=
+--Search element (list must be sorted)
+
+int index = Collections.binarySearch(list, element);
+
+Example:
+public class CollectionsClassUse {
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>(List.of(4,5,6,1,3,5,1));
+		Collections.sort(list);
+//		System.out.println(list);
+		
+		int x = Collections.binarySearch(list, 6);
+		System.out.println(x);
+		
+	}
+}
+Output:-
+6
+
+5. frequency():
+=-=-=-=-=-=-=-=
+--Counts occurrences of an element
+
+int count = Collections.frequency(list, element);
+
+
+Example:
+
+
+5. fill():
+=-=-=-=-=
+--Replaces all elements with given value.
+
+Collections.fill(list, GivenValue);
+
+Example:
+
+
+6. disjoint():
+=-=-=-=-=-=-=
+--Checks if two collections have no common elements
+
+Collections.disjoint(list1, list2) //return Boolean value based on if two values are same or not.
+
+Example:
+
+
+7. swap():
+=-=-=-=-=-=
+--Swaps two elements inside the List using index
+
+Collections.swap(list, index_1,  index_2);
+
+Example:
+
+
+8. unmodifiableList():
+==-=-=-=-==-=-=-=-=-==
+--To convert an existing List to the unmodifiableList (Immutable collections)
+
+List<String> unmod = Collections.unmodifiableList(list);
+		
+Example:
+
+
+9. synchronizedList():
+=-=-=-=-=-=-=-=-=-=-=-=-=
+--To make a Thread-safe list:
+
+List<Integer> syncList = Collections.synchronizedList(list);
+
+
+Example:
+
+	
+
+10. shuffle():
+=-=-=-=-===-=-=
+--It randomly shuffle the elements of the List
+
+Collections.shuffle(list);
+
+Example:
+
+
+
 
