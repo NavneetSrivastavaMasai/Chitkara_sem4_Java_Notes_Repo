@@ -1411,6 +1411,11 @@ int count = Collections.frequency(list, element);
 
 
 Example:
+		List<Integer> li = new ArrayList<>(List.of(1,2,23,43,4,45,5,1,1));
+		System.out.println(Collections.frequency(li, 1));
+
+Otput:-
+3
 
 
 5. fill():
@@ -1420,6 +1425,13 @@ Example:
 Collections.fill(list, GivenValue);
 
 Example:
+			List<Integer> li = new ArrayList<>(List.of(1,2,23,43,4,45,5,1,1));
+			Collections.fill(li, 0);
+			System.out.println(li);
+
+Output:-
+[0, 0, 0, 0, 0, 0, 0, 0, 0]
+	
 
 
 6. disjoint():
@@ -1429,6 +1441,12 @@ Example:
 Collections.disjoint(list1, list2) //return Boolean value based on if two values are same or not.
 
 Example:
+			List<Integer> li = new ArrayList<>(List.of(1,2,23,43,4,45,5,1,1));
+			List<Integer> li1 = new ArrayList<>(List.of(10,20));
+			System.out.println(Collections.disjoint(li, li1));
+			
+Output:-
+true
 
 
 7. swap():
@@ -1437,7 +1455,6 @@ Example:
 
 Collections.swap(list, index_1,  index_2);
 
-Example:
 
 
 8. unmodifiableList():
@@ -1447,6 +1464,18 @@ Example:
 List<String> unmod = Collections.unmodifiableList(list);
 		
 Example:
+public class Demo {
+	public static void main(String[] args) {
+			List<Integer> list = new ArrayList<>(List.of(10,20,30,40));
+			List<Integer> list2 = Collections.unmodifiableList(list);
+			list2.set(0,100);
+			System.out.println(list);		
+	}
+}
+Output:-
+Exception in thread "main" java.lang.UnsupportedOperationException
+	at java.base/java.util.Collections$UnmodifiableList.set(Collections.java:1504)
+	at com.chitkara.Demo.main(Demo.java:9)
 
 
 9. synchronizedList():
@@ -1456,10 +1485,6 @@ Example:
 List<Integer> syncList = Collections.synchronizedList(list);
 
 
-Example:
-
-	
-
 10. shuffle():
 =-=-=-=-===-=-=
 --It randomly shuffle the elements of the List
@@ -1467,6 +1492,312 @@ Example:
 Collections.shuffle(list);
 
 Example:
+public class Demo {
+	public static void main(String[] args) {
+			List<Integer> list = new ArrayList<>(List.of(10,20,30,40));
+			System.out.println(list);
+			Collections.shuffle(list);
+			System.out.println(list);
+	}
+}
+
+Output:-
+[10, 20, 30, 40]
+[30, 40, 10, 20]
+
+************************************************************************************************************************************************************
+
+
+Hierarchy of Set Interface or Implementation classes of Set Interface:-
+=======================================================================
+
+Set (Interface)
+|
+|----> HashSet (Implemented Class) ----> LinkedHashSet (Implemented Class)
+|
+|----> SortedSet (Interface) -----> Navigable Set (Interface) ----> TreeSet (Implemented Class)
+
+1. HashSet:-
+=-=-=-=-=-=
+- HashSet is a class that implements the Set interface.
+- It does not allow duplicate elements.
+- It does not maintain insertion order.
+- It allows one null value.
+- Internally uses a HashMap.
+- Implements:
+	- Set<E>
+	- Cloneable
+	- Serializable
+
+Internal Working of HashSet
+---------------------------
+- It is internally implemented using a HashMap.
+- In HashSet, elements are stored as keys of HashMap and a dummy value is used. Like key-value pair but at the place value used a dummy value.
+- When an element is added, first its hashCode() method is called to generate their hashCode value.
+- The hashCode() method generates an integer value that helps in finding the bucket location.
+- Based on this hashCode, the element is placed into a specific bucket.
+- If the bucket is empty, the element is stored directly.
+- If the bucket already contains elements, a collision occurs.
+- In case of collision, equals() method is used to compare the new element with existing elements in that bucket.
+- If equals returns true, the element is considered duplicate and is not added.
+- If equals returns false, the element is added in the same bucket.
+
+- So, hashCode() is always checked first to find the location.
+- equals() is checked only when multiple elements have the same hashCode.
+
+- If both hashCode is same and equals returns true, the element is treated as duplicate.
+- If hashCode is same but equals returns false, both elements are stored.
+
+- HashSet allows only one null value because all nulls have the same hashCode and are considered equal.
+
+Default Capacity and Load Factor
+--------------------------------
+- Default initial capacity: 16
+- Load factor: 0.75 (Capacity expansion happens when the number of elements exceeds 75% of the current capacity. This threshold is called the load factor limit.)
+- Capacity doubled after reached at Load factor.
+- During resizing, all existing elements are rehashed and placed into new buckets based on the new capacity.
+- This process is called rehashing and it helps maintain efficient performance of HashSet operations.
+
+Creation of HashSet:-
+=-=-=-=-=-=-=-=-=-=-=-=
+- Without type safety:
+	Set s = new HashSet();
+
+- With type safety:
+	Set<String> s = new HashSet<>();
+
+- With initial capacity:
+	Set<String> s = new HashSet<>(20);
+
+Specific Methods of Set Interface or HashSet class:-
+=-=-=-===-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-
+There are no any specific methods of Set Interface or HashSet class, all methods use from Collection interface.:-
+
+1. Adding Elements
+- boolean add(E e); → adds single element
+- boolean addAll(Collection<? extends E> c); → adds another collection
+
+2. Removing Elements
+- boolean remove(Object o); → removes specific element
+- boolean removeAll(Collection<?> c); → removes all matching elements
+- boolean retainAll(Collection<?> c); → keeps only common elements
+- void clear(); → removes everything
+
+3. Searching / Checking
+boolean contains(Object o); → checks element
+boolean containsAll(Collection<?> c); → checks collection
+boolean isEmpty(); → check empty or not
+
+
+Example:-
+=-=-=-=
+1.
+public class Demo {
+	public static void main(String[] args) {
+			Set<Integer> set = new HashSet<>();
+			set.add(1);
+			set.add(2);
+			set.add(3);
+			set.add(1);
+			set.add(3);
+			set.add(null);
+			System.out.println(set);
+			Set<Integer> set1 = new HashSet<>();
+			set1.addAll(set);
+			set.remove(1);
+			System.out.println(set);
+			System.out.println(set1);
+			
+	}
+}
+
+Output:-
+------
+[null, 1, 2, 3]
+[null, 2, 3]
+[null, 1, 2, 3]
+
+
+Example with user Define Class:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- As we know a HashSet is a collection that does not allow duplicate elements.
+- It stores elements using a hashing mechanism, which internally relies on two important methods from the Object class:
+	- hashCode()
+	- equals()
+
+- When we store user-defined objects in a HashSet, we must override these methods to ensure correct duplicate detection.
+- First object will use hashCode() to find the Bucket location and after that if there is no element in Bucket it will store the data directly or if there is any element, then first it will check the content using equals() method after, if equals() method returns false then store data inside the Bucket or equals() returns true then data will not be added due to duplicate data.
+
+Why Both Methods Must Be Overridden Together:-
+=-=-===-=-==-=-=--==--=-==-=--==--=-==-=-=-=-
+
+- It is mandatory to override both methods because:
+
+Rule 1
+-------
+- If two objects are equal using equals(),
+- then their hashCode() must also be equal.
+
+Rule 2
+-------
+- If only equals() is overridden
+- but hashCode() is not overridden:
+	- HashSet may place objects in different buckets
+	- Duplicate detection fails
+
+Code Example with overridden hashCode() and equals() method:-
+-------------------------------------------------------------
+public class Employee {
+	private int empId;
+	private String name;
+	public Employee(int empId, String name) {
+		this.empId = empId;
+		this.name = name;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(empId);
+	}	
+	@Override
+	public boolean equals(Object obj) {
+		if(this==obj)return true;
+		if(getClass()!=obj.getClass())return false;
+		Employee emp = (Employee)obj;
+		return this.empId==emp.empId;
+	}
+	public int getEmpId() {
+		return empId;
+	}
+	public String getName() {
+		return name;
+	}
+	@Override
+	public String toString() {
+		return "[Id=" + empId + ", Name=" + name + "]\n";
+	}
+}
+
+public class Demo {
+	public static void main(String[] args) {
+			Set<Employee> set = new HashSet<>();
+			set.add(new Employee(1, "Raghav"));
+			set.add(new Employee(2, "Navjot"));
+			set.add(new Employee(3, "Aditya"));
+			set.add(new Employee(4, "Nikhil"));
+			set.add(new Employee(3, "Aditya"));
+			set.add(new Employee(4, "Nikhil"));
+			set.add(null);
+			
+			System.out.println(set);	
+	}
+}
+
+Output:-
+------
+[[Id=1, Name=Raghav]
+, null, [Id=2, Name=Navjot]
+, [Id=3, Name=Aditya]
+, [Id=4, Name=Nikhil]
+]
+
+
+
+LinkedHashSet:-
+=-=-=-=-=-=-=-=-
+- LinkedHashSet is a class that implements the Set interface.
+- It does not allow duplicate elements.
+- It maintains insertion order of elements.
+- It allows one null value.
+- Internally uses a HashMap along with a doubly linked list to maintain order.
+- Implements:
+	- Set<E>
+	- Cloneable
+	- Serializable
+
+Internal Working of LinkedHashSet
+---------------------------------
+- LinkedHashSet internally uses LinkedHashMap.
+- LinkedHashMap internally uses HashMap + Doubly Linked List.
+- HashMap part stores elements using hashing (hashCode)(same as above we have studied in HashSet).
+- At the same time, elements are linked using a doubly linked list.
+- This doubly linked list maintains insertion order.
+- Iteration over LinkedHashSet happens through the linked list, not the hash table.
+- Duplicate elements are prevented using equals() method.
+- Removal deletes element from both hash table and linked list.
+- Searching is fast because hashing is used (O(1) average time).
+
+
+Default Capacity of LinkedHashSet
+----------------------------------
+
+- Same as HashSet / HashMap.
+	- Default Capacity = 16
+	- Default Load Factor = 0.75
+
+- Meaning:
+	- Initially 16 buckets created.
+	- When 75% full → resize happens.
+
+Creation of LinkedHashSet:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Without type safety:
+Set s = new LinkedHashSet();
+With type safety:
+Set<String> s = new LinkedHashSet<>();
+With initial capacity:
+Set<String> s = new LinkedHashSet<>(20);
+
+Specific Methods of Set Interface or LinkedHashSet class:-
+=-=-=-===-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+There are no any specific methods of Set Interface or LinkedHashSet class, all methods are used from Collection interface.
+
+* Adding Elements
+- boolean add(E e); → adds single element
+- boolean addAll(Collection<? extends E> c); → adds another collection
+
+* Removing Elements
+- boolean remove(Object o); → removes specific element
+- boolean removeAll(Collection<?> c); → removes all matching elements
+- boolean retainAll(Collection<?> c); → keeps only common elements
+- void clear(); → removes everything
+
+* Searching / Checking
+- boolean contains(Object o); → checks element
+- boolean containsAll(Collection<?> c); → checks collection
+- boolean isEmpty(); → checks empty or not
+
+Student Task:-
+=-=-=-=-=-=-=
+===== Student Management Application =====
+
+- Create a menu-driven program using Scanner class.
+
+Student Record Management using LinkedHashSet
+------------------------------------------------
+- Create a Student class and use LinkedHashSet to:
+	- Store student objects
+	- Prevent duplicate students
+	- Maintain insertion order
+
+- Create a Student class with:
+	- studentID:
+	- name:
+	- email:
+	- course:
+- Override:
+	- equals()
+	- hashCode()
+	- toString()
+- Perform operations:
+	1. Add Student
+	2. Get Student By ID
+	3. Remove Student By ID
+	4. Show All Students
+	5. Check Student Exists
+	6. Display Total Students
+	7. Exit
 
 
 
