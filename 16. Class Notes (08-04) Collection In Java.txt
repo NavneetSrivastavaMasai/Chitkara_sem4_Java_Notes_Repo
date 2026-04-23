@@ -1820,5 +1820,528 @@ Student Record Management using LinkedHashSet
 	7. Exit
 
 
+Some Technical questions to Practice:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Question :1.
+=-=-=-=--==
+Problem Statement
+- You are given a list of String values that may contain duplicate elements.
+- Your task is to remove duplicate elements from the list while preserving the original insertion order.
+- The final result should maintain the same order in which elements first appeared in the list.
+
+Input
+- A list of String values:
+["Java", "Python", "Java", "C++", "Python", "JavaScript"]
+
+Expected Output
+- A list with duplicates removed while maintaining insertion order:
+[Java, Python, C++, JavaScript]
+
+
+Question :2
+=-=-=-=-=-=
+Problem Statement
+- You are given a String containing lowercase alphabet characters.
+- Your task is to find the third non-repeating character in the given string.
+- A non-repeating character is a character that appears only once in the string.
+
+You must use:
+- HashSet → to track repeating characters
+- LinkedHashSet → to maintain insertion order of characters
+
+Input
+	programming
+
+Expected Output
+	a
+
+Solution:-
+---------
+public class Demo {	
+	public static void main(String[] args) {
+		String str = "programming";
+		Set<Character> repeat = new HashSet<>();
+		Set<Character> unique = new LinkedHashSet<>();
+		for(int i = 0; i<str.length();i++) {
+			char ch = str.charAt(i);
+			if(repeat.contains(ch)) {
+				continue;
+			}
+			if(unique.contains(ch)) {
+				unique.remove(ch);
+				repeat.add(ch);
+			}else {
+				unique.add(ch);
+			}
+		}
+		int i = 0;
+		for(char x : unique) {
+			i++;
+			if(i==3) {
+				System.out.println(x);
+				break;
+			}
+		}
+	}
+}
+
+Output:-
+a
+
+Question : 3.
+=-=-=-=-=-=-=
+Problem Statement
+- You are given two lists of integers.
+- Your task is to find all unique elements that exist in only one list but not in both lists.
+- In other words, you need to return elements that are present:
+	- In List1 but not in List2, and
+	- In List2 but not in List1
+- You must use HashSet and the removeAll() method to solve this problem.
+
+Input
+- Two integer lists:
+	List1 = [1, 2, 3, 4]
+	List2 = [3, 4, 5, 6]
+
+Expected Output
+- Unique Elements:
+	[1, 2, 5, 6]
+
+Question :-4
+=-=-=-=-=-=-=
+Problem Statement
+- You are given a String that may contain duplicate characters.
+- Your task is to remove duplicate characters from the string while keeping the last occurrence of each character.
+
+This means:
+- If a character appears multiple times, only its last occurrence should remain
+- The relative order of the last occurrences must be preserved
+
+You must use:
+
+LinkedHashSet to maintain insertion order
+
+Input
+	programming
+
+Expected Output
+	poraming
+
+
+
+***************************************************************************************************
+
+Revisiting Collections.sort() method:-
+=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+The Collections.sort() method is used to sort elements of a List either:
+- According to their natural ordering, or
+- According to a custom ordering defined by the programmer. 
+
+Internal Working of Collections.sort():-
+---------------------------------------
+
+When Collections.sort(list) is called:
+- Elements of the list are compared.
+- Comparison is done using:
+	- compareTo() (Comparable) (Natural sorting)
+	- compare() (Comparator) (Custom sorting)
+- Elements are rearranged into sorted order.
+- An efficient sorting algorithm is used internally.
+
+Requirement for Sorting:-
+-----------------------
+
+- To use Collections.sort():
+	- Elements must implement Comparable
+		OR
+	- A Comparator must be provided.
+- If neither Comparable nor Comparator is available:
+	- A runtime exception occurs
+	 (ClassCastException).
+
+Comparable Interface:-
+=--=-=-=-=-=-=-=-=-=
+- The Comparable interface in Java is used to define the natural ordering of objects.
+- It is part of the java.lang package and is widely used in sorting operations.
+- When objects of a user-defined class need to be sorted, the class must implement the Comparable interface and override its compareTo() method.
+- The Comparable interface contains only one method, making it a single-method interface.
+- Method Declaration
+	public interface Comparable<T> {
+    		int compareTo(T obj);
+	}
+The Comparable interface is used to:
+- Define natural sorting order of objects
+- Allow objects to be sorted automatically
+- Enable sorting using methods like:
+	Collections.sort()
+	Arrays.sort()
+	TreeSet
+	TreeMap
+
+- Without Comparable, Java cannot determine how objects should be ordered.
+
+- What is Natural Ordering?
+	- Natural ordering means the default sorting order defined by the class itself.
+
+Examples:
+
+Class		|  Natural Order
+Integer		|  Numerical order
+String		|  Alphabetical order
+Character	|  Alphabetical order
+
+** Note:- Built-in classes like Integer, String, and Double already implement Comparable.
+
+Understanding compareTo() Method:-
+---------------------------------
+The compareTo() method is used to compare current object with another object.
+
+Syntax
+	public int compareTo(T obj)
+
+The method returns:
+------------------
+Return Value			Meaning
+Negative value			Current object is smaller
+Zero				Objects are equal
+Positive value			Current object is greater
+
+Meaning:
+--------
+If result < 0 → smaller
+If result = 0 → equal
+If result > 0 → greater
+
+When sorting is performed using:
+---------------------------------
+	Collections.sort(list);
+
+Java internally:
+----------------
+- Calls compareTo() method
+- Compares objects
+- Rearranges elements
+- Produces sorted order
+- So sorting depends completely on the compareTo() logic.
+
+Steps to Implement Comparable Interface
+-----------------------------------------
+To implement Comparable in a user-defined class:
+
+Step 1
+- Implement Comparable interface
+	class Student implements Comparable<Student>
+
+Step 2
+- Override compareTo() method
+	@Override
+	public int compareTo(Student s) {
+    		return this.id - s.id;
+	}
+
+Step 3
+- Use sorting method
+	Collections.sort(list);
+
+Example:-
+=-=-=-=
+public class Main {
+	public static void main(String[] args) {
+		List<Student> list = new ArrayList<>();
+		list.add(new Student(4,"C_Satvik"));
+		list.add(new Student(2,"A_Krsih"));
+		list.add(new Student(1,"B_Shiwang"));
+		list.add(new Student(3,"D_Sarthak"));
+		Collections.sort(list);
+		System.out.println(list);
+	}
+}
+public class Student implements Comparable<Student>{
+	int id;
+	String name;
+	public Student(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "[id=" + id + ", name=" + name + "]\n";
+	}
+	@Override
+	public int compareTo(Student o) { // Compare based on names in descending order 
+		return o.name.compareTo(this.name);
+	}
+
+}
+
+Output:-
+=-=-=-=-
+[[id=3, name=D_Sarthak]
+, [id=4, name=C_Satvik]
+, [id=1, name=B_Shiwang]
+, [id=2, name=A_Krsih]
+]
+
+
+
+
+Comparator Interface
+=-=-=-=-=-=-=--=-=-=
+- The Comparator interface in Java is used to define a custom sorting order for objects.
+- It belongs to the java.util package and is widely used when multiple sorting criteria are required.
+- Unlike Comparable, which defines natural ordering inside the class, Comparator allows sorting outside the class, making it more flexible and reusable.
+- Comparator is a functional interface (contains one abstract method), which means it can also be implemented using lambda expressions.
+
+Method Declaration
+-------------------
+	public interface Comparator<T> {
+    		int compare(T o1, T o2);
+	}
+Purpose of Comparator Interface
+--------------------------------
+- Define custom sorting logic
+- Provide multiple sorting orders
+- Sort objects without modifying the original class
+- Compare two different objects
+- Provide flexible sorting strategies
+
+Comparator is commonly used with:
+- Collections.sort()
+- List.sort()
+- Arrays.sort()
+- TreeSet
+- TreeMap
+
+Understanding compare() Method
+--------------------------------
+- The compare() method compares two objects and determines their order.
+
+Syntax:-
+	public int compare(T o1, T o2)
+
+Return Values of compare()
+--------------------------
+Return Value		Meaning
+Negative value		First object is smaller
+Zero				Objects are equal
+Positive value		First object is greater
+
+Meaning:
+--------
+- If result < 0 → o1 comes before o2
+- If result = 0 → both equal
+- If result > 0 → o1 comes after o2
+
+***Sorting behavior depends entirely on the compare() method logic.
+
+Steps to Implement Comparator Interface
+---------------------------------------
+Step 1 — Create Comparator Class
+	class NameComparator implements Comparator<Student>
+
+Step 2 — Override compare() Method
+	@Override
+	public int compare(Student s1, Student s2) {
+    		return s1.name.compareTo(s2.name);
+	}
+	
+Step 3 — Use Comparator in Sorting
+	Collections.sort(list, new NameComparator());
+
+
+Example:- for a normal integer list (In reverse order)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+public class Demo {
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>();
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		list.add(6);
+		list.add(7);
+		Collections.sort(list,new ReverseOrder());
+//		Collections.sort(list, Collections.reverseOrder());//predefined method for reverse the list
+		System.out.println(list);
+	}
+}
+public class ReverseOrder implements Comparator<Integer>{
+	@Override
+	public int compare(Integer o1, Integer o2) {
+		return o2-o1;
+	}
+
+}
+
+Output:-
+-------
+[7, 6, 5, 4, 3, 2, 1]
+
+Example:- for User-defined Class :- Multiple Comparators for Same Class
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- One major advantage of Comparator is that multiple sorting logics can be defined.
+
+Code:-
+-----
+public class Employee implements Comparable<Employee>{
+	int id;
+	String name;
+	double salary;
+	public Employee(int id, String name, double salary) {
+		this.id = id;
+		this.name = name;
+		this.salary = salary;
+	}
+	@Override
+	public String toString() {
+		return "Employee [Id=" + id + ", Name=" + name + ", Salary=" + salary + "]\n";
+	}
+
+	//Natural Sorting --Comparable
+	@Override
+	public int compareTo(Employee o) { 
+		if(this.id==o.id) {
+			return this.name.compareTo(o.name);
+		}
+		return this.id-o.id;
+	}
+}
+
+//Custom sorting on Name
+public class NameComparator implements Comparator<Employee>{ 
+
+	@Override
+	public int compare(Employee o1, Employee o2) {
+		return o1.name.compareTo(o2.name);
+	}
+}
+
+//Custom sorting on Salary
+public class SalaryComparator implements Comparator<Employee>{
+	@Override
+	public int compare(Employee o1, Employee o2) {
+		return Double.compare(o1.salary,o2.salary);
+	}
+}
+public class Main {
+	public static void main(String[] args) {
+		List<Employee> list = new ArrayList<>();
+		list.add(new Employee(1,"Sarthak", 100000));
+		list.add(new Employee(2,"Abhishek", 200000));
+		list.add(new Employee(5,"Bhargav", 50000));
+		list.add(new Employee(3,"Chatur", 10000));
+		list.add(new Employee(4,"Shiwang", 500000));
+		list.add(new Employee(1,"Anuj", 10000));
+		list.add(new Employee(2,"Bikesh", 500000));
+
+		// Natural sorting by ID by using comparable inside the Class
+		System.out.println("Sorted by ID in ascending order...");
+		Collections.sort(list);
+		System.out.println(list);
+		
+		System.out.println("============================");
+
+		// Custom sorting by name by using a comparator outside the Class
+		System.out.println("Sorted by name in ascending order...");
+		NameComparator nc = new NameComparator();
+		Collections.sort(list,nc);
+		System.out.println(list);
+		
+		System.out.println("============================");
+
+		// Custom sorting by salary by using a comparator outside the Class
+		System.out.println("Sorted by salary in ascending order...");
+		SalaryComparator sc = new SalaryComparator();
+		Collections.sort(list,sc);
+		System.out.println(list);
+	}
+
+}
+Output:-
+-------
+Sorted by ID in ascending order...
+[Employee [Id=1, Name=Anuj, Salary=10000.0]
+, Employee [Id=1, Name=Sarthak, Salary=100000.0]
+, Employee [Id=2, Name=Abhishek, Salary=200000.0]
+, Employee [Id=2, Name=Bikesh, Salary=500000.0]
+, Employee [Id=3, Name=Chatur, Salary=10000.0]
+, Employee [Id=4, Name=Shiwang, Salary=500000.0]
+, Employee [Id=5, Name=Bhargav, Salary=50000.0]
+]
+============================
+Sorted by name in ascending order...
+[Employee [Id=2, Name=Abhishek, Salary=200000.0]
+, Employee [Id=1, Name=Anuj, Salary=10000.0]
+, Employee [Id=5, Name=Bhargav, Salary=50000.0]
+, Employee [Id=2, Name=Bikesh, Salary=500000.0]
+, Employee [Id=3, Name=Chatur, Salary=10000.0]
+, Employee [Id=1, Name=Sarthak, Salary=100000.0]
+, Employee [Id=4, Name=Shiwang, Salary=500000.0]
+]
+============================
+Sorted by salary in ascending order...
+[Employee [Id=1, Name=Anuj, Salary=10000.0]
+, Employee [Id=3, Name=Chatur, Salary=10000.0]
+, Employee [Id=5, Name=Bhargav, Salary=50000.0]
+, Employee [Id=1, Name=Sarthak, Salary=100000.0]
+, Employee [Id=2, Name=Abhishek, Salary=200000.0]
+, Employee [Id=2, Name=Bikesh, Salary=500000.0]
+, Employee [Id=4, Name=Shiwang, Salary=500000.0]
+]
+
+
+Example:- With a lambda expression
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- Since Comparator is a functional interface, lambda expressions can be used.
+Code:-
+-----
+public class Demo {	
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>();
+		list.add(11);
+		list.add(22);
+		list.add(13);
+		list.add(41);
+		list.add(15);
+		list.add(61);
+		list.add(17);
+
+		//***Here we are using a lambda expression because our Comparator is a functional interface(Have Single Abstract Methods, so we can apply a lambda expression)***
+		Collections.sort(list,(a,b)->b-a);
+		System.out.println(list);
+	}
+}
+Output:-
+-------
+[61, 41, 22, 17, 15, 13, 11]
+
+
+Key Difference between Comparable and Comparator:-
+=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=
+Comparable → Natural Sorting
+-----------
+- Sorting logic is defined inside the class
+- Used when only one default sorting order is needed
+- Uses:
+	compareTo()
+
+
+Comparator → Custom Sorting
+----------
+- Sorting logic is defined outside the class
+- Used when multiple sorting orders are needed
+- Uses:
+	compare()
+
+
+Core Rule:-
+=-=-=-=-=
+If Comparator is provided → Comparator used  
+If a Comparator is not provided → Comparable is used
+******************************************************************************
+
+
 
 
