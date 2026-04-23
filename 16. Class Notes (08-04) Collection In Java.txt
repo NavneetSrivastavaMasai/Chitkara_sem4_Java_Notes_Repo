@@ -1505,6 +1505,26 @@ Output:-
 [10, 20, 30, 40]
 [30, 40, 10, 20]
 
+
+Which method allowed on Which Collection:-
+=-=-=--==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+| Method               | List 	| Set 	| Queue 	| Reason                  |
+| -------------------- | ---- 	| --- 	| ----- 	| ----------------------- |
+| `sort()`             | ✅    	| ❌   	| ❌     	| Requires List indexing  |
+| `reverse()`          | ✅    	| ❌   	| ❌     	| Works on List positions |
+| `max()`              | ✅    | ✅   	| ✅     	| Accepts Collection      |
+| `min()`              | ✅    | ✅   	| ✅     	| Accepts Collection      |
+| `binarySearch()`     | ✅    | ❌   	| ❌     	| Needs sorted List       |
+| `frequency()`        | ✅    | ✅   	| ✅     	| Accepts Collection      |
+| `fill()`             | ✅    | ❌   	| ❌     	| Replaces List elements  |
+| `disjoint()`         | ✅    | ✅   	| ✅     	| Works on Collection     |
+| `swap()`             | ✅    | ❌   	| ❌     	| Uses index              |
+| `unmodifiableList()` | ✅    | ❌   	| ❌     	| List-specific wrapper   |
+| `synchronizedList()` | ✅    | ❌   	| ❌     	| List-specific wrapper   |
+| `shuffle()`          | ✅    | ❌   	| ❌     	| Randomizes List order   |
+
+
 ************************************************************************************************************************************************************
 
 
