@@ -2342,6 +2342,438 @@ If Comparator is provided → Comparator used
 If a Comparator is not provided → Comparable is used
 ******************************************************************************
 
+TreeSet:-
+=-=-=-=-=-=
+- TreeSet is a class that implements the NavigableSet interface.
+- It does not allow duplicate elements.
+- It maintains sorted order (ascending by default).
+- It does not allow null values.
+- Internally uses a Red-Black Tree (Self-balancing Binary Search Tree).
+- Elements are stored in sorted order automatically.
+- Implements:
+	- NavigableSet<E>
+	- SortedSet<E>
+	- Set<E>
+	- Cloneable
+	- Serializable
 
+Internal Working of TreeSet:-
+-----------------------------
+- TreeSet stores elements using a self-balancing binary search tree called Red-Black Tree.
+- When an element is added, TreeSet does not use hashCode().
+- Instead, TreeSet uses:
+	- compareTo() method (if Comparable used)
+			OR
+	- compare() method (if Comparator used)
+
+- When an element is inserted, TreeSet compares the new element with existing elements.
+- If the tree is empty, the element becomes the root node.
+- If the tree already contains elements, comparison starts from the root.
+- Based on comparison result:
+	- If result < 0 → element goes to left side
+	- If result > 0 → element goes to right side
+	- If result = 0 → element is treated as duplicate and not added
+- After insertion, TreeSet automatically balances the tree using Red-Black Tree rules.
+- Because of balancing, search, insert, and delete operations are efficient.
+ 
+
+*******Note***********
+- TreeSet internally uses Comparable interface for natural sorting of elements and Comparator interface for custom sorting.
+- Whenever an element is added into TreeSet, it compares elements using compareTo() (Comparable) or compare() (Comparator) methods to maintain sorted order and to prevent duplicate elements. 
+- Built-in classes like Integer, String, Double already implement's Comparable Interface.
+- But for user defined classes we need to implement Comparable interface for natural sorting of that particular class or provide Comparator object (Comparator implemented class object) for custom sorting.
+**********************
+
+
+Creation or Constructor of TreeSet:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+1. Default Constructor
+	TreeSet<Integer> set = new TreeSet<>();
+
+2. Collection Constructor 
+		ArrayList<Integer> list = new ArrayList<>(List.of(1,1,1,2,3,42,4,1,6,7));
+		TreeSet<Integer> set = new TreeSet<>(list);
+
+3. Comparator Constructor
+		// We can pass comparator object inside the constructor
+		TreeSet<Integer> set = new TreeSet<>(new NameComparator());
+
+Capacity of TreeSet:-
+---------------------
+- TreeSet does not have any default capacity. In TreeSet, capacity does not increase like array-based collections. Whenever a new element is added, a new node is dynamically created in the tree structure, allowing TreeSet to grow automatically as elements are inserted.
+
+Adding element in Tree set:-
+---------------------------
+Adding simple elements(Using Integer and Strings):-
+-------------------------------------------------
+For Integers :-
+public class Demo {
+	public static void main(String[] args) {
+		TreeSet<Integer> set = new TreeSet<>();
+		set.add(10);
+		set.add(6);
+		set.add(9);
+		set.add(1);
+		set.add(10);
+		set.add(14);
+		set.add(100);
+		set.add(10);
+		System.out.println(set);
+	}
+}
+Output:-
+[1, 6, 9, 10, 14, 100]
+
+For Strings:-
+----------
+public class Demo {
+	public static void main(String[] args) {
+		TreeSet<String> set = new TreeSet<>();
+		set.add("Ram");
+		set.add("Shyam");
+		set.add("Abhishek");
+		set.add("Krish");
+		set.add("Ram");
+		set.add("Shiwang");
+		System.out.println(set);
+	}
+}
+Output:-
+[Abhishek, Krish, Ram, Shiwang, Shyam]
+
+
+Adding User Define class elements(for Natural order sorting)(Implements Comparable):-
+-----------------------------------------------------------------------------------
+public class Product implements Comparable<Product>{
+	private int proId;
+	private String proName;
+	private double proPrice;
+	private int proRating;
+	public Product(int proId, String proName, double proPrice, int proRating) {
+		this.proId = proId;
+		this.proName = proName;
+		this.proPrice = proPrice;
+		this.proRating = proRating;
+	}
+	public int getProId() {
+		return proId;
+	}
+	public String getProName() {
+		return proName;
+	}
+	public double getProPrice() {
+		return proPrice;
+	}
+	public int getProRating() {
+		return proRating;
+	}
+	@Override
+	public String toString() {
+		return "Product [Product Id=" + proId + ", Product Name=" + proName + ", Product Price=" + proPrice + ", Product Rating="
+				+ proRating + "]\n";
+	}
+
+	//Compare on Product Id base:-
+	@Override
+	public int compareTo(Product o) {
+		return Integer.compare(this.proId, o.proId);
+	}
+}
+public class Demo {
+	public static void main(String[] args) {
+		TreeSet<Product> set = new TreeSet<>();
+		set.add(new Product(1,"Earbuds",2000, 5));
+		set.add(new Product(3,"Bottle",200, 3));
+		set.add(new Product(4,"Mobile",30000, 4));
+		set.add(new Product(2,"Watch",2500, 2));
+		set.add(new Product(5,"Laptop",100000, 5));
+		set.add(new Product(7,"Shoes",3000, 1));
+		set.add(new Product(6,"Bag",5000, 4));		
+		System.out.println(set);
+	}
+}
+
+Output:-
+------
+[Product [Product Id=1, Product Name=Earbuds, Product Price=2000.0, Product Rating=5]
+, Product [Product Id=2, Product Name=Watch, Product Price=2500.0, Product Rating=2]
+, Product [Product Id=3, Product Name=Bottle, Product Price=200.0, Product Rating=3]
+, Product [Product Id=4, Product Name=Mobile, Product Price=30000.0, Product Rating=4]
+, Product [Product Id=5, Product Name=Laptop, Product Price=100000.0, Product Rating=5]
+, Product [Product Id=6, Product Name=Bag, Product Price=5000.0, Product Rating=4]
+, Product [Product Id=7, Product Name=Shoes, Product Price=3000.0, Product Rating=1]
+]
+
+
+
+Adding User Define class elements(for Custom sorting)(Implements Comparator):-
+------------------------------------------------------------------------------
+Using same above Product class:-
+public class Product implements Comparable<Product>{
+	private int proId;
+	private String proName;
+	private double proPrice;
+	private int proRating;
+	public Product(int proId, String proName, double proPrice, int proRating) {
+		this.proId = proId;
+		this.proName = proName;
+		this.proPrice = proPrice;
+		this.proRating = proRating;
+	}
+	public int getProId() {
+		return proId;
+	}
+	public String getProName() {
+		return proName;
+	}
+	public double getProPrice() {
+		return proPrice;
+	}
+	public int getProRating() {
+		return proRating;
+	}
+	@Override
+	public String toString() {
+		return "Product [Product Id=" + proId + ", Product Name=" + proName + ", Product Price=" + proPrice + ", Product Rating="
+				+ proRating + "]\n";
+	}
+	@Override
+	public int compareTo(Product o) {
+		return Integer.compare(this.proId, o.proId);
+	}
+}
+
+public class NameComparator implements Comparator<Product>{
+
+	@Override
+	public int compare(Product o1, Product o2) {
+		return o1.getProName().compareTo(o2.getProName());
+	}
+
+}
+
+public class PriceComparator implements Comparator<Product>{
+
+	@Override
+	public int compare(Product o1, Product o2) {
+		return Double.compare(o1.getProPrice(), o2.getProPrice());
+	}
+
+}
+
+public class RatingComparator implements Comparator<Product>{
+
+	@Override
+	public int compare(Product o1, Product o2) {
+		if(o1.getProRating()==o2.getProRating()) {
+			return Integer.compare(o1.getProId(), o2.getProId());
+		}
+		return Integer.compare(o1.getProRating(),o2.getProRating());
+	}
+
+}
+
+public class Demo {
+	public static void main(String[] args) {
+		TreeSet<Product> set = new TreeSet<>();
+		set.add(new Product(1,"Earbuds",2000, 5));
+		set.add(new Product(3,"Bottle",200, 3));
+		set.add(new Product(4,"Mobile",30000, 4));
+		set.add(new Product(2,"Watch",2500, 2));
+		set.add(new Product(5,"Laptop",100000, 5));
+		set.add(new Product(7,"Shoes",3000, 1));
+		set.add(new Product(6,"Bag",5000, 4));	
+		
+		//Natural sorting by id(Comparable):-
+		System.out.println(set);
+		System.out.println("******************************************");
+		//Custom sorting by Name(Comparator):-
+		TreeSet<Product> nameSet = new TreeSet<>(new NameComparator());
+		nameSet.addAll(set);
+		System.out.println(nameSet);
+		System.out.println("******************************************");
+		
+		//Custom sorting by Price(Comparator):-
+		TreeSet<Product> priceSet = new TreeSet<>(new PriceComparator());
+		priceSet.addAll(set);
+		System.out.println(priceSet);
+		System.out.println("******************************************");
+		
+		//Custom sorting by Rating(Comparator):-
+		TreeSet<Product> ratingSet = new TreeSet<>(new RatingComparator());
+		ratingSet.addAll(set);
+		System.out.println(ratingSet);
+	}
+}
+
+Output:-
+[Product [Product Id=1, Product Name=Earbuds, Product Price=2000.0, Product Rating=5]
+, Product [Product Id=2, Product Name=Watch, Product Price=2500.0, Product Rating=2]
+, Product [Product Id=3, Product Name=Bottle, Product Price=200.0, Product Rating=3]
+, Product [Product Id=4, Product Name=Mobile, Product Price=30000.0, Product Rating=4]
+, Product [Product Id=5, Product Name=Laptop, Product Price=100000.0, Product Rating=5]
+, Product [Product Id=6, Product Name=Bag, Product Price=5000.0, Product Rating=4]
+, Product [Product Id=7, Product Name=Shoes, Product Price=3000.0, Product Rating=1]
+]
+******************************************
+[Product [Product Id=6, Product Name=Bag, Product Price=5000.0, Product Rating=4]
+, Product [Product Id=3, Product Name=Bottle, Product Price=200.0, Product Rating=3]
+, Product [Product Id=1, Product Name=Earbuds, Product Price=2000.0, Product Rating=5]
+, Product [Product Id=5, Product Name=Laptop, Product Price=100000.0, Product Rating=5]
+, Product [Product Id=4, Product Name=Mobile, Product Price=30000.0, Product Rating=4]
+, Product [Product Id=7, Product Name=Shoes, Product Price=3000.0, Product Rating=1]
+, Product [Product Id=2, Product Name=Watch, Product Price=2500.0, Product Rating=2]
+]
+******************************************
+[Product [Product Id=3, Product Name=Bottle, Product Price=200.0, Product Rating=3]
+, Product [Product Id=1, Product Name=Earbuds, Product Price=2000.0, Product Rating=5]
+, Product [Product Id=2, Product Name=Watch, Product Price=2500.0, Product Rating=2]
+, Product [Product Id=7, Product Name=Shoes, Product Price=3000.0, Product Rating=1]
+, Product [Product Id=6, Product Name=Bag, Product Price=5000.0, Product Rating=4]
+, Product [Product Id=4, Product Name=Mobile, Product Price=30000.0, Product Rating=4]
+, Product [Product Id=5, Product Name=Laptop, Product Price=100000.0, Product Rating=5]
+]
+******************************************
+[Product [Product Id=7, Product Name=Shoes, Product Price=3000.0, Product Rating=1]
+, Product [Product Id=2, Product Name=Watch, Product Price=2500.0, Product Rating=2]
+, Product [Product Id=3, Product Name=Bottle, Product Price=200.0, Product Rating=3]
+, Product [Product Id=4, Product Name=Mobile, Product Price=30000.0, Product Rating=4]
+, Product [Product Id=6, Product Name=Bag, Product Price=5000.0, Product Rating=4]
+, Product [Product Id=1, Product Name=Earbuds, Product Price=2000.0, Product Rating=5]
+, Product [Product Id=5, Product Name=Laptop, Product Price=100000.0, Product Rating=5]
+]
+
+
+Core Rule:-
+=-=-=-=-=
+If Comparator is provided → Comparator used  
+If Comparator not provided → Comparable used
+
+
+Methods of TreeSet:-
+=-=-=-=-=-=-=-=-=-=
+All methods from Set Interface will work like add(), addAll(), remove(), contains(), size(), clear(), isEmpty() etc...
+
+Specific Methods from SortedSet Interface:-
+-----------------------------------------
+1. first() — Return Smallest Element from the Set.
+
+2. last() — Return Largest Element.
+
+3. headSet() — Return Set of elements less than the given value.
+
+4. tailSet() — Return Set of Elements Greater or Equal of Given Value.
+
+5. subSet() — Return Set of Elements Between Range
+
+Example Code:-
+public class Main {
+	public static void main(String[] args) {
+		TreeSet<Integer> set = new TreeSet<>(List.of(1,2,3,4,5,9,12,18));
+		System.out.println(set);
+//		Methods of sorted set
+		System.out.println(set.first());
+		System.out.println(set.last());
+		System.out.println(set.headSet(10));
+		System.out.println(set.tailSet(10));
+		System.out.println(set.subSet(0, 9));
+	}
+}
+Output:-
+[1, 2, 3, 4, 5, 9, 12, 18]
+1
+18
+[1, 2, 3, 4, 5, 9]
+[12, 18]
+[1, 2, 3, 4, 5]
+
+Specific Methods from NavigableSet Interface:-
+---------------------------------------------
+These methods find the nearest elements:-
+
+1. lower() — Just Smaller Element of Given element.
+
+2. higher() — Just Greater Element of Given element.
+
+3. floor() — Equal element if available or smaller than given element.
+
+4. ceiling() — Equal element if available or greater than the given element.
+
+5. pollFirst() — Remove the first element from the set and return it.
+
+6. pollLast() — Remove the last element from the set and return it.
+
+7. descendingSet() — Return set in Reverse Order of Given TreeSet
+
+8. descendingIterator() - Return an Iterator that provides iteration in reverse order.
+
+Example code:-
+------------
+
+public class Main {
+	public static void main(String[] args) {
+		TreeSet<Integer> set = new TreeSet<>(List.of(1,2,3,4,5,9,12,18));
+		System.out.println(set.lower(10));
+		System.out.println(set.higher(10));
+		System.out.println(set.descendingSet());
+	}
+}
+Output:-
+9
+12
+[18, 12, 9, 5, 4, 3, 2, 1]
+
+TreeSet Time Complexity Table:-
+=-=--=-==-=-=-=-=--==-=-=-=-=-=
+Operation		Method			Time Complexity		Explanation
+---------               --------                ----------------        ------------
+Add Element		add(E e)		O(log n)		Finds correct position and rebalances tree
+Remove Element		remove(Object o)	O(log n)		Searches element and removes it
+Search Element		contains(Object o)	O(log n)		Traverses tree to find element
+Get First Element	first()			O(log n)		Traverses leftmost node
+Get Last Element	last()			O(log n)		Traverses rightmost node
+Find Greater Element	higher(E e)		O(log n)		Tree traversal required
+Find Smaller Element	lower(E e)		O(log n)		Tree traversal required
+Find Ceiling		ceiling(E e)		O(log n)		Finds ≥ element
+Find Floor		floor(E e)		O(log n)		Finds ≤ element
+Range Query		subSet()		O(log n)		Finds start position
+Head Set		headSet()		O(log n)		Finds range start
+Tail Set		tailSet()		O(log n)		Finds range start
+Get Size		size()			O(1)			Stored internally
+Check Empty		isEmpty()		O(1)			Simple check
+Clear All Elements	clear()			O(n)			Removes all elements
+Iteration		iterator()		O(n)			Visits all elements
+
+
+Checking time element adding in the middle using ArrayList and LinkedList:-
+---------------------------------------------------------------------
+public class Main {
+	public static void main(String[] args) {
+		ArrayList<Integer> al = new ArrayList<>(List.of(1,2,3,4));
+		LinkedList<Integer> ll = new LinkedList<>(List.of(1,2,3,4));
+		
+		long t1=  System.currentTimeMillis();
+		for(int i=0; i<10000;i++) {
+			al.add(al.size()/2,i);
+		}
+		long t2=  System.currentTimeMillis();
+		
+		long t3=  System.currentTimeMillis();
+		for(int i=0; i<10000;i++) {
+			ll.add(ll.size()/2,i);
+		}
+		long t4=  System.currentTimeMillis();
+		
+		System.out.println("ArrayList time:- "+(t2-t1));
+		System.out.println("LinkedList time:- "+(t4-t3));
+	}
+}
+Output:-
+ArrayList time:- 10
+LinkedList time:- 109
+
+**ArrayList taking lesser time than LinkedList because ArrayList is cache-friendly.
+
+****************************************************************************************************************************
 
 
