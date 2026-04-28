@@ -2775,5 +2775,553 @@ LinkedList time:- 109
 **ArrayList taking lesser time than LinkedList because ArrayList is cache-friendly.
 
 ****************************************************************************************************************************
+************************************************************************************************************************************************
+
+Hierarchy of Queue Interface or Implementation classes of Queue Interface:-
+===========================================================================
+
+
+Queue (Interface)
+|
+|----> Deque (Interface) -----> ArrayDeque (Implemented Class)
+|
+|----> PriorityQueue (Implemented Class)
+
+
+Queue:-
+======
+- Queue is an interface in the Java Collection Framework.
+- It is used to store elements in FIFO order (First In First Out).
+- The element that is inserted first will be removed first.
+- Queue allows duplicate elements.
+- Queue generally does not allow null values (most implementations).
+- It is mainly used for processing elements in order.
+
+ArrayDeque:-
+=-=-=-=-=-=
+- ArrayDeque is a class that implements the Deque interface.
+- It allows insertion and deletion of elements from both ends.
+- duplicates allowed.
+- It does not allow null values.
+- It maintains insertion order logically.
+- Internally uses a Resizable Circular Array.
+- It is faster than LinkedList when used as Stack or Queue.
+- Implements:
+	- Deque<E>
+	- Queue<E>
+	- Iterable<E>
+	- Cloneable
+	- Serializable
+
+Internal Working of ArrayDeque
+-----------------------------------
+- ArrayDeque is internally implemented using an Object[] array.
+- It works using a circular array mechanism.
+- Two important indexes are maintained internally:
+	- head → points to first element
+	- tail → points to next empty position
+
+How Elements Are Stored:-
+
+- When an element is added at the rear, it is stored at:
+		elements[tail] = ele;
+	After storing:
+		tail = (tail + 1) % capacity
+
+- When an element is added at the front, first head moves:
+		head = (head - 1 + capacity) % capacity
+	Then element is stored:
+		elements[head] = ele;
+
+How Elements removed:-
+
+- When element remove at the rear:
+		tail = (tail - 1 + capacity) % capacity
+		result = elements[tail]
+		elements[tail] = null
+
+- When element remove at the front:
+		result = elements[head]
+		elements[head] = null;
+		head = (head + 1) % capacity
+
+- Iteration logic:-
+	index = head
+	while(index != tail) {
+    		print(elements[index])
+    		index = (index + 1) % capacity
+	}
+
+
+Default Capacity of ArrayDeque
+-----------------------------------
+Default Initial Capacity:
+16
+
+Growth of An ArrayDeque:-
+------------------------
+newCapacity = oldCapacity × 2
+
+
+Creation of ArrayDeque:-
+=-=-=-=-=-=-=-=-=-=-=-=
+ArrayDeque<Integer> dq = new ArrayDeque<>();
+
+Using Deque reference:
+Deque<Integer> dq = new ArrayDeque<>();
+
+With initial capacity:
+ArrayDeque<Integer> dq =
+        new ArrayDeque<>(20);
+
+
+Specific Methods of Deque Interface or ArrayDeque class:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+There are so many methods in ArrayDeque for add (front and rear) and remove (front and rear), but we are going to learn those safe methods which are important.
+
+Methods we need to Implement Double ended Queue or Only for Queue:-
+-----------------------------------------------------------------
+1. For adding elements in Dequeue:-
+	a. offerFirst() - adding element at front.
+	b. offerLast() - adding element at rear.
+
+2. For removing elements in Dequeue:-
+	a. pollFirst() - removing element at front.
+	b. pollLast() - removing element at rear.
+
+3. For only seeing element:-
+	a. peekFirst() - return only element from the front.
+	b. peekLast() - return only element from the rear.
+
+Code:-
+-----
+public class DequeImpl {
+	public static void main(String[] args) {
+		ArrayDeque<Integer> dq = new ArrayDeque<>();
+		dq.offerLast(10);
+		dq.offerLast(20);
+		dq.offerLast(30);
+		System.out.println(dq);
+		System.out.println("=====================");
+		dq.offerFirst(40);
+		dq.offerFirst(50);
+		dq.offerFirst(60);
+		System.out.println(dq);
+		System.out.println("=====================");
+		System.out.println(dq.peekFirst());
+		System.out.println(dq.peekLast());
+		System.out.println("=====================");
+		while(!dq.isEmpty()) {
+			int x = dq.pollFirst();
+			int y = dq.pollLast();
+			System.out.println(x+y);
+		}
+	}
+}       
+Output:-
+[10, 20, 30]
+=====================
+[60, 50, 40, 10, 20, 30]
+=====================
+60
+30
+=====================
+90
+70
+50
+
+Methods we need to Implement Queue:-
+-----------------------------------------------------------------
+1. For adding elements in Queue:-
+	a. offer() - adding element at front.
+
+2. For removing elements in Queue:-
+	a. poll() - removing element at front.
+
+3. For only seeing element:-
+	a. peek() - return only element from the front.
+
+Code:-
+----
+public class QueueImpl {
+	public static void main(String[] args) {
+		ArrayDeque<Integer> queue = new ArrayDeque<>();
+		queue.offer(10);
+		queue.offer(20);
+		queue.offer(30);
+		queue.offer(40);
+		queue.offer(50);
+		System.out.println(queue);
+		System.out.println("==================");
+		while(!queue.isEmpty()) {
+			System.out.println(queue.poll());
+		}
+	}
+}
+
+Output:-
+------
+[10, 20, 30, 40, 50]
+==================
+10
+20
+30
+40
+50
+
+
+Methods we need to Implement Stack:-
+------------------------------------
+1. Adding element into Stack:-
+	a. push() :- internally uses offerFirst().
+
+2. Remove element from the Stack:-
+	a. pop() :- internally uses pollFirst().
+
+3. Seeing last element:-
+ 	a. peek():- internally uses peekFirst().
+
+Code:-
+-----
+public class StackImpl {
+	public static void main(String[] args) {
+		ArrayDeque<Integer> stack = new ArrayDeque<>();
+		stack.push(10);
+		stack.push(20);
+		stack.push(30);
+		stack.push(40);
+		stack.push(50);
+		stack.push(60);
+		System.out.println(stack);
+		System.out.println("=======================");
+		while(!stack.isEmpty()) {
+			int x = stack.peek();
+			stack.pop();
+			System.out.println(x);
+		}
+	}
+}
+Code:-
+-----
+[60, 50, 40, 30, 20, 10]
+=======================
+60
+50
+40
+30
+20
+10
+
+Note:- We can also perform same above operations with methods like addFirst(), addLast(), removeFirst(), removeLast(), getFirst(), getLast() but they are considered as unsafe methods because they will throw Exception  at runtime.
+
+Some other important methods:-
+---------------------------
+1. boolean removeFirstOccurrence(Object o)
+2. boolean removeLastOccurrence(Object o)
+3. boolean contains(Object o)
+4. void clear()
+5. isEmpty()
+
+
+Important Rules of ArrayDeque
+-----------------------------
+
+- ArrayDeque does NOT allow null values.
+- Head always points to first element.
+- Tail always points to next empty slot.
+- Uses circular indexing.
+- Capacity doubles automatically when full.
+
+
+Time Complexity of ArrayDeque Operations
+--------------------------------------------
+
+Operation	Time Complexity
+---------       --------------- 
+addFirst()	O(1)
+addLast()	O(1)
+removeFirst()	O(1)
+removeLast()	O(1)
+peekFirst()	O(1)
+peekLast()	O(1)
+resize()	O(n)
+search()	O(n)
+
+| Feature               | **ArrayDeque**           	| **LinkedList**     
+| --------------------- | ------------------------ 	| -------------------
+| Memory Layout         | Contiguous               	| Scattered          
+| Cache-Friendly        | Yes                    	|  No                
+| Null Elements         | Not allowed            	| Allowed            
+| Traversal Speed       | Faster                   	| Slower              
+| Memory Usage          | Less                     	| More                
+| Garbage Collection    | Less                     	| More                
+| Recommended for Stack | Best                   	| Good                
+| Recommended for Queue | Best                   	| Good               
+| Recommended for Deque | Best                   	| Good              
+| Java Recommendation   | Preferred              	| Only if needed    
+
+
+PriorityQueue:-
+=-=-=-=-=-=-=
+- PriorityQueue is a class that implements the Queue interface.
+- It allows duplicate elements.
+- It does not allow null values.
+- It does not maintain insertion order.
+- Elements are stored based on priority order.
+- By default, elements are arranged in natural ascending order.
+- Internally uses a Binary Heap (Min Heap).
+- The smallest element always remains at the front (root).
+- It is mainly used when priority-based processing is required.
+- Implements:
+	- Queue<E>
+	- Iterable<E>
+	- Serializable
+	- Cloneable
+
+Internal Working of PriorityQueue
+-----------------------------------
+- It is internally implemented using a Binary Heap.
+- By default, it uses a Min Heap structure.
+- In Min Heap, parent element is always smaller than its children.
+- PriorityQueue internally stores elements in an array.
+- When an element is added, it is first inserted at the end of the array.
+- After insertion, UpHeapify (Bubble Up) process is performed to maintain heap property.
+- During UpHeapify:
+	- The inserted element is compared with its parent.
+	- If the element is smaller than parent, swapping happens.
+	- This process continues until heap property is satisfied.
+- When an element is removed using poll():
+	- The root element (smallest) is removed.
+	- The last element is moved to root position.
+	- DownHeapify (Bubble Down) process is performed.
+- During DownHeapify:
+	- Root element is compared with its children.
+	- It is swapped with the smaller child.
+	- This continues until heap property is restored.
+- The root element is always stored at index 0 of the array.
+
+Index Relation in Heap:
+-------------------------
+- Parent Index = Floor((i - 1) / 2)
+- Left Child Index = (2 * i) + 1
+- Right Child Index = (2 * i) + 2
+
+Default Capacity and Growth:-
+=-=-=-=-==-=-=-=-=-=-=-=-=-=
+- Default initial capacity: 11
+- Capacity increases automatically when elements exceed current capacity.
+- Capacity grows dynamically as elements are added.
+- After resizing new Array capacity is:-
+	New Size = 1.5 × Old Size
+- During resizing, a new larger array is created.
+- Existing elements are copied into the new array.
+- Heap structure is maintained after resizing.
+
+Creation of PriorityQueue:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Default Constructor:
+Queue<Integer> q = new PriorityQueue<>();
+
+With initial capacity:
+Queue<Integer> q = new PriorityQueue<>(20);
+
+With custom ordering (Max Heap):
+Queue<Integer> q =
+        new PriorityQueue<>(WithComparatorObject);
+
+Methods we mostly use on PriorityQueue class:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- Adding Elements
+	- boolean offer(E e); → adds element
+- Removing Elements
+	- E poll(); → removes highest priority element
+	- void clear(); → removes all elements
+- Accessing Elements
+	- E peek(); → returns top element
+- Searching / Checking
+	- boolean contains(Object o);
+- Others
+	- boolean isEmpty();
+	- int size();
+
+
+Example:-
+=-=-=-=-=
+public class PriorityQueueImpl {
+	public static void main(String[] args) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		pq.offer(20);
+		pq.offer(30);
+		pq.offer(5);
+		pq.offer(40);
+		pq.offer(50);
+		pq.offer(1);
+		pq.offer(4);
+		System.out.println(pq);
+		System.out.println("===================");
+		while(!pq.isEmpty()) {
+			System.out.println(pq.poll());
+		}
+	}
+}
+Output:-
+-------
+[1, 30, 4, 40, 50, 20, 5]
+===================
+1
+4
+5
+20
+30
+40
+50
+
+
+
+
+(Note: Printing order may not be fully sorted, but smallest element always comes first.)
+
+Example with Custom Ordering (Max Heap):-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+public class PriorityQueueImpl {
+	public static void main(String[] args) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		pq.offer(20);
+		pq.offer(30);
+		pq.offer(5);
+		pq.offer(40);
+		pq.offer(50);
+		pq.offer(1);
+		pq.offer(4);
+		System.out.println(pq);
+		System.out.println("===================");
+		while(!pq.isEmpty()) {
+			System.out.println(pq.poll());
+		}
+	}
+}
+Output:-
+------
+[50, 40, 5, 20, 30, 1, 4]
+===================
+50
+40
+30
+20
+5
+4
+1
+
+
+Example with User Define Class:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- When we store user-defined objects in PriorityQueue, we must define ordering.
+- Ordering can be defined using:
+	- Comparable
+	- Comparator
+- PriorityQueue compares objects based on defined ordering rule.
+
+Code:-
+-----
+public class Patient {
+	private int patientId;
+	private String patientName;
+	private int priority;
+	
+	public Patient(int patientId, String patientName, int priority) {
+		this.patientId = patientId;
+		this.patientName = patientName;
+		this.priority = priority;
+	}
+	public int getPatientId() {
+		return patientId;
+	}
+	public String getPatientName() {
+		return patientName;
+	}
+	public int getPriority() {
+		return priority;
+	}
+	String getPriorityType() {
+		if(priority==1) {
+			return "Emergency";
+		}else if(priority==2) {
+			return "Critical";
+		}else {
+			return "Normal";
+		}
+	}
+	@Override
+	public String toString() {
+		return "Patient [Patient Id=" + patientId + ", Patient Name=" + patientName
+				+ ", Priority Type=" + getPriorityType() + "]\n";
+	}
+}
+public class Hospital {
+	public static void main(String[] args) {
+		//Implementing Comparator using Lambda Expression.....
+		PriorityQueue<Patient> patients = new PriorityQueue<>((p1,p2)->p1.getPriority()-p2.getPriority());
+		patients.offer(new Patient(1, "Ram", 1));
+		patients.offer(new Patient(2, "Shyam", 2));
+		patients.offer(new Patient(3, "Sita", 3));
+		patients.offer(new Patient(4, "Gita", 2));
+		patients.offer(new Patient(5, "Shankar", 1));
+		patients.offer(new Patient(6, "Vishnu", 3));
+		System.out.println(patients);
+		System.out.println("++++++++++++++++++++++++++++++++++");
+		while(!patients.isEmpty()) {
+			System.out.println(patients.poll());
+			System.out.println("+++++++++++++++++++++++++++++");
+		}
+	}
+}
+
+Output:-
+[Patient [Patient Id=1, Patient Name=Ram, Priority Type=Emergency]
+, Patient [Patient Id=5, Patient Name=Shankar, Priority Type=Emergency]
+, Patient [Patient Id=3, Patient Name=Sita, Priority Type=Normal]
+, Patient [Patient Id=4, Patient Name=Gita, Priority Type=Critical]
+, Patient [Patient Id=2, Patient Name=Shyam, Priority Type=Critical]
+, Patient [Patient Id=6, Patient Name=Vishnu, Priority Type=Normal]
+]
+++++++++++++++++++++++++++++++++++
+Patient [Patient Id=1, Patient Name=Ram, Priority Type=Emergency]
+
++++++++++++++++++++++++++++++
+Patient [Patient Id=5, Patient Name=Shankar, Priority Type=Emergency]
+
++++++++++++++++++++++++++++++
+Patient [Patient Id=2, Patient Name=Shyam, Priority Type=Critical]
+
++++++++++++++++++++++++++++++
+Patient [Patient Id=4, Patient Name=Gita, Priority Type=Critical]
+
++++++++++++++++++++++++++++++
+Patient [Patient Id=3, Patient Name=Sita, Priority Type=Normal]
+
++++++++++++++++++++++++++++++
+Patient [Patient Id=6, Patient Name=Vishnu, Priority Type=Normal]
+
++++++++++++++++++++++++++++++
+
+
+Basic T.C. of some Operation:-
+----------------------------
+Operation	Complexity
+offer()		O(log n)
+poll()		O(log n)
+peek()		O(1)
+
+Why we should use PriorityQueue:-
+--------------------------------
+- No Need to Sort Entire Data Again and Again, Much faster than repeated sorting.
+- Automatically Maintains Priority Order
+- Efficient for Continuous Data Processing
+
+Summary:-
+-------
+- We use PriorityQueue when elements need to be processed based on priority rather than insertion order. It provides efficient access to the highest priority element, avoids repeated sorting, and is widely used in scheduling systems and graph algorithms.
+
+*********************************************************************************************************************
 
 
