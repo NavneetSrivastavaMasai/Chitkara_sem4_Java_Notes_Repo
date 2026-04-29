@@ -1640,7 +1640,7 @@ Output:-
 
 Example with user Define Class:-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-- As we know a HashSet is a collection that does not allow duplicate elements.
+- As we know, a HashSet is a collection that does not allow duplicate elements.
 - It stores elements using a hashing mechanism, which internally relies on two important methods from the Object class:
 	- hashCode()
 	- equals()
@@ -2378,7 +2378,7 @@ Internal Working of TreeSet:-
  
 
 *******Note***********
-- TreeSet internally uses Comparable interface for natural sorting of elements and Comparator interface for custom sorting.
+- TreeSet internally uses the Comparable interface for natural sorting of elements and the Comparator interface for custom sorting.
 - Whenever an element is added into TreeSet, it compares elements using compareTo() (Comparable) or compare() (Comparator) methods to maintain sorted order and to prevent duplicate elements. 
 - Built-in classes like Integer, String, Double already implement's Comparable Interface.
 - But for user defined classes we need to implement Comparable interface for natural sorting of that particular class or provide Comparator object (Comparator implemented class object) for custom sorting.
@@ -3105,6 +3105,48 @@ Index Relation in Heap:
 - Parent Index = Floor((i - 1) / 2)
 - Left Child Index = (2 * i) + 1
 - Right Child Index = (2 * i) + 2
+
+
+
+Min Heap Tree (Example)
+=-=-=-=-=-=-=-=-=-=-=
+Rule: Parent node is smaller than or equal to its children.
+
+Example Numbers: 5, 10, 20, 30, 40, 50, 35
+
+             5
+         /      \
+      10          20
+    /    \      /       \
+ 30      40   50        35
+
+Array Representation:
+
+[5, 10, 20, 30, 40, 50, 35]
+
+
+Max Heap Tree (Example)
+=-=-=-=-=--=-=-=-=-=
+
+Rule: Parent node is greater than or equal to its children.
+
+Example Numbers: 50, 30, 40, 10, 5, 20, 35
+
+              50
+          /       \
+        30        40
+    /      \     /    \
+ 10         5   20     35
+
+Array Representation:
+
+[50, 30, 40, 10, 5, 20, 35]
+
+
+
+
+
+
 
 Default Capacity and Growth:-
 =-=-=-=-==-=-=-=-=-=-=-=-=-=
