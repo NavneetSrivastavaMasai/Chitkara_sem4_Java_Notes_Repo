@@ -3365,5 +3365,1339 @@ Summary:-
 - We use PriorityQueue when elements need to be processed based on priority rather than insertion order. It provides efficient access to the highest priority element, avoids repeated sorting, and is widely used in scheduling systems and graph algorithms.
 
 *********************************************************************************************************************
+***************************************************************************************************************************
 
+
+Map in Java
+============
+
+--If we want to represent data in the form of key-value pair, then we use Map.
+
+Example:
+--------
+	RollNo → Student Name
+	ProductID → Product Name
+	Username → Password
+
+--So instead of storing only objects, we store mapping between key and value.
+
+Example:
+---------
+Map<Integer,String> map = new HashMap<>();
+
+map.put(101,"Rahul");
+map.put(102,"Aman");
+map.put(103,"Neha");
+
+Here:
+------
+Key      Value
+101   -> Rahul
+102   -> Aman
+103   -> Neha
+
+Map Framework:
+--------------
+- Map is also a part of Java Collection Framework, but it is separate from Collection Interface.
+
+- Map Framework contains classes and interfaces that help us store and manage key-value pair data.
+
+- Each Map class works like a dictionary.
+
+Example:
+---------
+Dictionary:
+-----------
+Word → Meaning
+
+Map:
+----
+	Key → Value
+	Important Note:
+
+-Map does not extend Collection interface.
+
+-Both Collection and Map are root level interfaces of Collection Framework.
+
+Structure:
+------------
+Collection Framework
+        |
+   -------------------
+   |                 |
+Collection          Map
+(Single Objects)   (Key-Value Pair)
+
+Features of Map Interface:
+
+- Map stores data in key-value pair.
+
+- Key must be unique.
+
+- Value can be duplicate.
+
+- Each key maps to only one value.
+
+- Map does not allow duplicate keys.
+ 
+- Map supports different implementations based on requirement.
+
+- Map supports generic types.
+
+
+Main Interfaces and Classes of Map:
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=
+Map (Interface)
+ |
+ |--- HashMap
+ |       |
+ |       |--- LinkedHashMap
+ |
+ |--- TreeMap
+ |
+ |--- Hashtable
+
+
+1. HashMap:-
+=-=-=-=-=-=-=
+
+HashMap is a class that implements the Map interface.
+- It stores data in key-value pair format.
+- It does not allow duplicate keys.
+- It allows duplicate values.
+- It does not maintain insertion order.
+- It allows one null key.
+- It allows multiple null values.
+- It is not synchronized.
+- Internally uses Hash Table (Array + Linked List / Tree).
+- Implements:
+	- Map<K,V>
+	- Cloneable
+	- Serializable
+
+Internal Working of HashMap
+---------------------------
+- HashMap stores data in the form of key-value pairs.
+- When a key-value pair is added, the hashCode() method of the key is called to generate hashCode.
+- The hashCode() method generates an integer value that helps determine the bucket location.
+- Based on this hashCode, the key-value pair is placed into a specific bucket.
+- If the bucket is empty, the key-value pair is stored directly.
+- If the bucket already contains elements, collision occurs.
+- In case of collision, equals() method is used to compare the new key with existing keys in that bucket.
+- If equals() returns true, the old value is replaced with new value.
+- If equals() returns false, the new entry is added into the same bucket.
+
+Important Points:
+- hashCode() is always checked first to find bucket location.
+- equals() is checked only when multiple keys have same hashCode.
+- If both hashCode is same and equals returns true → value replaced.
+- If hashCode same but equals returns false → new entry added.
+
+Collision Handling (Java 8+)
+- Before Java 8 → Collision handled using Linked List.
+After Java 8 →
+- If number of elements in bucket > 8
+- Linked List converted into Balanced Tree (Red-Black Tree).
+- This improves performance.
+
+Default Capacity and Load Factor
+--------------------------------
+- Default initial capacity: 16
+- Load factor: 0.75 (When number of elements exceeds 75% of capacity, resizing happens.)
+
+Example:
+
+16 × 0.75 = 12 (After 12 entries → resizing occurs.)
+
+Capacity Expansion:
+--------------------
+- Capacity is doubled after reaching load factor limit.
+
+Example:
+16 → 32 → 64 → 128
+
+- During resizing, all existing entries are rehashed.
+- Rehashing means:
+	- Recalculate bucket location
+	- Place entries into new buckets
+
+- This helps maintain efficient performance.
+
+Creation of HashMap:-
+=-=-=-=-=-=-=-=-=-=
+With type safety:
+Map<Integer,String> map = new HashMap<>();
+
+With initial capacity:
+Map<Integer,String> map = new HashMap<>(20);
+
+With capacity and load factor:
+Map<Integer,String> map = new HashMap<>(20,0.75f);
+
+Methods of Map Interface which will work with all Implemented Map Classes so Practice them very carefully :-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-==-=-=--=-==-=-=-=
+
+1. Adding Elements:-
+	- V put(K key, V value):-
+		→ Adds key-value pair
+	
+	- void putAll(Map<? extends K, ? extends V> m);
+
+	- All key-value directly in the Map:-
+		- Map.of(key1 , value1,
+			 Key2 , value2,
+			 key3, value3);
+		- Features:
+			- Immutable
+			- No null key
+			- No duplicate key	
+
+Code:-
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(1, "Aditya");
+		map.put(2, "Rachit");
+		map.put(3, "Raghav");
+		
+		System.out.println(map);
+
+		Map<Integer, String> map1 = new HashMap<>();
+		
+		map1.putAll(map);
+		map1.put(1, "Riya");
+		System.out.println(map1);
+		
+
+		Map<Integer, String> map2 = Map.of(
+				1, "Abhishek",
+				2, "Rahul",
+				3, "Raghav"				
+				);
+		
+//		map2.put(1, "Rakesh");//Giving error due to java.lang.UnsupportedOperationException (Immutable Map)
+		System.out.println(map2);
+		
+	}
+}
+Output:-
+{1=Aditya, 2=Rachit, 3=Raghav}
+{1=Riya, 2=Rachit, 3=Raghav}
+{2=Rahul, 1=Abhishek, 3=Raghav}
+
+2. Removing Elements
+	- V remove(Object key);
+		→ Removes mapping
+
+	- void clear();
+		→ Removes all entries
+
+3. Searching / Checking
+	 - boolean containsKey(Object key);
+		→ Checks key existence
+
+	- boolean containsValue(Object value);
+		→ Checks value existence
+	
+	- boolean isEmpty();
+		→ Check empty or not
+	
+	- int size();
+		→ Number of entries
+
+4. Accessing Elements
+	- V get(Object key);
+		→ Returns value
+
+5. View Methods (Very Important)
+	- Set<K> keySet();
+		→ Returns all keys
+
+	- Collection<V> values();
+		→ Returns all values
+
+	- Set<Map.Entry<K,V>> entrySet();
+		→ Returns key-value pairs
+
+Example:-
+=-=-=-=-=
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(1, "Aditya");
+		map.put(2, "Rachit");
+		map.put(3, "Raghav");
+		
+		map.remove(1);
+		System.out.println(map);	
+		
+		System.out.println(map.containsKey(2));
+		System.out.println(map.containsValue("Aditya"));
+		System.out.println(map.isEmpty());
+		System.out.println(map.size());
+		
+		System.out.println(map.get(2));
+	}
+}
+
+Output:-
+{2=Rachit, 3=Raghav}
+true
+false
+false
+2
+Rachit
+
+
+Iterating HashMap
+=-=-=-=-=-=-=-=-=
+
+1. Using entrySet()
+-------------------
+- entrySet() is a method of Map interface that returns all key-value pairs of a Map as a Set.
+		
+		Set<Map.Entry<K,V>> entrySet();
+		- entrySet() → returns Set of key-value pairs
+
+Example Map:
+	
+	1 → A  
+	2 → B  
+	3 → C  
+
+After calling:
+
+- map.entrySet();
+
+Result:
+
+	[1=A, 2=B, 3=C]
+
+Each item:
+
+	Key + Value = One Entry
+
+
+
+- Map.Entry is an inner interface inside Map.
+
+It represents:
+
+- One single key-value pair
+
+Structure:
+
+	Map.Entry<K,V>
+
+Important methods of Map.Entry:
+
+	getKey()      → Returns key
+
+	getValue()    → Returns value
+
+	setValue()    → Updates value
+
+Example:-
+--------
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(1, "Aditya");
+		map.put(2, "Rachit");
+		map.put(3, "Raghav");
+		map.put(4, "Ram");
+		map.put(5, "Shyam");
+		map.put(6, "Sita");
+		
+		Set<Map.Entry<Integer, String>> set = map.entrySet();
+		for(Map.Entry<Integer, String> x : set) {
+			if(x.getKey()==3) {
+				x.setValue("Rakesh");
+			}
+			System.out.println(x.getKey()+" :- "+x.getValue());
+		}
+	}
+}
+Output:-
+
+1 :- Aditya
+2 :- Rachit
+3 :- Rakesh
+4 :- Ram
+5 :- Shyam
+6 :- Sita
+
+
+2. Using keySet()
+------------------
+Code:-
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(1, "Aditya");
+		map.put(2, "Rachit");
+		map.put(3, "Raghav");
+		map.put(4, "Ram");
+		map.put(5, "Shyam");
+		map.put(6, "Sita");
+		
+		for(Integer x : map.keySet() ) {
+			System.out.println(x+" :- "+map.get(x));
+		}
+	}
+}
+
+Output:-
+1 :- Aditya
+2 :- Rachit
+3 :- Raghav
+4 :- Ram
+5 :- Shyam
+6 :- Sita
+
+
+Fail fast and Fail safe behaviour:-
+=-=-=-=-=-=-=-=-=-=-=-=--==-=-=-=-=
+Fail-Fast Behaviour:-
+------------------
+- A Fail-Fast iterator throws an exception if the Map is structurally modified while iterating.
+
+- Structural modification means:
+	- Adding elements
+	- Removing elements
+
+- Except when modification is done using iterator's own remove() method.
+
+- When such modification happens, Java throws:
+	- ConcurrentModificationException
+
+Example:-
+--------
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(1, "Aditya");
+		map.put(2, "Rachit");
+		map.put(3, "Raghav");
+		map.put(4, "Ram");
+		map.put(5, "Shyam");
+		map.put(6, "Sita");
+		for(Integer x : map.keySet() ) {
+			if(x ==4) {
+				map.remove(x);
+			}
+		}
+		System.out.println(map);
+	}
+}
+Output:-
+Exception in thread "main" java.util.ConcurrentModificationException
+	at java.base/java.util.HashMap$HashIterator.nextNode(HashMap.java:1605)
+	at java.base/java.util.HashMap$KeyIterator.next(HashMap.java:1628)
+	at com.chitkara.Main.main(Main.java:14)
+
+
+Fail-Safe behaviour:
+---------------------
+When we iterate over a Map, and the Map is modified at the same time, no exception is thrown, and the program continues normally.
+
+Achieving fail-safe behaviour using iterator:-
+ public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(1, "Aditya");
+		map.put(2, "Rachit");
+		map.put(3, "Raghav");
+		map.put(4, "Ram");
+		map.put(5, "Shyam");
+		map.put(6, "Sita");
+		
+		Iterator itr = map.keySet().iterator();
+		
+		while(itr.hasNext()) {
+			int x = (Integer)itr.next();
+			if(x==3) {
+				itr.remove();
+			}
+		}
+		System.out.println(map);
+	}
+}
+
+Output:-
+{1=Aditya, 2=Rachit, 4=Ram, 5=Shyam, 6=Sita}
+
+
+
+Example with User Define Class:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+- As we know HashMap stores key-value pairs.
+- If we use user-defined object as key, we must override:
+	- hashCode()
+	- equals()
+- Because HashMap internally uses hashing mechanism.
+
+
+Why Both Methods Must Be Overridden Together:-
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Rule 1
+- If two objects are equal using equals()
+- Then their hashCode() must also be equal.
+
+Rule 2
+If equals() overridden but hashCode() not overridden:
+- HashMap may store duplicate keys
+- Data inconsistency occurs
+
+Code Example with overridden hashCode() and equals() method:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Can we add Multiple data with Single key?
+
+
+
+Code:-
+-----
+public class Student {
+	private int studentId;
+	private String name;
+	private String technology;
+	public Student(int studentId, String name, String technology) {
+		this.studentId = studentId;
+		this.name = name;
+		this.technology = technology;
+	}
+	public int getStudentId() {
+		return studentId;
+	}
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getTechnology() {
+		return technology;
+	}
+	public void setTechnology(String technology) {
+		this.technology = technology;
+	}
+	@Override
+	public String toString() {
+		return "Student [Student Id=" + studentId + ", Name=" + name + ", Technology=" + technology + "]";
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(studentId);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if(this==obj)return true;
+		if(getClass()!=obj.getClass())return false;
+		Student st = (Student)obj;
+		return st.studentId==this.studentId;
+	}
+	
+	
+}
+
+public class Collage {
+	public static void main(String[] args) {
+		List<String> java = List.of("Core Java", "Advanced Java", "Database", "JDBC", "Spring");
+		List<String> webDev = List.of("CSS", "HTML", "JavaScript", "ReactJS");
+		List<String> aiml = List.of("Python", "Data Structure", "OOP", "Algorithm");
+		
+		Map<Student, List<String>> mapStudent = new HashMap<>();
+		mapStudent.put(new Student(1,"Aditya","Java"),java);
+		mapStudent.put(new Student(2,"Rahul","AIML"),aiml);
+		mapStudent.put(new Student(3,"Riya","Web Development"),webDev);
+		mapStudent.put(new Student(4,"Puneet","Java"),java);
+		mapStudent.put(new Student(5,"Rachit","AIML"),aiml);
+		mapStudent.put(new Student(6,"Niyamat","Web Development"),webDev);
+		mapStudent.put(new Student(6,"Niyamat","Web Development"),java);
+		
+		Set<Map.Entry<Student, List<String>>> set = mapStudent.entrySet();
+		for(Map.Entry<Student, List<String>> x : set) {
+			System.out.println(x.getKey());
+			System.out.println(x.getValue());
+			System.out.println("=================================");
+		}		
+	}
+}
+
+Output:-
+--------
+Student [Student Id=1, Name=Aditya, Technology=Java]
+[Core Java, Advanced Java, Database, JDBC, Spring]
+=================================
+Student [Student Id=2, Name=Rahul, Technology=AIML]
+[Python, Data Structure, OOP, Algorithm]
+=================================
+Student [Student Id=3, Name=Riya, Technology=Web Development]
+[CSS, HTML, JavaScript, ReactJS]
+=================================
+Student [Student Id=4, Name=Puneet, Technology=Java]
+[Core Java, Advanced Java, Database, JDBC, Spring]
+=================================
+Student [Student Id=5, Name=Rachit, Technology=AIML]
+[Python, Data Structure, OOP, Algorithm]
+=================================
+Student [Student Id=6, Name=Niyamat, Technology=Web Development]
+[Core Java, Advanced Java, Database, JDBC, Spring]
+=================================
+
+
+Sorting Map According to their values:-
+=-=-=-=-=-=--=-==-=-=-=-=--==-=-=-=--=
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		map.put(1, "M");
+		map.put(2, "E");
+		map.put(3, "F");
+		map.put(4, "Z");
+		map.put(5, "C");
+		map.put(6, "B");
+		map.put(7, "A");
+		
+		Set<Map.Entry<Integer, String>> set = map.entrySet();
+		List<Map.Entry<Integer, String>> list = new ArrayList<>(set);
+		System.out.println(list);
+		
+		//Sorting by value ascending order
+		Collections.sort(list,(a,b)->a.getValue().compareTo(b.getValue()));
+		System.out.println(list);
+
+		//Sorting by value descending order
+		Collections.sort(list,(a,b)->b.getValue().compareTo(a.getValue()));
+		System.out.println(list);
+	}
+}
+Output:-
+[1=M, 2=E, 3=F, 4=Z, 5=C, 6=B, 7=A]
+[7=A, 6=B, 5=C, 2=E, 3=F, 1=M, 4=Z]
+[4=Z, 1=M, 3=F, 2=E, 5=C, 6=B, 7=A]
+
+
+Time Complexity Table of HashMap Operations:-
+--------------------------------------------
+Operation		Average Case		Worst Case		Explanation
+put()			O(1)			O(n)			Insert key-value pair
+get()			O(1)			O(n)			Retrieve value
+remove()		O(1)			O(n)			Remove entry
+containsKey()		O(1)			O(n)			Check key exists
+containsValue()		O(n)			O(n)			Search value
+size()			O(1)			O(1)			Returns size
+isEmpty()		O(1)			O(1)			Check empty
+clear()			O(n)			O(n)			Remove all entries
+keySet()		O(1)			O(1)			Returns view
+values()		O(1)			O(1)			Returns view
+entrySet()		O(1)			O(1)			Returns view
+iteration (loop)	O(n)			O(n)			Traverse all elements
+
+
+==============================================================================================
+2. LinkedHashMap:-
+=-=-=-=-=-=-=-=-=
+LinkedHashMap is a class that implements the Map interface.
+- Most of the property are same as HashMap.
+- The basic difference is:-
+	- It maintains insertion order.
+	- Internally uses Hash Table + Linked List.
+- Implements:
+	- Map<K,V>
+	- Cloneable
+	- Serializable
+
+Internal Working of LinkedHashMap:-
+-----------------------------------
+- LinkedHashMap works similar to HashMap, but it also maintains insertion order.
+- LinkedHashMap internally uses:
+	Hash Table + Doubly Linked List
+- When a key-value pair is added:
+- hashCode() method of key is called.
+- Bucket location is calculated.
+- Entry stored in HashMap bucket.
+- Entry also connected using Linked List to maintain order.
+
+Default Capacity and Load Factor
+---------------------------------
+Same as HashMap:
+- Default initial capacity: 16
+- Load factor: 0.75
+
+Example:
+
+16 × 0.75 = 12 (After 12 entries → resizing occurs.)
+
+Capacity Expansion:
+- Capacity is doubled after reaching load factor.
+
+Example:
+
+16 → 32 → 64 → 128 (All entries are rehashed.)
+
+Rehashing means:
+- Recalculate bucket index
+- Move entries to new buckets
+
+Creation of LinkedHashMap:-
+=-=-=-=-=-=-=-=-=-=-=-=-=
+
+With type safety:
+
+	Map<Integer,String> map = new LinkedHashMap<>();
+
+With initial capacity:
+
+	Map<Integer,String> map = new LinkedHashMap<>(20);
+
+With capacity and load factor:
+
+	Map<Integer,String> map = new LinkedHashMap<>(20,0.75f);
+
+Methods:-
+=-=-=-=
+(Same methods as HashMap — because LinkedHashMap also implements Map interface.)
+
+
+Example:-
+=-=-=-=-=
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new LinkedHashMap<Integer, String>();
+		map.put(1, "M");
+		map.put(2, "E");
+		map.put(3, "F");
+		map.put(4, "Z");
+		map.put(5, "C");
+		map.put(6, "B");
+		map.put(7, "A");
+		System.out.println(map);
+		
+	}
+}
+
+Output:-
+{1=M, 2=E, 3=F, 4=Z, 5=C, 6=B, 7=A}
+
+
+Difference Between HashMap and LinkedHashMap:-
+=-=-=-=--=-==-=--=-==-=--==-=-=-=-=-=-=--==-=
+Feature			HashMap				LinkedHashMap
+Order			No order			Maintains insertion order
+Performance		Faster				Slightly slower
+Internal Structure	Hash Table			Hash Table + Linked List
+Null Key		Yes				Yes
+Null Value		Yes				Yes
+
+For User-defined Class:-
+-----------------------
+Same as HashMap:
+- If a user-defined object is used as a key:
+
+Must override:
+- hashCode()
+- equals()
+
+Because LinkedHashMap internally uses a hashing mechanism.
+
+
+
+======================================================
+
+TreeMap:-
+=-=-=-=-=
+TreeMap is a class that implements the Map interface.
+- It stores data in key-value pair format.
+- It does not allow duplicate keys.
+- It allows duplicate values.
+- It maintains the sorted order of keys.
+- It does not allow a null key.
+- It allows multiple null values.
+- It is not synchronized.
+- Internally uses Red-Black Tree.
+- It sorts keys using:
+	Natural Sorting (Comparable)
+	OR
+	Custom Sorting (Comparator)
+- Implements:
+	NavigableMap<K,V>
+	SortedMap<K,V>
+	Map<K,V>
+	Cloneable
+	Serializable
+
+Internal Working of TreeMap
+----------------------------
+- TreeMap stores data using Red-Black Tree.
+- Red-Black Tree is a type of:
+	- Self-Balancing Binary Search Tree
+	- Keys are stored in sorted order.
+
+- When a key-value pair is added:
+- TreeMap compares keys.
+- Finds the correct position.
+- Inserts entry into tree.
+- Tree re-balances automatically.
+- TreeMap does not use hashing.
+- TreeMap uses:
+	compareTo() (Inside Comparable interface for Natural Sorting)
+  	OR  
+	compare() (Inside Comparator interface for Custom Sorting)
+	(methods to compare keys)
+
+- Elements are arranged based on:
+	- Sorted order of keys
+
+Default Capacity and Load Factor
+--------------------------------
+- TreeMap does not use capacity or load factor.
+
+Because:
+- It does not use hashing
+- It uses tree structure
+
+So:
+- No resizing like HashMap
+
+Creation of TreeMap:-
+=-=-=-=-=-=-=-=-=-=-=
+Deafault Constructor:-
+	Map<Integer,String> map = new TreeMap<>();
+
+With custom Comparator:
+	Map<Integer,String> map = new TreeMap<>((a,b) -> b - a); //Uisng Lambda Expression
+
+With existing Map:
+	Map<Integer,String> map2 = new TreeMap<>(map1);
+
+
+Methods:-
+=--==-=-
+(Same Map methods — because TreeMap implements Map interface.)
+
+Example:-
+---------
+public class Main {
+	public static void main(String[] args) {
+		
+		Map<Integer, String> map = new TreeMap<Integer, String>();
+		map.put(3, "M");
+		map.put(1, "E");
+		map.put(8, "F");
+		map.put(2, "Z");
+		map.put(4, "C");
+		map.put(10, "B");
+		map.put(7, "A");
+		System.out.println(map);
+	}
+}
+Output:-
+{1=E, 2=Z, 3=M, 4=C, 7=A, 8=F, 10=B} // Sorted order based on the Key...
+
+Example 2:-
+----------
+public class Main {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new TreeMap<Integer, String>();
+		map.put(1, "Abhishek");
+		map.put(3, "Ratnesh");
+		map.put(2, "Rahul");
+		map.put(4, "Neeraj");
+		
+		System.out.println(map);
+		System.out.println("================");
+		for(Integer x : map.keySet()) {
+			System.out.println(x+" : "+map.get(x));
+		}
+
+		System.out.println("================");
+		for(Map.Entry<Integer, String> x : map.entrySet()) {
+			System.out.println(x.getKey()+" : "+x.getValue());
+		}
+	}
+}
+Output:-
+{1=Abhishek, 2=Rahul, 3=Ratnesh, 4=Neeraj}
+================
+1 : Abhishek
+2 : Rahul
+3 : Ratnesh
+4 : Neeraj
+================
+1 : Abhishek
+2 : Rahul
+3 : Ratnesh
+4 : Neeraj
+
+Specific Methods of TreeMap:-
+-----------------------------
+- TreeMap provides extra methods from NavigableMap.
+- These are TreeMap specific useful methods:
+
+1. firstKey() - First (smallest) key
+
+
+2. lastKey() - Last (largest) key
+
+
+3. higherKey(K key) - Next higher key
+
+
+4. lowerKey(K key) - Next lower key
+
+
+5. ceilingKey(K key) - Equal or next higher key
+
+
+6. floorKey(K key) - Equal or next lower key
+
+
+Example:-
+=-=-=-=-=
+public class Main {
+	public static void main(String[] args) {
+		TreeMap<Integer, String> map = new TreeMap<Integer, String>();
+		map.put(1, "Abhishek");
+		map.put(3, "Ratnesh");
+		map.put(2, "Rahul");
+		map.put(4, "Neeraj");
+		map.put(6, "Shubham");
+		map.put(5, "Shiva");
+		
+		System.out.println(map.firstKey());
+		System.out.println(map.lastKey());
+		System.out.println(map.get(map.higherKey(3)));
+		System.out.println(map.lowerKey(3));
+	}
+}
+
+Output:-
+1
+6
+Neeraj
+2
+
+
+
+Difference Between HashMap, LinkedHashMap, and TreeMap
+-----------------------------------------------------
+Feature			HashMap			LinkedHashMap			TreeMap
+Order			No order		Insertion order			Sorted order
+Speed			Fastest			Slightly slower			Slower
+Null Key		Yes			Yes				No
+Internal Structure	Hash Table		Hash + Linked List		Red-Black Tree
+
+
+
+Example with User-Defined Class:-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+If using a user-defined class as a key:
+- Must implement:
+	- Comparable
+	OR 
+	provide Comparator
+
+- Otherwise "ClassCastException" will occur.
+
+Why is Comparable Required in TreeMap?
+
+- Because TreeMap needs to compare keys. Without comparison Sorting not possible.
+
+
+Example Code (Transaction Details)(By Using Comparable on Date and Time):-
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=--==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-
+public class TransactionDetails implements Comparable<TransactionDetails>{
+	private int transactinId;
+	private LocalDateTime dataAndTime;
+	private String transactionType;
+	private double transactionAmmount;
+	public TransactionDetails(String transactionType,
+			double transactionAmmount) {
+		this.transactinId = (int)(10000+(Math.random()*10000));
+		this.dataAndTime = LocalDateTime.now();
+		this.transactionType = transactionType;
+		this.transactionAmmount = transactionAmmount;
+	}
+	public int getTransactinId() {
+		return transactinId;
+	}
+	public LocalDateTime getDataAndTime() {
+		return dataAndTime;
+	}
+	public String getTransactionType() {
+		return transactionType;
+	}
+	public double getTransactionAmmount() {
+		return transactionAmmount;
+	}
+	@Override
+	public String toString() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
+		return "[Transaction Id=" + transactinId + ", Data And Time=" + dataAndTime.format(dtf)
+				+ ", Transaction Type=" + transactionType + ", Transaction Ammount=" + transactionAmmount + "]";
+	}
+	//Natural Sorting -- Comparable implements based on Date and Time
+	@Override
+	public int compareTo(TransactionDetails o) {
+		return this.dataAndTime.compareTo(o.dataAndTime);
+	}
+}
+
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		double balance = 500000;
+		TreeMap<TransactionDetails, String> map = new TreeMap<>();
+		
+		while(true) {
+			System.out.println("Transaction");
+			System.out.println("Please select your option...");
+			System.out.println("1. Add transaction..");
+			System.out.println("2. Show All transaction...");
+			System.out.println("3. Show Remaining Balance");
+			System.out.println("4. Get out..");
+			int choice = sc.nextInt();
+			switch (choice) {
+			case 1: {
+				System.out.println("Please select option:-\n1. For Deposit\n2. For Withdraw");
+				int c = sc.nextInt();
+				System.out.println("Please provide ammount..");
+				double amt = sc.nextDouble();
+				String type = "None";
+				String res = "Transaction Failed";
+				if(c==1) {
+					balance = balance+amt;
+					res = "Transaction Successfull";
+					type = "Deposit";
+				}else if(c==2) {
+					if(amt<=balance) {
+						balance = balance - amt;
+						res = "Transaction Successfull";
+						type = "Withdraw";
+					}else {
+						type = "Withdraw";
+						res = "Transaction Failed due to insufficient Balance..";
+					}
+				}
+				TransactionDetails td = new TransactionDetails(type, amt);
+				map.put(td, res);
+				break;
+			}
+			case 2: {
+				if(map.isEmpty()) {
+					System.out.println("No Transaction happen...");
+				}else {
+					for(Map.Entry<TransactionDetails, String> t : map.entrySet()) {
+						System.out.println(t.getKey());
+						System.out.println(t.getValue());
+						System.out.println("===================");
+					}
+				}
+				break;
+			}
+			case 3: {
+				System.out.println("Remaining Balance: "+balance);
+				break;
+			}
+			case 4: {
+				System.exit(0);
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + choice);
+			}
+		}		
+	}
+
+}
+
+Output:-
+------
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+1
+Please select option:-
+1. For Deposit
+2. For Withdraw
+1
+Please provide ammount..
+1000
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+1
+Please select option:-
+1. For Deposit
+2. For Withdraw
+1
+Please provide ammount..
+100
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+1
+Please select option:-
+1. For Deposit
+2. For Withdraw
+2
+Please provide ammount..
+10000
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+2
+[Transaction Id=15993, Data And Time=30-04-2026 08:31:56, Transaction Type=Deposit, Transaction Ammount=1000.0]
+Transaction Successfull
+===================
+[Transaction Id=10060, Data And Time=30-04-2026 08:32:03, Transaction Type=Deposit, Transaction Ammount=100.0]
+Transaction Successfull
+===================
+[Transaction Id=18073, Data And Time=30-04-2026 08:32:12, Transaction Type=Withdraw, Transaction Ammount=10000.0]
+Transaction Successfull
+===================
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+3
+Remaining Balance: 491100.0
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+4
+
+
+Example with same TransactionsDetails Class but With Custom Comparator based on Ammount:-
+=--=-==--=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		double balance = 500000;
+		//Provided Custom Comparator based on Ammount--This is the only change in Main class or main Method from above
+		TreeMap<TransactionDetails, String> map = new TreeMap<>(new AmmountComparator()); // Custom Comparator in Constructor
+		
+		............
+	}
+}
+Custom Comparator Class:-
+----------------------
+public class AmmountComparator implements Comparator<TransactionDetails>{
+
+	@Override
+	public int compare(TransactionDetails o1, TransactionDetails o2) {
+		int res = Double.compare(o1.getTransactionAmmount(), o2.getTransactionAmmount());
+		if(res==0) {
+			return o1.getDataAndTime().compareTo(o2.getDataAndTime());
+		}
+		return res;
+	}
+
+}
+Output:-
+------
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+1
+Please select option:-
+1. For Deposit
+2. For Withdraw
+1
+Please provide ammount..
+400
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+1
+Please select option:-
+1. For Deposit
+2. For Withdraw
+2
+Please provide ammount..
+200
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+1
+Please select option:-
+1. For Deposit
+2. For Withdraw
+1
+Please provide ammount..
+100
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+2
+
+[Transaction Id=13143, Data And Time=30-04-2026 08:41:00, Transaction Type=Deposit, Transaction Ammount=100.0]
+Transaction Successfull
+===================
+[Transaction Id=19272, Data And Time=30-04-2026 08:40:55, Transaction Type=Withdraw, Transaction Ammount=200.0]
+Transaction Successfull
+===================
+[Transaction Id=16227, Data And Time=30-04-2026 08:40:50, Transaction Type=Deposit, Transaction Ammount=400.0]
+Transaction Successfull
+===================
+Transaction
+Please select your option...
+1. Add transaction..
+2. Show All transaction...
+3. Show Remaining Balance
+4. Get out..
+
+Time Complexity Table of TreeMap Operations:-
+--------------------------------------------
+Operation		Time Complexity
+put()			O(log n)
+get()			O(log n)
+remove()		O(log n)
+containsKey()		O(log n)
+containsValue()		O(n)
+size()			O(1)
+isEmpty()		O(1)
+clear()			O(n)
+iteration		O(n)
+
+
+
+
+=================================================================
+
+
+Hashtable:-
+=-=-=-=-=
+
+Hashtable is a class that implements the Map interface.
+- It stores data in key-value pair format.
+- It does not allow duplicate keys.
+- It allows duplicate values.
+- It does not maintain insertion order.
+- It does not allow null key.
+- It does not allow null value.
+- It is synchronized (Thread-safe).
+- It internally uses Hash Table.
+- It is considered legacy class (old class from early Java versions).
+- Implements:
+	- Map<K,V>
+	- Cloneable
+	- Serializable
+
+Internal Working of Hashtable:-
+------------------------------
+- Hashtable works similar to HashMap, but it is synchronized.
+
+
+Default Capacity and Load Factor
+-------------------------------
+- Default initial capacity: 11
+- Load factor: 0.75
+
+Example:
+
+11 × 0.75 ≈ 8 (After about 8 elements → resizing occurs.)
+
+Capacity Expansion:
+---------------------
+- Capacity increases using:
+	- (Old Capacity × 2) + 1
+
+Example:
+11 → 23 → 47 → 95
+All existing entries are rehashed.
+
+Creation of Hashtable:-
+=-=-=-=-=-=-=-=-=-=-=-=
+
+Default Constructor:-
+
+	Map<Integer,String> map = new Hashtable<>();
+
+With initial capacity:-
+	
+	Map<Integer,String> map = new Hashtable<>(20);
+
+With capacity and load factor:
+
+	Map<Integer,String> map = new Hashtable<>(20,0.75f);
+
+Example:-
+=-=-=-=-=
+public class HashTableImpl {
+	public static void main(String[] args) {
+		Hashtable<String, Integer> table = new Hashtable<String, Integer>();
+		table.put("Ram", 1);
+		table.put("Shyam", 2);
+		table.put("Sita", 3);
+		table.put("Gita", 4);
+		table.put(null, 5);//Exception in thread "main" java.lang.NullPointerException
+		table.put("Rakesh", null);//Exception in thread "main" java.lang.NullPointerException
+		System.out.println(table);
+	}
+}
+
+Output:-
+Exception in thread "main" java.lang.NullPointerException
+	at java.base/java.util.Hashtable.put(Hashtable.java:476)
+	at com.chitkara4.HashTableImpl.main(HashTableImpl.java:13)
+
+
+
+Difference Between HashMap and Hashtable
+-----------------------------------------
+Feature			HashMap			Hashtable
+--------		--------		----------
+Thread-safe		No			Yes
+Null Key		Yes			No
+Null Value		Yes			No
+Performance		Faster			Slower
+Synchronization		No			Yes
+Introduced		Java 1.2		Java 1.0
+
+
+Student Task:-
+=-=-=-=-=-=-=
+1. Create a Bank Account System where:
+	- Account Number → Key
+	- Account Holder Name → Value
+	- Search account by account number
+	- Display all accounts
+	- Remove account
+	- Use HashTable<String AccountNumber, String AccountName
 
