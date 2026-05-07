@@ -1,0 +1,187 @@
+Collections Questions:-
+=-=-=-=-=-=-=-=-=-=-=-=
+1. K Closest Numbers
+---------------------
+- You are given an array of integers and a target value. Design a system to return K closest numbers to the target.
+- Return k closest numbers
+- If tie → prefer smaller number
+- Output sorted in ascending order
+
+Input:-
+nums = [1, 4, 4, 6], K = 3, Target = 3
+Output:-
+[1, 4, 4]
+
+
+Solution:-
+--------
+public class Main {
+	public static void main(String[] args) {
+		int[] arr = { 10, 4, 6, 7, 2, 21, 10, 1, 15 };
+		int tar = 9;
+		int k = 4;
+
+		List<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < arr.length; i++) {
+			list.add(arr[i]);
+		}
+
+		Collections.sort(list, (a, b) -> {
+			int d1 = Math.abs(tar - a);
+			int d2 = Math.abs(tar - b);
+			if (d1 != d2) {
+				return d1 - d2;
+			}
+			return a - b;
+		});
+		for (int i = 0; i < k; i++) {
+			System.out.print(list.get(i) + " ");
+		}
+	}
+}
+Output:-
+10 10 7 6 
+
+
+2. Frequency Sort with Order Preservation
+------------------------------------------
+- Given an array, sort elements based on:
+
+	1. Increasing frequency
+	2. If frequency same → smaller number first
+
+Example
+
+Input: [4, 5, 6, 5, 4, 3]
+Output: [6, 3, 4, 4, 5, 5]
+
+
+3. Custom Sorted Student Ranking
+--------------------------------
+You are given a list of students. Sort them using TreeMap based on:
+
+1. Higher marks first
+2. If marks same → lexicographically smaller name
+3. If still same → smaller ID
+
+Class Design
+-------------
+class Student {
+    int id;
+    String name;
+    int marks;
+}
+
+- Store students in TreeMap
+- Implement Comparator
+
+
+4. Product Catalog Sorting
+-------------------------
+- Design a system to store products sorted by:
+	1. Price (ascending)
+	2. If same → rating (descending)
+	3. If same → name
+
+Class Design:-
+-----------
+class Product implements Comparable<Product> {
+    int id;
+    String name;
+    double price;
+    double rating;
+}
+
+- Override `compareTo()`
+- Store products in TreeMap
+
+
+
+5. Employee Record System
+---------------------------
+
+Store employee records in HashMap such that:
+- Two employees are same if:
+	- same employeeId
+	- same email
+
+---
+
+Class Design:-
+-------------
+
+class Employee {
+    int id;
+    String name;
+    String email;
+}
+
+Override:
+	- equals()
+	- hashCode()
+	- Use Employee as key in HashMap
+
+
+6. Custom Cache Key System
+--------------------------
+
+Design a cache where key is a combination of:
+
+- userId
+- resourceId
+
+Two keys are equal if both fields match.
+
+---
+
+Class Design:-
+-------------
+
+class CacheKey {
+    int userId;
+    int resourceId;
+}
+
+- Override equals() and hashCode()
+- Use in HashMap / LinkedHashMap
+
+
+7. Closest Ceiling & Floor Finder
+----------------------------------
+- You are given an array of integers and multiple query values.
+- For each query, find:
+	- the floor (greatest element ≤ target)
+	- the ceiling (smallest element ≥ target)
+
+For each query print:
+- floor and ceiling
+-If not present, print -1
+
+Example:-
+---------
+Input:
+nums = [2, 5, 8]
+queries = [4, 8, 1]
+
+Output:
+2 5
+8 8
+-1 2
+
+8. Check Pair with Given Sum
+------------------------------
+Given an array and a target sum, determine whether there exists a pair of elements whose sum equals the target. Array may be sorted or not. 
+
+Example
+Input: nums = [2, 7, 11, 15], target = 9
+Output: true
+
+- Find the solution in O(n).
+
+9. First Unique Element in Array
+--------------------------------
+- Find the first element in the array that appears only once.
+
+Example
+Input: [4, 5, 1, 2, 0, 4]
+Output: 5
