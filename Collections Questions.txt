@@ -185,3 +185,271 @@ Output: true
 Example
 Input: [4, 5, 1, 2, 0, 4]
 Output: 5
+
+Exception Handling:-
+-==-=-=-=-=-=-=--=-=
+
+10. Online Voting System Using Custom Exception
+-----------------------------------------------
+- Write a Java program to simulate an online voting system.
+- Create a class Voter with the following data members:	
+	- Voter ID
+	- Voter Name
+	- Age
+- The user is allowed to vote only if age is 18 or above.
+- Create a user-defined exception named:
+	- InvalidAgeException
+
+- Throw this exception if the voter age is less than 18.
+
+- If eligible, display:
+
+	Voting Allowed
+	
+Sample Input
+101
+Rahul
+16
+
+Sample Output
+Exception: Age must be 18 or above
+
+11. File Data Reader Using Checked Exception
+------------------------------------------
+- Write a Java program to read integer values from a text file and calculate their sum.
+- The file name should be provided by the user.
+- Handle the following checked exceptions properly:
+	FileNotFoundException
+	IOException
+Use:
+- throws
+- try-catch-finally
+
+- If the file is not found, display an appropriate message.
+
+Sample Input
+numbers.txt
+
+Assume file contents:
+10 20 30 40
+
+Sample Output
+Sum = 100
+
+12. ATM PIN Verification Using Unchecked Exception
+------------------------------------------------
+- Write a Java program to simulate ATM PIN verification.
+- Create a class ATM containing the following data members:
+	Account Number
+	PIN
+- Create a method:
+	void verifyPin(int enteredPin)
+	Inside the method:
+		- If the entered PIN is incorrect, throw an IllegalArgumentException with the message:
+			- Invalid PIN
+		- Otherwise display:
+			- Access Granted
+Functional Requirements:-
+- The user gets a maximum of 3 attempts to enter the correct PIN.
+- If the correct PIN is entered within 3 attempts:
+	- Display "Access Granted"
+	- Stop further execution.
+- If all 3 attempts fail, display:
+	- Card Blocked
+- Handle the exception using try-catch.
+
+Sample Input
+1234
+1111
+2222
+1234
+
+Explanation
+First input → Original ATM PIN
+Next inputs → User entered PINs
+
+Sample Output
+Invalid PIN
+Invalid PIN
+Access Granted
+
+Another Sample Input
+1234
+1111
+2222
+3333
+
+Sample Output
+Invalid PIN
+Invalid PIN
+Invalid PIN
+Card Blocked
+
+Constraints-
+PIN should contain exactly 4 digits.
+Maximum attempts allowed = 3.
+
+13. Employee Salary Validation Using throw and throws
+------------------------------------------------
+- Write a Java program to manage employee salary details.
+- Create a class Employee with:
+	Employee ID
+	Employee Name
+	Salary
+- Create a method:
+	validateSalary(double salary) throws Exception
+		- If salary is less than 50000, throw an exception with the message:
+			- Salary cannot be less than 50000
+		- Otherwise display:
+			- Valid Salary
+
+Sample Input
+101
+Aman
+35500
+Sample Output
+Exception: Salary cannot be less than 50000
+
+
+One question for revising 3-4 topics:-
+-------------------------------------
+=====================================
+14. Smart Library Management System Using Core Java
+-----------------------------------------------
+- Write a Java program to develop a Smart Library Management System for maintaining library book issue records using Core Java concepts.
+
+- Create a class Book with the following data members:
+	Book ID
+	Book Name
+	Author Name
+	Student Name
+	Issue Date (dd-MM-yyyy)
+	Return Status (Issued / Returned)
+	
+Functional Requirements
+=-=-=-=-=-=-=-=-=-=-=
+1. Store Book Records
+	Store all book objects using:
+		ArrayList<Book>
+
+2. Remove Duplicate Records
+- Two book records are considered duplicates if:
+	Book ID is the same
+	Student Name is same
+- Students must Override:
+	equals()
+	hashCode()
+- Use a suitable Collection (HashSet) to remove duplicate records.
+- Display:
+	Duplicate Records Removed Successfully
+
+3. Sort Book Records
+(a)
+- Students must implement:
+	Comparable<Book>
+- Sort books according to:
+	Student Name alphabetically
+	If student names are same, sort by Fine Amount in descending order
+- Display all sorted records.
+
+(b)
+- Students must implement:
+	Comparator<Book>
+- Sort books according to:
+	Issue Date
+	If the dates are the same, sort by Book ID in ascending order
+- Display all sorted records.
+
+4. String Processing
+- Using String class methods, display:
+(a) Total number of books issued to students whose names start with a vowel:
+	A, E, I, O, U
+(b) The longest book title present in the library records.
+(c)Total number of books whose title contains the word:
+	Java
+- Students should use String methods such as:
+	contains()
+	startsWith()
+	length()
+	equalsIgnoreCase()
+
+5. Exception Handling
+- Create a custom exception:
+	InvalidBookIdException
+- Throw the exception if:
+	Book ID <= 0
+- Display:
+	Exception: Invalid Book ID
+- Students must:
+	- Create a user-defined exception class.
+- Use:
+	throw
+	try-catch
+
+
+6. Collection-Based Searching
+- Search and display all books issued by a particular author name entered by the user.
+- If no record is found, display:
+	No Records Found
+
+Sample Input
+5
+101 JavaProgramming James Rahul 12-04-2026 Issued 
+102 DBMS Korth Aman 15-04-2026 Returned 
+103 DataStructures Mark Ankit 18-04-2026 Issued 
+101 JavaProgramming James Rahul 12-04-2026 Issued 
+104 OperatingSystems Galvin Esha 20-04-2026 Returned
+
+Sample Output
+Duplicate Records Removed Successfully
+
+Sorted Book Records:
+102 DBMS Korth Aman 15-04-2026 Returned 
+103 DataStructures Mark Ankit 18-04-2026 Issued 
+104 OperatingSystems Galvin Esha 20-04-2026 Returned 
+101 JavaProgramming James Rahul 12-04-2026 Issued 
+
+Books issued to students with vowel names: 2
+
+Longest Book Title:
+OperatingSystems
+
+Books containing 'Java' in title:
+1
+
+Books issued by author James:
+101 JavaProgramming James Rahul 12-04-2026 Issued
+
+- Requirements
+	Students must use:
+		- Collection Framework
+		- ArrayList
+		- HashSet
+		- OOP Concepts
+		- Class and Objects
+		- Constructor
+		- Method Overriding
+		- Override Methods
+			- equals()
+			- hashCode()
+		- Sorting
+			- Comparable<Book>
+		- Exception Handling
+			- Custom Exception
+			- throw
+			- try-catch
+		- String Processing		
+			- Use suitable String methods.
+
+Constraints:-
+- Book ID must be positive.
+- Return Status must be either:
+	Issued
+	Returned
+- Number of records ≥ 1.
+
+Note:-
+Students should:
+- Use meaningful variable names.
+- Avoid duplicate records properly using the Collection Framework.
+- Display output in proper formatted manner.
