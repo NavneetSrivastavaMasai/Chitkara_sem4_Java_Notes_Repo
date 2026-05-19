@@ -1,0 +1,437 @@
+static and non-static blocks:-
+=============================
+
+Code:-
+------
+Example 1:-
+----------
+public class Demo {
+	
+	public Demo() {
+		System.out.println("Inside Constructor..");
+	}
+	static {
+		System.out.println("Inside static block..");
+	}
+	
+	{
+		System.out.println("Inside non-static block..");
+	}
+	public static void main(String[] args) {
+		System.out.println("Inside main method..");
+		Demo d = new Demo();
+	}
+}
+
+Output:-
+-----
+Inside static block..
+Inside main method..
+Inside non-static block..
+Inside Constructor..
+
+
+Example 2:-
+----------
+public class Demo {
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("com.chitkara.A");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		System.out.println("Inside main method..");
+	}
+}
+public class A {
+	static {
+		System.out.println("Inside static block of A class..");
+	}
+	public static void fun1() {
+		System.out.println("Inside A class method of fun1");
+	}
+}
+
+Output:-
+-------
+Inside static block of A class..
+Inside main method..
+
+
+- static blocks will be executed before the main method of our application.
+
+- as soon as our application/Class loaded into the memory, static blocks will be executed. 
+
+- whenever we try to create object of a class, then constructor of that class will be executed, but before executing the constructor if any non-static blocks are there then those blocks will be executed.
+
+- non-static blocks will never execute if we don't create object.
+
+- purpose of a static block is when we execute some code before main method we should write them inside a static block.
+
+- purpose of an non-static block is with irrespective of a constructor  we need to execute some line of code, then we will use a non-static block.
+
+Code:-
+------
+public class A {
+	static {
+		System.out.println("Inside static block of A class..");
+	}
+	{
+		//1000 lines of code..
+		System.out.println("Inside non-static block..");
+	}
+	public A() {
+		System.out.println("Inside non-argument constructor..");
+	}
+	public A(String name) {
+		System.out.println("Inside argument constructor..");
+	}
+	public static void fun1() {
+		System.out.println("Inside A class method of fun1");
+	}
+}
+
+- When we load our class from secondary memory to primary memory all static blocks gets executed.
+
+===================================================================================================================================================
+
+JDBC:    Java Database Connectivity
+====== ============================
+
+--Java Mostly used in industry to develop Business application.
+
+--common and general things required in a business application:
+
+1. maintaining the business data permanently in a secure and easily retrieval manner.
+
+2. processing the data according to the business rules.
+
+3. presenting the data to the user in user understandable format.
+
+
+--we store the business data for a typical business application inside RDBMS s/w.
+
+
+Q/- Why Java-DB communication is required ?
+
+A/-
+
+RDBMS are excellent in data storage in a secure and easily retrieval manner, but it is very poor in processing and presenting the data in user-understandable format.
+
+--Java is excellent in processing the data and presenting the data, but Java is very poor in storing the data 
+(In Java we can store the business data permanently using Serialization and Files)
+
+--so in order to develop a powerful business application we need to communicate our Java Application with the DB server.
+
+
+Q/- How Java DB communication is possible ?
+
+A/-
+
+--Java App can do any task only through the method calls and objects, 
+these method calls and object are not directly understandable to the DB s/w.
+
+--DB s/w can understands only Sql, Java Compiler does not accept the sql syntax directly.
+
+--Despite being heterogeneous platforms, Java and databases can communicate through JDBC.
+
+
+Chinese ------translator-----------Russian 
+
+Java -------- JDBC driver s/w -----------------DB s/w
+
+
+
+- JDBC is a technology that enables any kind of Java application to communicate with any kind of DB s/w in a standard manner.
+
+- JDBC technology is given by Sun-microsystem(Oracle Corp).
+
+- JDBC technology comes in the form of a specification (It is a documentation which describes rules and guidelines to develop a particular s/w : "JDBC driver s/w").
+
+
+- JDBC driver s/w is the implementation of the JDBC specification, which will act as a translator s/w to communicate Java App with the DB s/w.
+
+--Each DB s/w have their own JDBC driver s/w, so DB vendor will implement the JDBC specification and they develop the JDBC driver s/w.
+
+--these driver s/w comes in the form of a .jar file.
+
+Mysql:   mysql-connector.jar
+
+- JAR file works like "ZIP file" for Java programs.
+
+- A JAR file is a compressed file that contains:
+
+	.class files
+	packages
+	libraries
+	metadata
+	resources in a single file.
+
+--compile all the .java files -----> .class files ----> zip all the .class files inside a .jar file
+
+--all the JDBC driver s/w is developed according the same JDBC specification.
+
+
+
+
+--in order to communicate our Java application with the DB server, Java developer need to get/download JDBC driver s/w and need to add the JDBC driver related jar file in the class path of our application.
+
+
+--In order to communicate our java application with the DB server, Java Developer needs 2 things:
+
+1.JDBC driver related jar file
+
+2.JDBC API (this API comes in the form of following 2 packages):
+
+1.java.sql
+2.javax.sql
+
+--this JDBC API contains all the library classes, interfaces using which we can communicate our java application with the DB server.
+
+Note: JDBC API comes along with the JDK installation.
+
+
+JDBC client:
+==========
+
+--In Java DB communication, our Java application will act as a client because Java application needs the services of DB server. so our Java app is a JDBC client.
+
+
+Responsibility of the JDBC client:
+===========================
+
+1. Requesting the DB connection.
+
+2. Submitting the appropriate SQL statement to the DB server in the form of String object.
+
+3. Processing the result given by the DB server.
+
+4. Dealing with exceptions if any.
+
+5. Managing the transactions whenever it is required.
+
+6. closing the connection once done with the DB operation.
+
+
+JDBC driver:
+==========
+
+--it is a translation s/w written in Java according to the JDBC Specification
+(it comes in the form of .jar file)
+
+Responsibility of JDBC Driver :
+=======================
+
+1. establishing the connection.
+
+2. receiving the JDBC method calls (java method call) and translate them into the DB understandable format (sql) and forward them to the DB server.
+
+3. Translating the DB s/w given result in the Java format (Java objects) and returns that object to the JDBC client.
+
+
+Steps to connect our Java application with the DB server (Mysql):
+================================================================
+
+1. download/get the JDBC driver related jar file (mysql-connector.jar) from the internet and set that jar file inside the class path of our java application.
+
+2. Load the JDBC driver related main class into the memory.
+
+3. Prepare the connection String.
+
+4. Establish the connection
+
+5. after performing the CRUD operation close the connection.
+
+Code:-
+public class Main {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try {
+			Connection conn = DriverManager.getConnection(url,"root","root");
+			if(conn!=null) {
+				System.out.println("Connected..");
+			}else {
+				System.out.println("Not connected with the database..");
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Output:-
+Connected..
+
+
+Getting the mysql-connector jar and setting that jar to the class path of our application:
+=========================================================================================
+Download .jar file:-
+--------------------
+--type in google : download mysql connector j ->Select Operating system as Platform Independent -> Download "Platform Independent (Architecture Independent), ZIP Archive" -> Extract files -> Add  "mysql-connector-j-9.7.0.jar" in Application class Path
+
+How to add .jar file our application class path:-
+-------------------------------------------------
+--right click on the project---> build path ----> configure build path----> libraries----> Classpath --->Add external jars ----> select "mysql-connector-j-9.7.0.jar" in the downloaded file  ---> apply and close.
+
+
+closing the connection :-
+=========================
+
+solution 1: Using finally block:-
+---------------------------------
+public class Main {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(url,"root","root");
+			if(conn!=null) {
+				System.out.println("Connected..");
+			}else {
+				System.out.println("Not connected with the database..");
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
+
+solution 2: using try-with-resource
+-----------------------------------
+public class Main {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try(Connection conn = DriverManager.getConnection(url,"root","root")){
+			if(conn!=null) {
+				System.out.println("Connected..");
+			}else {
+				System.out.println("Not connected with the database..");
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Inserting record into the table using Java Application:
+======================================================
+
+--once we get the Connection object then we can execute any sql statement from our java application to the DB server.
+
+--for that we require a "java.sql.Statement(I)" object.
+
+--We get the Statement object by using:
+
+Statement st=  conn.createStatement();
+
+
+--Once we get the Statement object, in order to execute any sql statement from our Java application we need to use one of the following methods of Statement object.
+
+1. public int executeUpdate(String dml)throws SQLException //(insert, update, delete)
+
+2.public ResultSet executeQuery(String drl)throws SQLException // (select)
+
+3. public boolean execute(String anysql)throws SQLException //even ddl also
+
+
+Inserting data into table using Statement Object:-
+--------------------------------------------------
+Code:-
+----
+public class Main {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try(Connection conn = DriverManager.getConnection(url,"root","root")){
+			String query = "insert into Student values (1,'Krish'),(2,'Sarthak')";
+			
+			Statement st = conn.createStatement();
+			int x = st.executeUpdate(query);
+			System.out.println(x);
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+Output:-
+2
+
+Database:-
+-------
++------+---------+
+| roll | name    |
++------+---------+
+|    1 | Krish   |
+|    2 | Sarthak |
++------+---------+
+
+
+
+Using Statement obj inserting dynamic details in the table:-
+---------------------------------------------------------- 
+public class Main {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Please provide roll number..");
+		int roll= sc.nextInt();
+		
+		System.out.println("Please provide name..");
+		String name  = sc.next();
+
+		try(Connection conn = DriverManager.getConnection(url,"root","root")){
+			String query = "insert into Student values ("+roll+",'"+name+"')";
+			
+			Statement st = conn.createStatement();
+			int x = st.executeUpdate(query);
+			System.out.println(x);
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Output:-
+1
+
+Database:-
++------+---------+
+| roll | name    |
++------+---------+
+|    1 | Krish   |
+|    2 | Sarthak |
+|    3 | Khushi  |
++------+---------+
+
