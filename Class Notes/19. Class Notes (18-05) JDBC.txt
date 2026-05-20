@@ -435,3 +435,540 @@ Database:-
 |    3 | Khushi  |
 +------+---------+
 
+
+Deleting data using statement Object:-
+=--==-=--==-=-=-=-=--=--=-=-=-=-=-=-=	
+public class Main1 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Provide roll - ");
+		String roll = sc.next();
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try {
+			Connection con = DriverManager.getConnection(url,"root","root");
+			Statement st = con.createStatement();
+			
+			int x = st.executeUpdate("delete from Student where roll = "+roll);
+			System.out.println(x);
+
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Output:-
+Provide roll - 
+1
+1
+
+Before table:-
++------+----------+
+| roll | name     |
++------+----------+
+|    1 | Rahul    |
+|    2 | Abhishek |
+|    3 | Ridhi    |
+|    5 | Aditya   |
+|    6 | Rachit   |
++------+----------+
+
+After table:-
++------+----------+
+| roll | name     |
++------+----------+
+|    2 | Abhishek |
+|    3 | Ridhi    |
+|    5 | Aditya   |
+|    6 | Rachit   |
++------+----------+
+
+
+
+Problem or Limitations with Statement Object to update the data:-
+================================================================
+1. complexities to concatenate the dynamic variables.
+
+2. whenever we pass any query to the DB using Statement obj, DB engine will perform following tasks every time to execute that query.
+
+	a. query compilation
+	b. query plan generation
+	c. query optimization
+
+
+--for the same query doing these operations every time, it will degrade the performance.
+
+
+3. SQL injection  
+- SQL Injection is a security attack in which malicious SQL code is inserted through user input to manipulate database queries.
+- Or we can say that SQL Injection happens when user input changes the original SQL query behavior
+
+
+public class Main1 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Provide roll - ");
+		String roll = sc.nextLine();
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try {
+			Connection con = DriverManager.getConnection(url,"root","root");
+			Statement st = con.createStatement();
+			
+			int x = st.executeUpdate("delete from Student where roll = "+roll);
+			System.out.println(x);
+
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Console output:-
+Provide roll - 
+3 OR 1=1
+3
+
+Before Table:-
++------+--------+
+| roll | name   |
++------+--------+
+|    3 | Ridhi  |
+|    5 | Aditya |
+|    6 | Rachit |
++------+--------+
+
+After query Table:-
+Empty set (0.00 sec) 
+
+Note:- Complete data deleted.
+
+
+Solution of above problems:-
+=--=-=-=-==--=-=-==-=-=-=-=
+-We need to use "java.sql.PreparedStatement" object instead of "java.sql.Statement" object.
+
+java.sql.Statement(I)
+                |
+java.sql.PreparedStatement(I)
+
+"Note: Statement is relatively faster than PreparedStatement."
+
+
+--to get the PreparedStatement object we need to call "prepareStatement(String sql)" method on the Connection object, with the value or without the value.
+
+--in case of without the value, we need to use placeholders (?)
+
+ex:
+
+	PreparedStatement ps=  conn.prepareStatement("insert into student values(40,'mukesh', 900)");
+
+	PreparedStatement ps=  conn.prepareStatement("insert into student values(?,?,?)");
+
+
+--In case of Placeholders, before executing the query we need to bind the appropriate values to the corresponding placeholders by calling various types of "setXXX(--)" methods on the PreparedStatement object.
+- here XXX will replace with appropriate data type of the value.
+
+Example:
+
+For Integer:-	ps.setInt(1, 50);
+For String:-	ps.setString(2,"Amit");
+and so on..
+
+
+--after binding the appropriate placeholders we need to execute the query by using one of the following methods of the PreparedStatement object.
+
+public int executeUpdate();   // if dml 
+
+public ResultSet executeQuery() // if drl 
+
+public boolean execute(); // any type of sql
+
+Example:-
+-=-=-=-=
+1. Insert a record:-
+-------------------
+public class Demo1 {
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try (Connection conn = DriverManager.getConnection(url, "root", "root"); 
+		     Scanner sc = new Scanner(System.in)) {
+			System.out.println("Please provide roll");
+			int roll = sc.nextInt();
+
+			System.out.println("Please provide name");
+			String name = sc.next();
+
+			System.out.println("Please provide marks");
+			int marks = sc.nextInt();
+			
+			PreparedStatement ps = conn.prepareStatement("insert into Student values(?,?,?)");
+			ps.setInt(1, roll);
+			ps.setString(2, name);
+			ps.setInt(3, marks);
+			
+			int x = ps.executeUpdate();
+			if(x>0) {
+				System.out.println("Student added successfully..");
+			}			
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+Console output:-
+Please provide roll
+2
+Please provide name
+Shivam
+Please provide marks
+100
+Student added successfully..
+
+Database:-
++------+----------+-------+
+| roll | name     | marks |
++------+----------+-------+
+|    1 | Abhishek |    10 |
+|    2 | Shivam   |   100 |
+|    6 | Sarthak  |   110 |
++------+----------+-------+
+
+2. Update a record:-
+-------------------
+public class Demo1 {
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try (Connection conn = DriverManager.getConnection(url, "root", "root"); 
+			Scanner sc = new Scanner(System.in)) {
+			System.out.println("Please provide roll");
+			int roll = sc.nextInt();
+
+			System.out.println("Please provide marks");
+			int marks = sc.nextInt();
+			
+			PreparedStatement ps = conn.prepareStatement("update Student set marks = ? where roll = ?");
+			ps.setInt(1, marks);
+			ps.setInt(2, roll);
+			
+			int x = ps.executeUpdate();
+			if(x>0) {
+				System.out.println("Student updated successfully..");
+			}			
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Console output:-
+Please provide roll
+2
+Please provide marks
+10
+Student updated successfully..
+
+Database:-
++------+----------+-------+
+| roll | name     | marks |
++------+----------+-------+
+|    1 | Abhishek |    10 |
+|    2 | Shivam   |    10 |
+|    6 | Sarthak  |   110 |
++------+----------+-------+
+
+
+3. Delete a record:-
+-------------------
+public class Demo1 {
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try (Connection conn = DriverManager.getConnection(url, "root", "root"); 
+			Scanner sc = new Scanner(System.in)) {
+			System.out.println("Please provide roll");
+			int roll = sc.nextInt();
+			
+			PreparedStatement ps = conn.prepareStatement("delete from Student where roll = ?");
+			ps.setInt(1, roll);
+			
+			int x = ps.executeUpdate();
+			if(x>0) {
+				System.out.println("Student deleted successfully..");
+			}			
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+Output:-
+Please provide roll
+2
+Student deleted successfully..
+
+Database:-
++------+----------+-------+
+| roll | name     | marks |
++------+----------+-------+
+|    1 | Abhishek |    10 |
+|    6 | Sarthak  |   110 |
++------+----------+-------+
+
+
+Performing DRL operation (select query):
+=========================================
+
+PreparedStatement ps=  conn.prepareStatement("select * from student");
+
+ResultSet rs=  ps.executeQuery();
+
+--here we get the records from the DB, in the form of "java.sql.ResultSet(I)" object.
+
+--in order to get the details from the ResultSet object, we should know the structure of the ResultSet object.
+
+Note: ResultSet object structure will depends upon the query what we have executed, if does not depends upon the table structure.
+
+Table Schema :- There is a student table have three columns with roll, name, and marks.
+
+ Query:-
+ select * from student;
+
+
+                  RESULTSET OBJECT STRUCTURE
+		=--=-=-=-=-==-=--=-==-=-=-=-=
+
+				-------------------------------------------------
+BFR (Before First Row)->	|  roll      |   name        |     marks       |
+     			 	-------------------------------------------------
+        			|   101      |   Rahul       |       85        |
+        			-------------------------------------------------
+        			|   102      |   Aman        |       90        |
+        			-------------------------------------------------
+        			|   103      |   Neha        |       88        |
+        			-------------------------------------------------
+ ALR (After Last Row)->
+                     
+                   
+
+Now we need to move the cursor from the BFR to the record area, and fetch the data from each column(cell).
+
+--to move the cursor from the BFR to the record area we have a method in the ResultSet object :-
+
+	public boolean next(); // it will move the cursor to the record area and if any record is there then it 				returns true  and if it points to the ALR then it returns false.
+
+
+--to access/get the column/cell value, from the cursor pointed record area we need to use following methods of the ResultSet object.
+
+	public XXX getXXX(String columnName);  // here XXX will replace with appropriate data type of the value.
+
+Example:-
+
+public int getInt("roll");
+public String getString("name");
+public int getInt("marks");
+
+-- Here we can also use column index:-
+
+Example:-
+
+public int getInt(1); // for roll
+public String getString(2); //for name
+public int getInt(3); // for marks
+
+
+
+Note: to move the cursor from the BFR to the record area we need to follow following strategy:
+
+1. If we sure that only 0 or 1  record will be there (utmost 1) : in that case we should use "if-else" condition.
+(when our search condition in on the Primary key)
+ 
+2. if there may be a chance of getting more than 1 record then we need to use "while loop".
+
+
+Example 1:
+-------
+public class Main1 {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try(Connection con = DriverManager.getConnection(url,"root","root")) {
+			PreparedStatement st = con.prepareStatement("select * from Student");
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				int roll = rs.getInt("roll");
+				String name = rs.getString("name");
+				int marks = rs.getInt("marks");
+				System.out.println("Roll Number:- "+roll);
+				System.out.println("Name:- "+name);
+				System.out.println("Marks:- "+marks);
+				
+				System.out.println("============================");
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+
+Output:-
+Roll Number:- 1
+Name:- Abhishek
+Marks:- 100
+============================
+Roll Number:- 2
+Name:- Aditya
+Marks:- 10
+============================
+Roll Number:- 3
+Name:- Nischal
+Marks:- 20
+============================
+
+Database:-
+--------
++------+----------+-------+
+| roll | name     | marks |
++------+----------+-------+
+|    1 | Abhishek |   100 |
+|    2 | Aditya   |    10 |
+|    3 | Nischal  |    20 |
++------+----------+-------+
+
+Example 2:- get student by roll number
+public class Demo2 {
+	public static void main(String[] args) {
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try (Connection conn = DriverManager.getConnection(url, "root", "root");
+				Scanner sc = new Scanner(System.in)) {
+			System.out.println("please provide roll number");
+			int roll = sc.nextInt();
+			
+			PreparedStatement ps = conn.prepareStatement("select name, marks from Student where roll = ?");
+			ps.setInt(1, roll);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				System.out.println("Name:- "+rs.getString("name"));
+				System.out.println("Marks:- "+rs.getInt("marks"));
+			}else {
+				System.out.println("No student available for roll number "+roll);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Console output:-
+please provide roll number
+1
+Name:- Abhishek
+Marks:- 10
+
+Database:-
++------+----------+-------+
+| roll | name     | marks |
++------+----------+-------+
+|    1 | Abhishek |    10 |
+|    6 | Sarthak  |   110 |
++------+----------+-------+
+
+
+
+
+
+Basic Difference Between Statement and PreparedStatement
+========================================================
+Statement				PreparedStatement
+----------				-----------------
+Used for simple/static queries		Used for dynamic/parameterized queries
+Query written directly			Uses ? placeholders
+Less secure				More secure
+Vulnerable to SQL Injection		Prevents SQL Injection
+Query compiles every time		Query compiles only once
+Slower					Faster (For repeated query)
+String concatenation required		No concatenation required
+Rarely used in real projects		Mostly used in industry
+
+
+
+Internal Working Difference
+=-=-=-=-=-=-=-=-=-=-=--=-=-=
+Statement
+----------
+Every time:
+	Parse
+	↓
+	Compile
+	↓
+	Execute
+
+PreparedStatement
+------------------
+	Parse + Compile once
+	↓
+	Set values
+	↓
+	Execute multiple times
+
+Use Statement when:-
+-------------------
+- query fixed
+- no user input
+- simple query
+
+Example:- select * from Student;
+
+Use PreparedStatement when:-
+---------------------------
+- user input involved
+- insert/update/delete operations
+- dynamic values
+- repeated execution
+- security important
+
+
