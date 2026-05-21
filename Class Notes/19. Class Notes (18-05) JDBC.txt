@@ -972,3 +972,470 @@ Use PreparedStatement when:-
 - security important
 
 
+
+
+ResultSetMetaData:-
+==================
+- ResultSetMetaData is an interface in JDBC used to get information about the columns of a ResultSet object.
+
+Meaning of Metadata
+	Metadata Means Data about data
+
+Example:-
+Actual Data
+------------
+	id	name	marks
+	101	Rahul	85
+Metadata:-
+---------
+- Column Names
+- Column Count
+- Column Types
+- Table Name
+
+Package
+-------
+	java.sql.ResultSetMetaData
+
+Why Do We Use ResultSetMetaData?
+--------------------------------
+We use it to get:
+- total columns
+- column names
+- column data types
+- table name
+
+How to Create ResultSetMetaData Object?
+--------------------------------------
+Step 1 → Execute Query
+	ResultSet rs = st.executeQuery("select * from student");
+
+Step 2 → Get Metadata Object
+	ResultSetMetaData rsmd = rs.getMetaData();
+
+Important Methods of ResultSetMetaData
+--------------------------------------
+Method					Purpose
+-------					--------
+getColumnCount()			Returns total columns
+getColumnName(int column)		Returns column name
+getColumnTypeName(int column)		Returns data type
+getTableName(int column)		Returns table name
+isNullable(int column)			Checks null allowed or not
+
+
+Example 
+--------
+public class Demo {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try(Connection con = DriverManager.getConnection(url,"root","root")){
+			PreparedStatement ps = con.prepareStatement("select * from Student");
+			ResultSet rs = ps.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			
+			int numberOfColumn = rsmd.getColumnCount();
+			System.out.println("Total column numbers :-"+numberOfColumn);
+			
+			System.out.println("==================");
+			
+			for(int i=1; i<=numberOfColumn; i++) {
+				System.out.println(rsmd.getColumnName(i));
+			}
+			System.out.println("=============================");
+			System.out.println(rsmd.getTableName(1));
+		}catch(Exception e) {
+			
+		}
+	}
+}
+Output:-
+Total column numbers :-3
+==================
+roll
+name
+marks
+=============================
+student
+
+Database:-
++------+----------+-------+
+| roll | name     | marks |
++------+----------+-------+
+|    1 | Abhishek |    10 |
+|    6 | Sarthak  |   110 |
++------+----------+-------+
+
+
+When query executes:
+- database sends row data 
+- database also sends column information 
+- ResultSetMetaData object is use to access that column information.
+
+Dynamic Data Printing Example
+------------------------------
+public class Demo {
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		String url = "jdbc:mysql://localhost:3306/Chitkara";
+		try(Connection con = DriverManager.getConnection(url,"root","root")){
+			PreparedStatement ps = con.prepareStatement("select * from Student");
+			ResultSet rs = ps.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			
+			int numberOfColumn = rsmd.getColumnCount();
+			
+			while(rs.next()) {
+				for(int i=1; i<=numberOfColumn; i++) {
+					System.out.print(rs.getString(i)+" ");
+				}
+				System.out.println();
+			}
+			
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+}
+
+Output:-
+1 Abhishek 10 
+6 Sarthak 110 
+
+
+
+
+
+Types of Driver:-
+===============
+
+1. Type 1 Driver :- JDBC-ODBC Bridge Driver
+===========================================
+	- Type 1 Driver is a JDBC driver that converts JDBC calls into ODBC calls and then communicates with the database.
+
+Simple Understanding:-
+---------------------
+
+Java application can not communicate directly with the database
+
+First:
+	JDBC request converted into ODBC request.
+
+Then:
+	ODBC communicate with the database.
+
+What is ODBC?
+- ODBC Full Form "Open Database Connectivity"
+- It is a Microsoft technology used for database communication.
+
+Architecture of Type 1 Driver
+------------------------------
+Java Application
+↓
+JDBC API
+↓
+Type 1 Driver
+↓
+ODBC Driver
+↓
+Database
+
+Internal Working (Step-by-Step)
+-------------------------------
+
+Step 1 → Java Application Sends JDBC Calls
+	Suppose Java code:
+		Statement st = con.createStatement();
+Java application send request to JDBC API.
+
+Step 2 → Type 1 Driver Receives JDBC Calls
+	Type 1 driver receives JDBC calls.
+
+Step 3 → JDBC Calls Converted into ODBC Calls
+	Driver internally:
+		JDBC → ODBC
+Because database do not understand JDBC directly.
+
+Step 4 → ODBC Driver Communicates with Database
+	ODBC driver: database-specific communication.
+
+Step 5 → Database Processes Request
+	Database:
+		- executes query
+		- prepare result 
+
+Step 6 → Response Travels Back
+	Database
+	↓
+	ODBC Driver
+	↓	
+	Type 1 Driver
+	↓
+	Java Application
+
+Important Observation
+- There are two conversions happens here, that is why performance is slow.
+	JDBC → ODBC
+	ODBC → Database
+
+
+Advantages of Type 1 Driver
+- Easy to Use
+- Good for Learning 
+- Supports Multiple Databases
+
+Disadvantages of Type 1 Driver
+- Very Slow
+- Platform Dependent 	
+	- ODBC installation required
+	- for Different OS needs different setup.
+- ODBC Driver Installation Required
+- Not Pure Java
+- Removed After Java 8
+	- Modern Java versions does not support Type 1 Driver
+
+Why Type 1 Driver Became Obsolete?
+----------------------------------
+
+- slow
+- complex
+- platform dependent
+- external setup required
+- Industry wanted pure Java solution.
+
+
+
+Type 2 Driver - Native API Driver
+=================================
+Type 2 Driver is a JDBC driver that converts:
+	- JDBC calls → Native Database API calls
+	- using database-specific native libraries.
+
+What is Native API?
+
+Native API means database vendor ki special system libraries/files.
+
+Architecture of Type 2 Driver
+-----------------------------
+Java Application
+↓
+JDBC API
+↓
+Type 2 Driver
+↓
+Native Database Library
+↓
+Database
+
+Internal Working (Step-by-Step)
+--------------------------------
+Step 1 → Java Application Sends JDBC Calls
+	Suppose Java code:
+		PreparedStatement ps = con.prepareStatement(query);
+
+Step 2 → Type 2 Driver Receives JDBC Calls
+	Type 2 Driver: JDBC requests receive
+
+Step 3 → JDBC Calls Converted into Native API Calls
+
+Step 4 → Native Library Communicates with Database
+
+Step 5 → Database Executes Query
+
+Step 6 → Response Travels Back
+	Database
+	↓
+	Native Library
+	↓
+	Type 2 Driver
+	↓
+	Java Application
+
+
+Advantages of Type 2 Driver
+- Faster Than Type 1 
+- Better Performance 
+- Database-Specific Optimization
+- More Efficient Than Bridge Driver
+
+Disadvantages of Type 2 Driver
+- Native Library Required - we need to install Database-specific files.
+- Platform Dependent 
+- Installation Complex 
+- Not Pure Java 
+- Portability Issues - Different setup for different Machine
+
+Why Type 2 Driver Became Less Popular?
+-------------------------------------
+Because industry wanted:
+- pure Java
+- simple deployment
+- platform independence
+
+
+Type 3 Driver - Network Protocol Driver
+=======================================
+Type 3 Driver is a JDBC driver that uses middleware server to communicate between Java application and database.
+
+What is Middleware?
+-------------------
+- Middleware means is a server/system which handle communication between Java application and Database.
+
+Architecture of Type 3 Driver
+-----------------------------
+	Java Application
+	↓
+	JDBC API
+	↓
+	Type 3 Driver
+	↓
+	Middleware Server
+	↓
+	Database
+
+Internal Working (Step-by-Step)
+Step 1 → Java Application Sends JDBC Calls
+- Suppose Java code:
+	Statement st =	con.createStatement();
+
+Step 2 → Type 3 Driver Receives JDBC Calls
+
+Step 3 → Driver Sends Request to Middleware Server
+
+Step 4 → Middleware Processes Request
+- Middleware understand request and convert it into database-specific format.
+
+Step 5 → Middleware Communicates with Database
+
+Step 6 → Database Executes Query
+
+Step 7 → Response Travels Back
+	Database
+	↓
+	Middleware Server
+	↓
+	Type 3 Driver
+	↓
+	Java Application
+
+Why Type 3 Driver Was Introduced?
+----------------------------------
+Because industry wanted:
+- platform independence
+- no native libraries
+- centralized communication
+
+Advantages of Type 3 Driver
+- Platform Independent - Pure Java based.
+- No Native Library Required 
+- Supports Multiple Databases
+- Centralized Database Management
+- Better Security - Database does not exposed to clint directly.
+- Good for Large Enterprise Applications
+
+Disadvantages of Type 3 Driver
+1. Middleware Server Required
+2. Complex Architecture 
+3. Network Dependency 
+4. Performance Slower Than Type 4
+
+
+Type 4 Driver - Thin Driver
+===========================
+- Type 4 Driver is a JDBC driver that directly communicates with the database using database-specific protocol.
+- It is also called Pure Java Driver or Thin Driver
+- In Type 4 Driver Java application communicates directly to the database.
+- No need of:
+	- ODBC
+	- native libraries
+	- middleware server
+
+Architecture of Type 4 Driver
+-----------------------------
+	Java Application
+	↓
+	JDBC API
+	↓
+	Type 4 Driver
+	↓
+	Database
+
+Internal Working (Step-by-Step)
+-------------------------------
+Step 1 → Java Application Sends JDBC Calls
+- Suppose Java code:
+	PreparedStatement ps =	con.prepareStatement(query);
+
+Step 2 → Type 4 Driver Receives JDBC Calls
+
+Step 3 → Driver Converts JDBC Calls into Database Protocol
+
+Step 4 → Direct Communication with Database
+
+Step 5 → Database Executes Query
+
+Step 6 → Response Travels Back
+	Database
+	↓
+	Type 4 Driver
+	↓
+	Java Application
+
+Important Observation
+----------------------
+Type 4 Driver mein:
+- no extra conversion
+- no middleware
+- no native library
+So:
+- communication is fastest.
+
+Why Type 4 Driver Became Most Popular?
+--------------------------------------
+Because industry wanted:
+- high speed
+- simple setup
+- platform independence
+- pure Java solution
+
+Example of Type 4 Driver
+-------------------------
+MySQL Driver - mysql-connector-j.jar
+
+Advantages of Type 4 Driver
+---------------------------
+- Fastest Driver
+- Pure Java 
+- Platform Independent
+- Easy Setup 
+- No Middleware Required
+- No Native Libraries Required
+- Portable
+- Industry Standard
+	- Nowadays almost all JDBC applications use Type 4 Driver.
+
+Disadvantages of Type 4 Driver:-
+-------------------------------
+- Database-Specific Driver Required
+- Driver Depends on Database Vendor 
+
+Why We Use Type 4 Driver in Modern JDBC?
+----------------------------------------
+Because:
+- best performance
+- easy deployment
+- pure Java
+- platform independent
+- simple architecture
+
+
+
