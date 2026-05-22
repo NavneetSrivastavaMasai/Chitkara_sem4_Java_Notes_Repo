@@ -1439,3 +1439,352 @@ Because:
 
 
 
+DAO Pattern:-
+===========
+Data Access Object
+
+- DAO is used to keep database code separate from the main application code.
+or we can also say that
+- DAO (Data Access Object) is a design pattern used to write database-related code in a separate and structured manner.
+
+What Happened Before DAO?
+------------------------
+- developers used to write everything in a single class:
+	SQL queries
+	connection code
+	ResultSet code
+
+Problems Before DAO
+-------------------
+1. Code Became Messy
+2. Difficult Maintenance 
+3. Code Reusability Poor 
+4. Large Projects Difficult
+
+DAO introduced because:
+-----------------------
+- we need to separate database code 
+- clean architecture 
+- reusable code 
+
+After DAO:-
+=========
+Code divide properly :-
+
+Layer			Responsibility
+----------		---------------
+Main Class		Business Logic
+DAO			Database Operations
+DBConnection		Connection Logic
+Entity Class		Data Representation
+
+Note:- DAO is not only a class, it is a design pattern used to organize database code in a clean and structured way.
+
+CODE IMPLEMENTATION:-
+=====================
+SQL TABLE QUERY:-
+=--==-=-=-=--==-
+create table Employee (empId int primary key, name varchar(20), department varchar(20), salary int);
+
+DATABASE CONNECTION CODE:-
+=-=-=-=-=--=-==--==-=-=-=
+import java.sql.Connection;
+import java.sql.DriverManager;
+public class DatabaseConnection {
+	public static Connection provideConnection() {
+		Connection conn = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			String url = "jdbc:mysql://localhost:3306/Chitkara";
+			conn = DriverManager.getConnection(url, "root", "root");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return conn;
+	}
+}
+
+EMPLOYEE BEAN CLASS:-
+-===--=-==-=-=-=-=-=-
+public class Employee {
+	private int empID;
+	private String name;
+	private String department;
+	private int salary;
+	public Employee() {
+
+	}
+	public Employee(int empID, String name, String department, int salary) {
+		this.empID = empID;
+		this.name = name;
+		this.department = department;
+		this.salary = salary;
+	}
+
+	public int getEmpID() {
+		return empID;
+	}
+
+	public void setEmpID(int empID) {
+		this.empID = empID;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public int getSalary() {
+		return salary;
+	}
+
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [empID=" + empID + ", name=" + name + ", department=" + department + ", salary=" + salary
+				+ "]";
+	}
+
+}
+
+LOGIC RELATED INTERFACE:-
+=-=-=-=-=-=-=-=-=-=-=-=-
+
+import java.util.List;
+
+public interface EmployeeLogicInterface {
+	
+	String addEmployee(Employee emp);
+	Employee getEmployeeByID(int id);
+	String deleteEmployeeByID(int id);
+	List<Employee> getEmployeeList();
+
+}
+
+LOGIC IMPLEMENTATION CODE:-
+=-=-=-=-=-=-=-=-=-=-=-=-=
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class EmployeeLogicImpl implements EmployeeLogicInterface{
+
+	@Override
+	public String addEmployee(Employee emp) {
+		String message = "Duplicate Employee, already available in Database";
+		try(Connection conn = DatabaseConnection.provideConnection()){
+			PreparedStatement ps = conn.prepareStatement("insert into Employee values(?,?,?,?)");
+			ps.setInt(1, emp.getEmpID());
+			ps.setString(2, emp.getName());
+			ps.setString(3, emp.getDepartment());
+			ps.setInt(4, emp.getSalary());
+			int x = ps.executeUpdate();
+			if(x>0) {
+				message = "Employee added successfully";
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return message;
+	}
+
+	@Override
+	public Employee getEmployeeByID(int id) {
+		Employee emp = new Employee();
+		try(Connection conn = DatabaseConnection.provideConnection()){
+			PreparedStatement ps = conn.prepareStatement("select * from Employee where empId = ?");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				emp.setEmpID(rs.getInt("empId"));
+				emp.setName(rs.getString("name"));
+				emp.setDepartment(rs.getString("department"));
+				emp.setSalary(rs.getInt("salary"));
+			}else {
+				emp=null;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return emp;
+	}
+
+	@Override
+	public String deleteEmployeeByID(int id) {
+		String message = "Employee is not available in Database";
+		try(Connection conn = DatabaseConnection.provideConnection()){
+			PreparedStatement ps = conn.prepareStatement("delete from Employee where empId = ?");
+			ps.setInt(1, id);
+			int x = ps.executeUpdate();
+			if(x>0) {
+				message = "Employee removed from the Database";
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return message;
+	}
+
+	@Override
+	public List<Employee> getEmployeeList() {
+		List<Employee> empList = new ArrayList<Employee>();
+		try(Connection conn = DatabaseConnection.provideConnection()){
+			PreparedStatement ps = conn.prepareStatement("select * from Employee");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Employee emp = new Employee();
+				emp.setEmpID(rs.getInt("empId"));
+				emp.setName(rs.getString("name"));
+				emp.setDepartment(rs.getString("department"));
+				emp.setSalary(rs.getInt("salary"));
+				
+				empList.add(emp);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		
+		return empList;
+	}
+
+}
+
+MAIN APPLICATION:-
+=-=-=-=-=-=-=-=-=
+import java.util.List;
+import java.util.Scanner;
+
+public class Application {
+	public static void main(String[] args) {
+		EmployeeLogicInterface el = new EmployeeLogicImpl();
+		Scanner sc = new Scanner(System.in);
+
+		while (true) {
+			System.out.println("Welcome Emplyee Management System");
+			System.out.println("1. Add Employee");
+			System.out.println("2. Get Employee By ID");
+			System.out.println("3. Delete Employee By ID");
+			System.out.println("4. Get All Emplyoee List");
+			System.out.println("5. Exit");
+			System.out.println("======================================");
+			System.out.println("Choose your option:- ");
+			int choice = sc.nextInt();
+
+			switch (choice) {
+			case 1: {
+				System.out.println("Please provide Employee ID");
+				int id = sc.nextInt();
+				sc.nextLine();
+				System.out.println("Please provide Employee name");
+				String name = sc.nextLine();
+
+				System.out.println("Please provide Employee Department");
+				String department = sc.next();
+
+				System.out.println("Please provide Employee Salary");
+				int salary = sc.nextInt();
+
+				Employee emp = new Employee(id, name, department, salary);
+				String mess = el.addEmployee(emp);
+				System.out.println(mess);
+				break;
+			}
+			case 2: {
+				System.out.println("Please provide Employee ID");
+				int id = sc.nextInt();
+
+				Employee emp = el.getEmployeeByID(id);
+				if (emp == null) {
+					System.out.println("There is no any Employee available in Database with id " + id);
+				} else {
+					System.out.println(emp);
+				}
+				break;
+			}
+			case 3: {
+				System.out.println("Please provide Employee ID");
+				int id = sc.nextInt();
+				String mess = el.deleteEmployeeByID(id);
+				System.out.println(mess);
+				break;
+			}
+			case 4: {
+				List<Employee> empList = el.getEmployeeList();
+				if (empList.size() == 0) {
+					System.out.println("There is no any Employee available in Database yet...");
+				} else {
+					for (Employee emp : empList) {
+						System.out.println(emp);
+					}
+				}
+				break;
+			}
+			case 5: {
+				System.out.println("Thanks for using our application...");
+				System.exit(0);
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + choice);
+			}
+
+		}
+
+	}
+}
+
+CONSOLE OUTPUT:-
+=-=-=-=-=--==-=-
+Welcome Emplyee Management System
+1. Add Employee
+2. Get Employee By ID
+3. Delete Employee By ID
+4. Get All Emplyoee List
+5. Exit
+======================================
+Choose your option:- 
+4
+Employee [empID=2, name=saumya, department=Quality, salary=100000]
+Employee [empID=3, name=Neelabh, department=Development, salary=2000000]
+Welcome Emplyee Management System
+1. Add Employee
+2. Get Employee By ID
+3. Delete Employee By ID
+4. Get All Emplyoee List
+5. Exit
+======================================
+Choose your option:-
+5
+Thanks for using our application...
+
+
+DATABASE :-
+=-=-=-=--=
++-------+---------+-------------+---------+
+| empId | name    | department  | salary  |
++-------+---------+-------------+---------+
+|     2 | saumya  | Quality     |  100000 |
+|     3 | Neelabh | Development | 2000000 |
++-------+---------+-------------+---------+
+
+
